@@ -44,130 +44,162 @@ export function SettingsPage() {
   return (
     <div className="settings-container">
       <h2>Rental Data</h2>
-      <div className="rental-data-tabs">
-        {rentalData.map(range => (
-          <button
-            key={range.minSize}
-            className={`tab-button ${selectedRange.minSize === range.minSize ? 'active' : ''}`}
-            onClick={() => setSelectedRange(range)}
-          >
-            {range.minSize} - {range.maxSize} m²
-          </button>
-        ))}
-      </div>
-
-      <div className="add-data-section">
-        {!isAdding ? (
-          <button 
-            className="add-data-button"
-            onClick={() => setIsAdding(true)}
-          >
-            + Add Data
-          </button>
-        ) : (
-          <form onSubmit={handleAdd} className="add-data-form">
-            {isCustomNeighbourhood ? (
-              <input
-                type="text"
-                placeholder="Neighbourhood"
-                value={newData.neighbourhood}
-                onChange={e => setNewData(prev => ({ ...prev, neighbourhood: e.target.value }))}
-                required
-              />
-            ) : (
-              <select
-                value={newData.neighbourhood}
-                onChange={e => {
-                  if (e.target.value === "new") {
-                    setIsCustomNeighbourhood(true);
-                    setNewData(prev => ({ ...prev, neighbourhood: "" }));
-                  } else {
-                    setNewData(prev => ({ ...prev, neighbourhood: e.target.value }));
-                  }
-                }}
-                required
-              >
-                <option value="">Select Neighbourhood</option>
-                {getAvailableNeighbourhoods().map(hood => (
-                  <option key={hood} value={hood}>
-                    {hood}
-                  </option>
-                ))}
-                <option value="new">Enter New Neighbourhood</option>
-              </select>
-            )}
-            <input
-              type="number"
-              placeholder="Monthly Rent (€)"
-              value={newData.rent}
-              onChange={e => setNewData(prev => ({ ...prev, rent: e.target.value }))}
-              required
-              step="1"
-            />
-            <button type="submit">Add</button>
-            <button 
-              type="button" 
-              onClick={() => {
-                setIsAdding(false)
-                setIsCustomNeighbourhood(false)
-              }}
+      <div className={isAdding ? 'content-blur' : ''}>
+        <div className="rental-data-tabs">
+          {rentalData.map(range => (
+            <button
+              key={range.minSize}
+              className={`tab-button ${selectedRange.minSize === range.minSize ? 'active' : ''}`}
+              onClick={() => setSelectedRange(range)}
             >
-              Cancel
+              {range.minSize} - {range.maxSize} m²
             </button>
-          </form>
-        )}
+          ))}
+        </div>
+
+        <div className="add-data-section">
+          {!isAdding ? (
+            <button 
+              className="add-data-button"
+              onClick={() => setIsAdding(true)}
+            >
+              + Add Data
+            </button>
+          ) : null}
+        </div>
+
+        <div className="rental-data-container">
+          <table className="rental-data-table">
+            <thead>
+              <tr>
+                <th 
+                  onClick={() => handleSort('neighbourhood')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Neighbourhood {sortField === 'neighbourhood' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </th>
+                <th 
+                  onClick={() => handleSort('rent')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Monthly Rent (€) {sortField === 'rent' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(selectedRange.averageRents)
+                .sort(([aNeighbourhood, aRent], [bNeighbourhood, bRent]) => {
+                  if (sortField === 'neighbourhood') {
+                    return sortDirection === 'asc' 
+                      ? aNeighbourhood.localeCompare(bNeighbourhood)
+                      : bNeighbourhood.localeCompare(aNeighbourhood)
+                  } else {
+                    return sortDirection === 'asc'
+                      ? aRent - bRent
+                      : bRent - aRent
+                  }
+                })
+                .map(([neighbourhood, rent]) => (
+                  <tr key={neighbourhood}>
+                    <td>{neighbourhood}</td>
+                    <td>{rent}</td>
+                    <td>
+                      <button
+                        className="delete-button rental-delete-button"
+                        onClick={() => removeRent(selectedRange.minSize, neighbourhood)}
+                        title="Remove entry"
+                      >
+                        ×
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div className="rental-data-container">
-        <table className="rental-data-table">
-          <thead>
-            <tr>
-              <th 
-                onClick={() => handleSort('neighbourhood')}
-                style={{ cursor: 'pointer' }}
-              >
-                Neighbourhood {sortField === 'neighbourhood' && (sortDirection === 'asc' ? '↑' : '↓')}
-              </th>
-              <th 
-                onClick={() => handleSort('rent')}
-                style={{ cursor: 'pointer' }}
-              >
-                Monthly Rent (€) {sortField === 'rent' && (sortDirection === 'asc' ? '↑' : '↓')}
-              </th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(selectedRange.averageRents)
-              .sort(([aNeighbourhood, aRent], [bNeighbourhood, bRent]) => {
-                if (sortField === 'neighbourhood') {
-                  return sortDirection === 'asc' 
-                    ? aNeighbourhood.localeCompare(bNeighbourhood)
-                    : bNeighbourhood.localeCompare(aNeighbourhood)
-                } else {
-                  return sortDirection === 'asc'
-                    ? aRent - bRent
-                    : bRent - aRent
-                }
-              })
-              .map(([neighbourhood, rent]) => (
-                <tr key={neighbourhood}>
-                  <td>{neighbourhood}</td>
-                  <td>{rent}</td>
-                  <td>
-                    <button
-                      className="delete-button rental-delete-button"
-                      onClick={() => removeRent(selectedRange.minSize, neighbourhood)}
-                      title="Remove entry"
-                    >
-                      ×
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
+      {isAdding && (
+        <div className="form-overlay">
+          <div className="form-container">
+            <form onSubmit={handleAdd} className="rental-data-form">
+              <div className="form-header">
+                <h3>Add Rental Data</h3>
+                <button 
+                  type="button" 
+                  className="close-form-button"
+                  onClick={() => {
+                    setIsAdding(false)
+                    setIsCustomNeighbourhood(false)
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+              
+              {isCustomNeighbourhood ? (
+                <input
+                  type="text"
+                  placeholder="Neighbourhood"
+                  value={newData.neighbourhood}
+                  onChange={e => setNewData(prev => ({ ...prev, neighbourhood: e.target.value }))}
+                  required
+                  className="popup-input"
+                />
+              ) : (
+                <select
+                  value={newData.neighbourhood}
+                  onChange={e => {
+                    if (e.target.value === "new") {
+                      setIsCustomNeighbourhood(true);
+                      setNewData(prev => ({ ...prev, neighbourhood: "" }));
+                    } else {
+                      setNewData(prev => ({ ...prev, neighbourhood: e.target.value }));
+                    }
+                  }}
+                  required
+                  className="popup-input"
+                >
+                  <option value="">Select Neighbourhood</option>
+                  {getAvailableNeighbourhoods().map(hood => (
+                    <option key={hood} value={hood}>
+                      {hood}
+                    </option>
+                  ))}
+                  <option value="new">Enter New Neighbourhood</option>
+                </select>
+              )}
+              
+              <input
+                type="number"
+                placeholder="Monthly Rent (€)"
+                value={newData.rent}
+                onChange={e => setNewData(prev => ({ ...prev, rent: e.target.value }))}
+                required
+                step="1"
+                className="popup-input"
+              />
+              
+              <div className="form-actions">
+                <button type="submit" className="submit-button">
+                  Add Data
+                </button>
+                <button 
+                  type="button" 
+                  className="cancel-button"
+                  onClick={() => {
+                    setIsAdding(false)
+                    setIsCustomNeighbourhood(false)
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 } 

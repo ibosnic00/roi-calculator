@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Property } from '../types/Property'
 import {
   LineChart,
@@ -29,24 +29,52 @@ interface Parameters {
 }
 
 export function GraphView({ properties }: GraphViewProps) {
-  const [parameters, setParameters] = useState<Parameters>({
-    sp500Return: 10,
-    baseAppreciation: 3,
-    years: 30,
-    initialValueProperty: properties[0]?.id || null,
-    calculationMethod: 'appreciation'
-  });
+  // Load initial parameters from localStorage or use defaults
+  const [parameters, setParameters] = useState<Parameters>(() => {
+    const savedParams = localStorage.getItem('graphParameters')
+    return savedParams ? JSON.parse(savedParams) : {
+      sp500Return: 10,
+      baseAppreciation: 3,
+      years: 30,
+      initialValueProperty: properties[0]?.id || null,
+      calculationMethod: 'roi_plus_appreciation_minus_maintenance'
+    }
+  })
 
-  // Add state for line visibility
+  // Save parameters to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('graphParameters', JSON.stringify(parameters))
+  }, [parameters])
+
+  // Update initialValueProperty when properties change
+  useEffect(() => {
+    if (properties.length > 0 && !properties.find(p => p.id === parameters.initialValueProperty)) {
+      setParameters(prev => ({
+        ...prev,
+        initialValueProperty: properties[0].id
+      }))
+    }
+  }, [properties])
+
+  // Add state for line visibility with persistence
   const [visibleLines, setVisibleLines] = useState<{ [key: string]: boolean }>(() => {
+    const savedVisibility = localStorage.getItem('graphVisibility')
+    if (savedVisibility) {
+      return JSON.parse(savedVisibility)
+    }
     const initial: { [key: string]: boolean } = {
       sp500Value: false
-    };
+    }
     properties.forEach((_, index) => {
-      initial[`property${index}`] = true;
-    });
-    return initial;
-  });
+      initial[`property${index}`] = true
+    })
+    return initial
+  })
+
+  // Save visibility state to localStorage
+  useEffect(() => {
+    localStorage.setItem('graphVisibility', JSON.stringify(visibleLines))
+  }, [visibleLines])
 
   const calculateValues = (): DataPoint[] => {
     const data: DataPoint[] = [];

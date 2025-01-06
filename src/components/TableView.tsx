@@ -23,6 +23,7 @@ export function TableView({
         <thead>
           <tr>
             <th className="index-column">#</th>
+            <th>Notes</th>
             <th>Asking Price (€)</th>
             <th>Expected Price (€)</th>
             <th>Size (m²)</th>
@@ -34,7 +35,6 @@ export function TableView({
             <th>ROI (%)</th>
             <th>ROI (years)</th>
             <th>Year</th>
-            <th>Notes</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -42,6 +42,15 @@ export function TableView({
           {properties.map((property, index) => (
             <tr key={property.id}>
               <td className="index-column">{index + 1}</td>
+              <td>
+                <input
+                  type="text"
+                  value={property.notes || ''}
+                  onChange={(e) => onNotesChange(property.id, e.target.value)}
+                  className="notes-input"
+                  placeholder="Add notes..."
+                />
+              </td>
               <td>{property.askingPrice?.toLocaleString() || '0'}</td>
               <td>
                 <input
@@ -79,15 +88,6 @@ export function TableView({
                   className="year-input"
                   placeholder="Year"
                   maxLength={4}
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={property.notes || ''}
-                  onChange={(e) => onNotesChange(property.id, e.target.value)}
-                  className="notes-input"
-                  placeholder="Add notes..."
                 />
               </td>
               <td>

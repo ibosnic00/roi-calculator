@@ -6,6 +6,7 @@ import { GraphView } from '../components/GraphView'
 
 export function CalculationPage() {
   const { rentalData } = useRentalData()
+  const [isFormVisible, setIsFormVisible] = useState(false)
   const [formData, setFormData] = useState({
     askingPrice: '',
     apartmentSize: '',
@@ -99,6 +100,7 @@ export function CalculationPage() {
       neighbourhood: '',
       renovationCost: ''
     })
+    setIsFormVisible(false) // Hide form after submission
   }
 
   const handleExpectedPriceChange = (id: number, price: string) => {
@@ -167,87 +169,123 @@ export function CalculationPage() {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="roi-form">
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="askingPrice">Asking Price (€)</label>
-            <input
-              type="number"
-              id="askingPrice"
-              name="askingPrice"
-              value={formData.askingPrice}
-              onChange={handleInputChange}
-              placeholder="Enter price"
-              required
-            />
-          </div>
+      {!isFormVisible ? (
+        <div className="add-property-button-container">
+          <button 
+            className="add-property-button"
+            onClick={() => setIsFormVisible(true)}
+          >
+            + Add Property
+          </button>
+        </div>
+      ) : (
+        <div className="form-overlay">
+          <div className="form-container">
+            <form onSubmit={handleSubmit} className="roi-form">
+              <div className="form-header">
+                <h3>Add New Property</h3>
+                <button 
+                  type="button" 
+                  className="close-form-button"
+                  onClick={() => setIsFormVisible(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="askingPrice">Asking Price (€)</label>
+                  <input
+                    type="number"
+                    id="askingPrice"
+                    name="askingPrice"
+                    value={formData.askingPrice}
+                    onChange={handleInputChange}
+                    placeholder="Enter price"
+                    required
+                    className="popup-input"
+                  />
+                </div>
 
-          <div className="form-group">
-            <label htmlFor="apartmentSize">Size (m²)</label>
-            <input
-              type="number"
-              id="apartmentSize"
-              name="apartmentSize"
-              value={formData.apartmentSize}
-              onChange={handleInputChange}
-              placeholder="Enter size"
-              required
-            />
-          </div>
+                <div className="form-group">
+                  <label htmlFor="apartmentSize">Size (m²)</label>
+                  <input
+                    type="number"
+                    id="apartmentSize"
+                    name="apartmentSize"
+                    value={formData.apartmentSize}
+                    onChange={handleInputChange}
+                    placeholder="Enter size"
+                    required
+                    className="popup-input"
+                  />
+                </div>
 
-          <div className="form-group">
-            <label htmlFor="neighbourhood">Neighbourhood</label>
-            <select
-              id="neighbourhood"
-              name="neighbourhood"
-              value={formData.neighbourhood}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Select</option>
-              {neighbourhoods.map(hood => (
-                <option key={hood} value={hood}>
-                  {hood}
-                </option>
-              ))}
-            </select>
-          </div>
+                <div className="form-group">
+                  <label htmlFor="neighbourhood">Neighbourhood</label>
+                  <select
+                    id="neighbourhood"
+                    name="neighbourhood"
+                    value={formData.neighbourhood}
+                    onChange={handleInputChange}
+                    required
+                    className="popup-input"
+                  >
+                    <option value="">Select</option>
+                    {neighbourhoods.map(hood => (
+                      <option key={hood} value={hood}>
+                        {hood}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          <div className="form-group">
-            <label htmlFor="renovationCost">Renovation (€)</label>
-            <input
-              type="number"
-              id="renovationCost"
-              name="renovationCost"
-              value={formData.renovationCost}
-              onChange={handleInputChange}
-              placeholder="Enter cost"
-              required
-            />
-          </div>
-
-          <div className="form-group button-group">
-            <label>&nbsp;</label>
-            <button type="submit" className="submit-button">
-              Add
-            </button>
+                <div className="form-group">
+                  <label htmlFor="renovationCost">Renovation (€)</label>
+                  <input
+                    type="number"
+                    id="renovationCost"
+                    name="renovationCost"
+                    value={formData.renovationCost}
+                    onChange={handleInputChange}
+                    placeholder="Enter cost"
+                    required
+                    className="popup-input"
+                  />
+                </div>
+              </div>
+              <div className="form-actions">
+                <button type="submit" className="submit-button">
+                  Add Property
+                </button>
+                <button 
+                  type="button" 
+                  className="cancel-button"
+                  onClick={() => setIsFormVisible(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-      </form>
-
-      {properties.length > 0 && (
-        <>
-          <TableView
-            properties={properties}
-            onExpectedPriceChange={handleExpectedPriceChange}
-            onNotesChange={handleNotesChange}
-            onYearChange={handleYearChange}
-            onDelete={handleDelete}
-            onMaintenanceCostChange={handleMaintenanceCostChange}
-          />
-          <GraphView properties={properties} />
-        </>
       )}
+
+      <div className={isFormVisible ? 'content-blur' : ''}>
+        {properties.length > 0 && (
+          <>
+            <TableView
+              properties={properties}
+              onExpectedPriceChange={handleExpectedPriceChange}
+              onNotesChange={handleNotesChange}
+              onYearChange={handleYearChange}
+              onDelete={handleDelete}
+              onMaintenanceCostChange={handleMaintenanceCostChange}
+            />
+            <GraphView properties={properties} />
+          </>
+        )}
+      </div>
     </>
   )
 } 
