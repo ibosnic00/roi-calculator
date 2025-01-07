@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useRentalData } from '../contexts/RentalDataContext'
-import { getAvailableNeighbourhoods } from '../utils/rentalData'
+import { getAvailableneighborhoods } from '../utils/rentalData'
 
 export function SettingsPage() {
   const { rentalData, removeRent, addRent } = useRentalData()
   const [selectedRange, setSelectedRange] = useState(rentalData[0])
   const [isAdding, setIsAdding] = useState(false)
   const [newData, setNewData] = useState({
-    neighbourhood: '',
+    neighborhood: '',
     rent: ''
   })
-  const [isCustomNeighbourhood, setIsCustomNeighbourhood] = useState(false)
-  const [sortField, setSortField] = useState<'neighbourhood' | 'rent'>('neighbourhood')
+  const [isCustomneighborhood, setIsCustomneighborhood] = useState(false)
+  const [sortField, setSortField] = useState<'neighborhood' | 'rent'>('neighborhood')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
 
   // Update selectedRange when rentalData changes
@@ -24,15 +24,15 @@ export function SettingsPage() {
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
-    if (newData.neighbourhood && newData.rent) {
-      addRent(selectedRange.minSize, newData.neighbourhood, Number(newData.rent))
-      setNewData({ neighbourhood: '', rent: '' })
+    if (newData.neighborhood && newData.rent) {
+      addRent(selectedRange.minSize, newData.neighborhood, Number(newData.rent))
+      setNewData({ neighborhood: '', rent: '' })
       setIsAdding(false)
-      setIsCustomNeighbourhood(false)
+      setIsCustomneighborhood(false)
     }
   }
 
-  const handleSort = (field: 'neighbourhood' | 'rent') => {
+  const handleSort = (field: 'neighborhood' | 'rent') => {
     if (sortField === field) {
       setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
     } else {
@@ -43,7 +43,7 @@ export function SettingsPage() {
 
   return (
     <div className="settings-container">
-      <h2>Rental Data</h2>
+      <h2 color='black'>Rental Data</h2>
       <div className={isAdding ? 'content-blur' : ''}>
         <div className="rental-data-tabs">
           {rentalData.map(range => (
@@ -73,10 +73,10 @@ export function SettingsPage() {
             <thead>
               <tr>
                 <th 
-                  onClick={() => handleSort('neighbourhood')}
+                  onClick={() => handleSort('neighborhood')}
                   style={{ cursor: 'pointer' }}
                 >
-                  Neighbourhood {sortField === 'neighbourhood' && (sortDirection === 'asc' ? '↑' : '↓')}
+                  neighborhood {sortField === 'neighborhood' && (sortDirection === 'asc' ? '↑' : '↓')}
                 </th>
                 <th 
                   onClick={() => handleSort('rent')}
@@ -89,25 +89,25 @@ export function SettingsPage() {
             </thead>
             <tbody>
               {Object.entries(selectedRange.averageRents)
-                .sort(([aNeighbourhood, aRent], [bNeighbourhood, bRent]) => {
-                  if (sortField === 'neighbourhood') {
+                .sort(([aneighborhood, aRent], [bneighborhood, bRent]) => {
+                  if (sortField === 'neighborhood') {
                     return sortDirection === 'asc' 
-                      ? aNeighbourhood.localeCompare(bNeighbourhood)
-                      : bNeighbourhood.localeCompare(aNeighbourhood)
+                      ? aneighborhood.localeCompare(bneighborhood)
+                      : bneighborhood.localeCompare(aneighborhood)
                   } else {
                     return sortDirection === 'asc'
                       ? aRent - bRent
                       : bRent - aRent
                   }
                 })
-                .map(([neighbourhood, rent]) => (
-                  <tr key={neighbourhood}>
-                    <td>{neighbourhood}</td>
+                .map(([neighborhood, rent]) => (
+                  <tr key={neighborhood}>
+                    <td>{neighborhood}</td>
                     <td>{rent}</td>
                     <td>
                       <button
                         className="delete-button rental-delete-button"
-                        onClick={() => removeRent(selectedRange.minSize, neighbourhood)}
+                        onClick={() => removeRent(selectedRange.minSize, neighborhood)}
                         title="Remove entry"
                       >
                         ×
@@ -131,43 +131,43 @@ export function SettingsPage() {
                   className="close-form-button"
                   onClick={() => {
                     setIsAdding(false)
-                    setIsCustomNeighbourhood(false)
+                    setIsCustomneighborhood(false)
                   }}
                 >
                   ×
                 </button>
               </div>
               
-              {isCustomNeighbourhood ? (
+              {isCustomneighborhood ? (
                 <input
                   type="text"
-                  placeholder="Neighbourhood"
-                  value={newData.neighbourhood}
-                  onChange={e => setNewData(prev => ({ ...prev, neighbourhood: e.target.value }))}
+                  placeholder="neighborhood"
+                  value={newData.neighborhood}
+                  onChange={e => setNewData(prev => ({ ...prev, neighborhood: e.target.value }))}
                   required
                   className="popup-input"
                 />
               ) : (
                 <select
-                  value={newData.neighbourhood}
+                  value={newData.neighborhood}
                   onChange={e => {
                     if (e.target.value === "new") {
-                      setIsCustomNeighbourhood(true);
-                      setNewData(prev => ({ ...prev, neighbourhood: "" }));
+                      setIsCustomneighborhood(true);
+                      setNewData(prev => ({ ...prev, neighborhood: "" }));
                     } else {
-                      setNewData(prev => ({ ...prev, neighbourhood: e.target.value }));
+                      setNewData(prev => ({ ...prev, neighborhood: e.target.value }));
                     }
                   }}
                   required
                   className="popup-input"
                 >
-                  <option value="">Select Neighbourhood</option>
-                  {getAvailableNeighbourhoods().map(hood => (
+                  <option value="">Select neighborhood</option>
+                  {getAvailableneighborhoods().map(hood => (
                     <option key={hood} value={hood}>
                       {hood}
                     </option>
                   ))}
-                  <option value="new">Enter New Neighbourhood</option>
+                  <option value="new">Enter New neighborhood</option>
                 </select>
               )}
               
@@ -190,7 +190,7 @@ export function SettingsPage() {
                   className="cancel-button"
                   onClick={() => {
                     setIsAdding(false)
-                    setIsCustomNeighbourhood(false)
+                    setIsCustomneighborhood(false)
                   }}
                 >
                   Cancel

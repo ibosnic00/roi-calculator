@@ -103,7 +103,7 @@ const rentalData: RentalRange[] = [
     }
 ];
 
-export function getAverageRent(neighbourhood: string, sizeInSquareMeters: number): number | null {
+export function getAverageRent(neighborhood: string, sizeInSquareMeters: number): number | null {
     // Find the appropriate size range
     const range = rentalData.find(range => 
         sizeInSquareMeters >= range.minSize && sizeInSquareMeters <= range.maxSize
@@ -113,25 +113,25 @@ export function getAverageRent(neighbourhood: string, sizeInSquareMeters: number
         return null;
     }
 
-    // Get the rent for the specified neighbourhood
-    const rent = range.averageRents[neighbourhood];
+    // Get the rent for the specified neighborhood
+    const rent = range.averageRents[neighborhood];
     
     return rent || null;
 }
 
-export function getAvailableNeighbourhoods(): string[] {
+export function getAvailableneighborhoods(): string[] {
     // Create a Set to store unique neighborhood names
-    const neighbourhoodSet = new Set<string>();
+    const neighborhoodSet = new Set<string>();
     
     // Iterate through all rental ranges and collect neighborhood names
     rentalData.forEach(range => {
-        Object.keys(range.averageRents).forEach(neighbourhood => {
-            neighbourhoodSet.add(neighbourhood);
+        Object.keys(range.averageRents).forEach(neighborhood => {
+            neighborhoodSet.add(neighborhood);
         });
     });
     
     // Convert Set to array and sort alphabetically
-    return Array.from(neighbourhoodSet).sort();
+    return Array.from(neighborhoodSet).sort();
 }
 
 // Export the data for potential other uses

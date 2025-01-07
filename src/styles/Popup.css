@@ -1,0 +1,124 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  padding-right: 2rem;
+  border-radius: 8px;
+  position: relative;
+  min-width: 300px;
+  max-width: 600px;
+}
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.popup-link-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.popup-link-text {
+  word-break: break-all;
+  margin: 10px 0;
+}
+
+.popup-link-text a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.popup-link-text a:hover {
+  text-decoration: underline;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 20px;
+}
+
+.popup-save {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.popup-save:hover {
+  background-color: #2c5282;
+  transform: translateY(-1px);
+}
+
+.popup-cancel {
+  padding: 0.625rem 1.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: white;
+  color: #4a5568;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.popup-cancel:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.link-container {
+  display: flex;
+  flex-direction: column;  
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.popup-edit {
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #4CAF50;
+  background-color: white;
+  color: #4CAF50;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.popup-edit:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.link-container a {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} 

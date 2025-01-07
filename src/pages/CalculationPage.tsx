@@ -11,7 +11,7 @@ export function CalculationPage() {
   const [formData, setFormData] = useState({
     askingPrice: '',
     apartmentSize: '',
-    neighbourhood: '',
+    neighborhood: '',
     renovationCost: ''
   })
 
@@ -30,7 +30,7 @@ export function CalculationPage() {
   useEffect(() => {
     setProperties(prevProperties =>
       prevProperties.map(property => {
-        const newRent = getAverageRentFromContext(property.neighbourhood, property.apartmentSize)
+        const newRent = getAverageRentFromContext(property.neighborhood, property.apartmentSize)
         const newRoi = calculateROI(property.expectedPrice, newRent, property.renovationCost)
         return {
           ...property,
@@ -41,14 +41,14 @@ export function CalculationPage() {
     )
   }, [rentalData])
 
-  const getAverageRentFromContext = (neighbourhood: string, size: number): number => {
+  const getAverageRentFromContext = (neighborhood: string, size: number): number => {
     const range = rentalData.find(range =>
       size >= range.minSize && size <= range.maxSize
     )
 
     if (!range) return 0
 
-    return range.averageRents[neighbourhood] || 0
+    return range.averageRents[neighborhood] || 0
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -72,7 +72,7 @@ export function CalculationPage() {
     const size = Number(formData.apartmentSize)
     const renovationCost = Number(formData.renovationCost)
 
-    const monthlyRent = getAverageRentFromContext(formData.neighbourhood, size)
+    const monthlyRent = getAverageRentFromContext(formData.neighborhood, size)
     const roi = calculateROI(price, monthlyRent, renovationCost)
 
     // Calculate maintenance cost with 2 decimal places
@@ -83,7 +83,7 @@ export function CalculationPage() {
       askingPrice: price,
       expectedPrice: price,
       apartmentSize: size,
-      neighbourhood: formData.neighbourhood,
+      neighborhood: formData.neighborhood,
       renovationCost: renovationCost,
       monthlyRent: monthlyRent,
       roi: roi,
@@ -98,7 +98,7 @@ export function CalculationPage() {
     setFormData({
       askingPrice: '',
       apartmentSize: '',
-      neighbourhood: '',
+      neighborhood: '',
       renovationCost: ''
     })
     setIsFormVisible(false) // Hide form after submission
@@ -154,17 +154,25 @@ export function CalculationPage() {
     setProperties(updatedProperties)
   }
 
-  const getAvailableNeighbourhoods = (): string[] => {
-    const neighbourhoodSet = new Set<string>()
+  const handleLinkChange = (id: number, link: string) => {
+    setProperties(properties.map(property => 
+      property.id === id 
+        ? { ...property, link }
+        : property
+    ));
+  };
+
+  const getAvailableneighborhoods = (): string[] => {
+    const neighborhoodSet = new Set<string>()
     rentalData.forEach(range => {
-      Object.keys(range.averageRents).forEach(neighbourhood => {
-        neighbourhoodSet.add(neighbourhood)
+      Object.keys(range.averageRents).forEach(neighborhood => {
+        neighborhoodSet.add(neighborhood)
       })
     })
-    return Array.from(neighbourhoodSet).sort()
+    return Array.from(neighborhoodSet).sort()
   }
 
-  const neighbourhoods = getAvailableNeighbourhoods()
+  const neighborhoods = getAvailableneighborhoods()
 
   const [viewMode, setViewMode] = useState<'table' | 'tiles'>(() => {
     const savedViewMode = localStorage.getItem('viewMode')
@@ -259,17 +267,17 @@ export function CalculationPage() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="neighbourhood">Neighbourhood</label>
+                  <label htmlFor="neighborhood">Neighborhood</label>
                   <select
-                    id="neighbourhood"
-                    name="neighbourhood"
-                    value={formData.neighbourhood}
+                    id="neighborhood"
+                    name="neighborhood"
+                    value={formData.neighborhood}
                     onChange={handleInputChange}
                     required
                     className="popup-input"
                   >
                     <option value="">Select</option>
-                    {neighbourhoods.map(hood => (
+                    {neighborhoods.map(hood => (
                       <option key={hood} value={hood}>
                         {hood}
                       </option>
@@ -319,12 +327,14 @@ export function CalculationPage() {
                 onYearChange={handleYearChange}
                 onDelete={handleDelete}
                 onMaintenanceCostChange={handleMaintenanceCostChange}
+                onLinkChange={handleLinkChange}
               />
             ) : (
               <TileView
                 properties={properties}
                 onDelete={handleDelete}
                 onPropertyClick={setSelectedProperty}
+                onLinkChange={handleLinkChange}
               />
             )}
             <GraphView properties={properties} />
@@ -369,8 +379,8 @@ export function CalculationPage() {
                   <span>€{((selectedProperty.expectedPrice || 0) / (selectedProperty.apartmentSize || 1)).toFixed(2)}</span>
                 </div>
                 <div className="detail-row">
-                  <label>Neighbourhood:</label>
-                  <span>{selectedProperty.neighbourhood}</span>
+                  <label>neighborhood:</label>
+                  <span>{selectedProperty.neighborhood}</span>
                 </div>
                 <div className="detail-row">
                   <label>Monthly Rent:</label>
@@ -418,6 +428,20 @@ export function CalculationPage() {
                     placeholder="Add notes..."
                   />
                 </div>
+              </div>
+              <div className="form-actions">
+                <button 
+                  className="submit-button"
+                  onClick={() => setSelectedProperty(null)}
+                >
+                  Save
+                </button>
+                <button 
+                  className="cancel-button"
+                  onClick={() => setSelectedProperty(null)}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>

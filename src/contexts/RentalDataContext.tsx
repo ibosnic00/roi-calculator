@@ -3,8 +3,8 @@ import { rentalData as initialRentalData } from '../utils/rentalData'
 
 interface RentalDataContextType {
   rentalData: typeof initialRentalData;
-  removeRent: (sizeRange: number, neighbourhood: string) => void;
-  addRent: (sizeRange: number, neighbourhood: string, rent: number) => void;
+  removeRent: (sizeRange: number, neighborhood: string) => void;
+  addRent: (sizeRange: number, neighborhood: string, rent: number) => void;
 }
 
 const RentalDataContext = createContext<RentalDataContextType | undefined>(undefined)
@@ -19,11 +19,11 @@ export function RentalDataProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('rentalData', JSON.stringify(rentalData))
   }, [rentalData])
 
-  const removeRent = (sizeRange: number, neighbourhood: string) => {
+  const removeRent = (sizeRange: number, neighborhood: string) => {
     setRentalData((prevData: typeof initialRentalData) => 
       prevData.map(range => {
         if (range.minSize === sizeRange) {
-          const { [neighbourhood]: removed, ...rest } = range.averageRents
+          const { [neighborhood]: removed, ...rest } = range.averageRents
           return {
             ...range,
             averageRents: rest
@@ -34,7 +34,7 @@ export function RentalDataProvider({ children }: { children: ReactNode }) {
     )
   }
 
-  const addRent = (sizeRange: number, neighbourhood: string, rent: number) => {
+  const addRent = (sizeRange: number, neighborhood: string, rent: number) => {
     setRentalData((prevData: typeof initialRentalData) => 
       prevData.map(range => {
         if (range.minSize === sizeRange) {
@@ -42,7 +42,7 @@ export function RentalDataProvider({ children }: { children: ReactNode }) {
             ...range,
             averageRents: {
               ...range.averageRents,
-              [neighbourhood]: rent
+              [neighborhood]: rent
             }
           }
         }
