@@ -2,6 +2,10 @@
 
 A React application for calculating and comparing Return on Investment (ROI) for properties in Zagreb, Croatia. The app helps investors analyze different properties, compare their potential returns with S&P 500 investment, and manage rental data for different neighborhoods.
 
+## 🚀 [Live Demo](https://ibosnic00.github.io/roi-calculator/)
+
+![Demo](images/demo.gif)
+
 ## Project Structure
 
 ### Core Files
