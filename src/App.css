@@ -160,6 +160,11 @@ select:focus {
   vertical-align: middle;
   white-space: normal;
   word-wrap: break-word;
+  color: #2d3748 !important;
+}
+
+.properties-table th {
+  color: #1a202c !important;
 }
 
 .properties-table th .unit {
@@ -180,7 +185,7 @@ select:focus {
   background: transparent;
   width: 100%;
   padding: 0;
-  color: #4a5568;
+  color: #2d3748 !important;
   font-size: 0.875rem;
   font-family: inherit;
   text-align: center;
@@ -229,10 +234,11 @@ select:focus {
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
+  color: #2d3748 !important;
 }
 
 .legend-item {
-  color: #2d3748;
+  color: #2d3748 !important;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -302,7 +308,7 @@ select:focus {
 .rental-data-table th {
   background-color: #f8fafc;
   font-weight: 600;
-  color: #4a5568;
+  color: #1a202c !important;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
@@ -310,7 +316,7 @@ select:focus {
 }
 
 .rental-data-table td {
-  color: #4a5568;
+  color: #2d3748 !important;
   font-size: 0.875rem;
 }
 
@@ -735,7 +741,7 @@ select:focus {
 .detail-input {
   border: none;
   background: transparent;
-  color: #4a5568;
+  color: #2d3748 !important;
   font-size: 0.875rem;
   font-family: inherit;
   text-align: right;
@@ -1028,4 +1034,30 @@ select:focus {
   color: #718096;
   margin-left: 0.5rem;
   font-weight: normal;
+}
+
+/* Graph Title Color Fix */
+.graph-container h3,
+.graph-container text {
+  color: #2d3748 !important;
+}
+
+/* Force text color for all rental data related elements */
+.rental-data-container h2,
+.rental-data-container h3,
+.rental-data-container .tab-button:not(.active) {
+  color: #2d3748 !important;
+}
+
+.rental-data-container input,
+.rental-data-container select {
+  color: #2d3748 !important;
+}
+
+/* Settings Page Title */
+.settings-container h2 {
+  color: #2d3748 !important;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
