@@ -1,0 +1,185 @@
+.homepage {
+    background-color: #ffffff;
+    overflow-x: hidden;
+}
+
+.hero-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #3182ce, #2c5282);
+    color: white;
+    position: relative;
+}
+
+.hero-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.animate-text {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-text:nth-child(1) {
+    animation-delay: 0.6s;
+}
+
+.animate-text:nth-child(2) {
+    animation-delay: 0.9s;
+}
+
+.animate-text:nth-child(3) {
+    animation-delay: 1.2s;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 1.5s;
+}
+
+.features-section {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem 0;
+    gap: 4rem;
+    padding: 2rem;
+}
+
+.feature-row.reverse {
+    flex-direction: row-reverse;
+}
+
+.feature-image, .feature-image1 {
+    width: 15%;
+    min-width: 200px;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    will-change: transform, opacity;
+    transform-origin: center center;
+}
+
+.feature-image1 {
+    width: 50%;
+    min-width: 200px;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    will-change: transform, opacity;
+}
+
+.feature-image:hover {
+    transform: translateY(-10px);
+}
+
+.feature-text {
+    flex: 1;
+    max-width: 500px;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    will-change: transform, opacity;
+}
+
+.feature-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.feature-text p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #666;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #2c5282, #3182ce);
+    color: white;
+    padding: 36rem 2rem;
+    text-align: center;
+}
+
+.cta-content {
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.cta-button {
+    background-color: white;
+    color: #3182ce;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 2rem;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .feature-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .feature-row.reverse {
+        flex-direction: column;
+    }
+
+    .feature-image {
+        width: 30%;
+        min-width: 150px;
+    }
+
+    .feature-text {
+        max-width: 100%;
+    }
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards;
+    animation-delay: 0.2s;
+}

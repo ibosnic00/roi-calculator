@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-import { IoHomeOutline } from "react-icons/io5"
-import { IoSettingsOutline } from "react-icons/io5"
+import { IoHomeOutline, IoCalculatorOutline, IoSettingsOutline } from "react-icons/io5"
 import { CalculationPage } from './pages/CalculationPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { RentalDataProvider } from './contexts/RentalDataContext'
+import { HomePage } from './pages/HomePage'
 import './App.css'
 
 function App() {
@@ -15,12 +15,14 @@ function App() {
             <h1>Zagreb</h1>
             <nav className="main-nav">
               <Link to="/" title="Home"><IoHomeOutline size={24} /></Link>
+              <Link to="/calculator" title="Calculator"><IoCalculatorOutline size={24} /></Link>
               <Link to="/settings" title="Settings"><IoSettingsOutline size={24} /></Link>
             </nav>
           </header>
 
           <Routes>
-            <Route path="/" element={<CalculationPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/calculator" element={<CalculationPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </div>
