@@ -189,13 +189,23 @@ export function GraphView({ properties }: GraphViewProps) {
             onClick={() => handleLegendClick(item.dataKey)}
           >
             <span className="legend-color" style={{ backgroundColor: item.color }}></span>
-            <span className="legend-text">
+            <span className="legend-text" style={{ color: item.visible ? item.color : '#718096' }}>
               {item.visible ? '☑' : '☐'} {item.name}
             </span>
           </li>
         ))}
       </ul>
     );
+  };
+
+  const formatTooltipName = (name: string): string => {
+    if (name.startsWith('Property ')) {
+      return name.split(' ')[1].split('(')[0].trim(); // Gets just the number
+    }
+    if (name === 'S&P 500 Investment') {
+      return 'S&P';
+    }
+    return name;
   };
 
   return (
@@ -269,7 +279,6 @@ export function GraphView({ properties }: GraphViewProps) {
         </div>
       </div>
       
-      {/* Move custom legend here, before the chart */}
       {renderCustomLegend()}
       
       <ResponsiveContainer width="100%" height={400}>
@@ -282,13 +291,28 @@ export function GraphView({ properties }: GraphViewProps) {
           <YAxis 
             label={{ 
               value: 'Value (€)', 
-              angle: -90, 
-              position: 'insideLeft' 
+              angle: -90,
+              position: 'insideLeft',
+              style: {
+                textAnchor: 'middle',
+                fontSize: '0.75rem',
+                display: window.innerWidth <= 768 ? 'none' : 'block' // Hide on mobile
+              }
             }}
-            tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+            tickFormatter={(value) => {
+              // On mobile, show shorter format
+              if (window.innerWidth <= 768) {
+                return `${(value / 1000)}k`;
+              }
+              return `${(value / 1000).toFixed(0)}k`;
+            }}
+            width={window.innerWidth <= 768 ? 35 : 60} // Reduce axis width on mobile
           />
           <Tooltip 
-            formatter={(value: number) => [`€${value.toLocaleString()}`, '']}
+            formatter={(value: number, name: string) => [
+              `€${value.toLocaleString()}`,
+              formatTooltipName(name)
+            ]}
             labelFormatter={(label) => `Year ${label}`}
           />
           

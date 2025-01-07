@@ -176,7 +176,7 @@ export function CalculationPage() {
 
   const [viewMode, setViewMode] = useState<'table' | 'tiles'>(() => {
     const savedViewMode = localStorage.getItem('viewMode')
-    return (savedViewMode === 'table' || savedViewMode === 'tiles') ? savedViewMode : 'table'
+    return (savedViewMode === 'table' || savedViewMode === 'tiles') ? savedViewMode : 'tiles'
   })
 
   // Add effect to save viewMode changes

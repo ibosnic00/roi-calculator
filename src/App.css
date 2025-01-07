@@ -238,13 +238,26 @@ select:focus {
 }
 
 .legend-item {
-  color: #2d3748 !important;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 4px 8px;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.legend-item.inactive .legend-text {
+  opacity: 0.5;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legend-text {
   transition: all 0.2s;
 }
 
@@ -846,8 +859,8 @@ select:focus {
 
   /* Graph */
   .graph-container {
-    padding: 1rem;
-    margin: 1rem;
+    padding: 1rem 0.25rem;
+    margin: 1rem 0.5rem;
   }
 
   .graph-parameters {
@@ -973,6 +986,23 @@ select:focus {
 
   .detail-input {
     width: 40%;
+  }
+
+  .recharts-wrapper {
+    font-size: 0.75rem;
+  }
+
+  .recharts-yAxis .recharts-text {
+    font-size: 0.57rem;
+  }
+
+  .recharts-xAxis .recharts-text {
+    font-size: 0.57rem;
+  }
+
+  /* Make tooltip more compact on mobile */
+  .recharts-tooltip-wrapper {
+    font-size: 0.75rem;
   }
 }
 
