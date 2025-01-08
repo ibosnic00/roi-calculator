@@ -196,6 +196,15 @@ export function CalculationPage() {
     }
   }, [properties])
 
+  const handleReorder = (startIndex: number, endIndex: number) => {
+    setProperties(prevProperties => {
+      const result = Array.from(prevProperties);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result;
+    });
+  };
+
   return (
     <>
       {!isFormVisible ? (
@@ -319,6 +328,11 @@ export function CalculationPage() {
       <div className={isFormVisible ? 'content-blur' : ''}>
         {properties.length > 0 && (
           <>
+            {viewMode === 'tiles' && (
+              <div className="drag-hint">
+                Hold any tile for a second to reorder
+              </div>
+            )}
             {viewMode === 'table' ? (
               <TableView
                 properties={properties}
@@ -335,6 +349,7 @@ export function CalculationPage() {
                 onDelete={handleDelete}
                 onPropertyClick={setSelectedProperty}
                 onLinkChange={handleLinkChange}
+                onReorder={handleReorder}
               />
             )}
             <GraphView properties={properties} />

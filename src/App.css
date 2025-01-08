@@ -640,61 +640,54 @@ select:focus {
 /* Tile View Styles */
 .tiles-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 0.75rem;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  min-height: 100px;
 }
 
 .property-tile {
   background: white;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  touch-action: none;
+  /* Prevents scrolling while dragging on touch devices */
   cursor: pointer;
-  transition: all 0.2s;
+  user-select: none;
+  /* Prevents text selection */
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE/Edge */
 }
 
-.property-tile:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.property-tile.dragging {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+  cursor: grabbing;
 }
 
-.tile-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.25rem;
+.drag-handle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: grab;
+  color: #718096;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  user-select: none;
 }
 
-.tile-index {
-  font-weight: 600;
-  color: #4a5568;
+.drag-handle:hover {
+  background: #f0f0f0;
 }
 
 .tile-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.tile-roi {
-  font-size: 0.9rem;
-  color: #718096;
-}
-
-.tile-price {
-  color: #4a5568;
-}
-
-.tile-notes {
-  font-size: 1.25rem;
-  color: #2d3748;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  font-weight: 600;
-  -webkit-box-orient: vertical;
+  padding: 1rem;
 }
 
 /* Property Detail Styles */
@@ -711,12 +704,15 @@ select:focus {
 
 .detail-content {
   overflow-y: auto;
-  max-height: calc(100vh - 250px); /* Adjusted to account for buttons */
-  margin-bottom: 1.5rem; /* Add space between content and buttons */
+  max-height: calc(100vh - 250px);
+  /* Adjusted to account for buttons */
+  margin-bottom: 1.5rem;
+  /* Add space between content and buttons */
 }
 
 .property-detail .form-actions {
-  margin-top: auto; /* Push buttons to bottom */
+  margin-top: auto;
+  /* Push buttons to bottom */
   padding-top: 1rem;
   border-top: 1px solid #e2e8f0;
 }
@@ -728,7 +724,8 @@ select:focus {
 /* Adjust for mobile */
 @media (max-width: 768px) {
   .property-detail .form-actions {
-    flex-direction: row; /* Keep buttons side by side */
+    flex-direction: row;
+    /* Keep buttons side by side */
     gap: 1rem;
   }
 
@@ -1028,7 +1025,8 @@ select:focus {
 .index-column,
 .tile-index {
   position: relative;
-  color: #3182ce;  /* Blue color to indicate it's clickable */
+  color: #3182ce;
+  /* Blue color to indicate it's clickable */
   font-weight: 500;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
@@ -1038,8 +1036,10 @@ select:focus {
 
 .index-column:hover,
 .tile-index:hover {
-  background-color: #ebf8ff;  /* Light blue background on hover */
-  color: #2c5282;  /* Darker blue on hover */
+  background-color: #ebf8ff;
+  /* Light blue background on hover */
+  color: #2c5282;
+  /* Darker blue on hover */
 }
 
 .index-column::after,
@@ -1053,7 +1053,8 @@ select:focus {
 .tile-index {
   display: inline-flex;
   align-items: center;
-  max-width: calc(100% - 32px); /* Account for delete button */
+  max-width: calc(100% - 32px);
+  /* Account for delete button */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1101,10 +1102,14 @@ select.popup-input {
   font-size: 14px;
   background-color: white;
   color: #333;
-  appearance: none; /* Removes default browser styling */
-  -webkit-appearance: none; /* For Safari */
-  -moz-appearance: none; /* For Firefox */
-  padding-right: 32px; /* Make room for the custom arrow */
+  appearance: none;
+  /* Removes default browser styling */
+  -webkit-appearance: none;
+  /* For Safari */
+  -moz-appearance: none;
+  /* For Firefox */
+  padding-right: 32px;
+  /* Make room for the custom arrow */
 }
 
 /* Style for hover state */
@@ -1355,4 +1360,21 @@ select.popup-input option[value=""] {
   border: 0px solid #e2e8f0;
   border-radius: 6px;
   margin-bottom: 1rem;
+}
+
+.drag-hint {
+  color: #718096;
+  font-size: 0.875rem;
+  opacity: 50%;
+  background: #f8fafc;
+  border-radius: 6px;
+  margin: 0 1rem;
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .drag-hint {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+  }
 }
