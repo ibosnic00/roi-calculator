@@ -1091,3 +1091,75 @@ select:focus {
   font-weight: 600;
   margin-bottom: 1rem;
 }
+
+/* Add these styles for the select element */
+.popup-input,
+select.popup-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+  appearance: none; /* Removes default browser styling */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
+  padding-right: 32px; /* Make room for the custom arrow */
+}
+
+/* Style for hover state */
+.popup-input:hover,
+select.popup-input:hover {
+  border-color: #999;
+}
+
+/* Style for focus state */
+.popup-input:focus,
+select.popup-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+/* Style for the placeholder option */
+select.popup-input option[value=""] {
+  color: #666;
+}
+
+/* Add these styles */
+.graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.graph-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bar-chart-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.sort-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sort-button:hover {
+  background: #f0f0f0;
+}
+
+/* Make sure the select in bar chart controls matches other inputs */
+.bar-chart-controls .popup-input {
+  min-width: 150px;
+}

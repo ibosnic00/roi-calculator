@@ -9,6 +9,8 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts'
+import { LineChartView } from './LineChartView';
+import { BarChartView } from './BarChartView';
 
 interface GraphViewProps {
   properties: Property[];
@@ -29,6 +31,7 @@ interface Parameters {
 }
 
 export function GraphView({ properties }: GraphViewProps) {
+  const [activeTab, setActiveTab] = useState<'line' | 'bar'>('line');
   // Load initial parameters from localStorage or use defaults
   const [parameters, setParameters] = useState<Parameters>(() => {
     const savedParams = localStorage.getItem('graphParameters')
@@ -200,7 +203,7 @@ export function GraphView({ properties }: GraphViewProps) {
 
   const formatTooltipName = (name: string): string => {
     if (name.startsWith('Property ')) {
-      return name.split(' ')[1].split('(')[0].trim(); // Gets just the number
+      return name.split(' ')[1].split('(')[0].trim();
     }
     if (name === 'S&P 500 Investment') {
       return 'S&P';
@@ -210,141 +213,106 @@ export function GraphView({ properties }: GraphViewProps) {
 
   return (
     <div className="graph-container">
-      <h3>Investment Comparison</h3>
-      <div className="graph-parameters">
-        <div className="parameter-group">
-          <label htmlFor="sp500Return">S&P 500 Return (%)</label>
-          <input
-            type="number"
-            id="sp500Return"
-            name="sp500Return"
-            value={parameters.sp500Return}
-            onChange={handleParameterChange}
-            step="0.1"
-          />
-        </div>
-        <div className="parameter-group">
-          <label htmlFor="baseAppreciation">Base Property Appreciation (%)</label>
-          <input
-            type="number"
-            id="baseAppreciation"
-            name="baseAppreciation"
-            value={parameters.baseAppreciation}
-            onChange={handleParameterChange}
-            step="0.1"
-          />
-        </div>
-        <div className="parameter-group">
-          <label htmlFor="years">Years</label>
-          <input
-            type="number"
-            id="years"
-            name="years"
-            value={parameters.years}
-            onChange={handleParameterChange}
-            min="1"
-            max="100"
-          />
-        </div>
-        <div className="parameter-group">
-          <label htmlFor="initialValueProperty">Initial S&P 500 Investment</label>
-          <select
-            id="initialValueProperty"
-            name="initialValueProperty"
-            value={parameters.initialValueProperty || ''}
-            onChange={handleParameterChange}
-            className="parameter-select"
+      <div className="graph-header">
+        <h3>Investment Comparison</h3>
+        <div className="graph-tabs">
+          <button
+            className={`tab-button ${activeTab === 'line' ? 'active' : ''}`}
+            onClick={() => setActiveTab('line')}
           >
-            {properties.map((property, index) => (
-              <option key={property.id} value={property.id}>
-                Property {index + 1} ({(property.expectedPrice + property.renovationCost).toLocaleString()}€)
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="parameter-group">
-          <label htmlFor="calculationMethod">Property Value Calculation</label>
-          <select
-            id="calculationMethod"
-            name="calculationMethod"
-            value={parameters.calculationMethod}
-            onChange={handleParameterChange}
-            className="parameter-select"
+            Line Chart
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'bar' ? 'active' : ''}`}
+            onClick={() => setActiveTab('bar')}
           >
-            <option value="appreciation">Property Appreciation</option>
-            <option value="roi_plus_appreciation">ROI + Property Appreciation</option>
-            <option value="appreciation_minus_maintenance">Appreciation - Maintenance</option>
-            <option value="roi_plus_appreciation_minus_maintenance">ROI + Appreciation - Maintenance</option>
-          </select>
+            Bar Chart
+          </button>
         </div>
       </div>
-      
-      {renderCustomLegend()}
-      
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="year" 
-            label={{ value: 'Years', position: 'bottom' }}
-          />
-          <YAxis 
-            label={{ 
-              value: 'Value (€)', 
-              angle: -90,
-              position: 'insideLeft',
-              style: {
-                textAnchor: 'middle',
-                fontSize: '0.75rem',
-                display: window.innerWidth <= 768 ? 'none' : 'block' // Hide on mobile
-              }
-            }}
-            tickFormatter={(value) => {
-              // On mobile, show shorter format
-              if (window.innerWidth <= 768) {
-                return `${(value / 1000)}k`;
-              }
-              return `${(value / 1000).toFixed(0)}k`;
-            }}
-            width={window.innerWidth <= 768 ? 35 : 60} // Reduce axis width on mobile
-          />
-          <Tooltip 
-            formatter={(value: number, name: string) => [
-              `€${value.toLocaleString()}`,
-              formatTooltipName(name)
-            ]}
-            labelFormatter={(label) => `Year ${label}`}
-          />
-          
-          {/* Lines for properties - only render visible ones */}
-          {properties.map((property, index) => {
-            const propertyKey = `property${index}`;
-            return visibleLines[propertyKey] ? (
-              <Line
-                key={property.id}
-                type="monotone"
-                dataKey={propertyKey}
-                name={`Property ${index + 1} (ROI: ${property.roi.toFixed(1)}%)`}
-                stroke={colors[index % colors.length]}
-                strokeWidth={2}
-                dot={false}
-              />
-            ) : null;
-          })}
 
-          {/* S&P 500 line - only render if visible */}
-          {visibleLines.sp500Value && (
-            <Line
-              type="monotone"
-              dataKey="sp500Value"
-              name="S&P 500 Investment"
-              stroke="#ff0000"
-              strokeWidth={2}
-              dot={false}
-            />
-          )}
-        </LineChart>
-      </ResponsiveContainer>
+      {activeTab === 'line' && (
+        <>
+          <div className="graph-parameters">
+            <div className="parameter-group">
+              <label htmlFor="sp500Return">S&P 500 Return (%)</label>
+              <input
+                type="number"
+                id="sp500Return"
+                name="sp500Return"
+                value={parameters.sp500Return}
+                onChange={handleParameterChange}
+                step="0.1"
+              />
+            </div>
+            <div className="parameter-group">
+              <label htmlFor="baseAppreciation">Base Property Appreciation (%)</label>
+              <input
+                type="number"
+                id="baseAppreciation"
+                name="baseAppreciation"
+                value={parameters.baseAppreciation}
+                onChange={handleParameterChange}
+                step="0.1"
+              />
+            </div>
+            <div className="parameter-group">
+              <label htmlFor="years">Years</label>
+              <input
+                type="number"
+                id="years"
+                name="years"
+                value={parameters.years}
+                onChange={handleParameterChange}
+                min="1"
+                max="100"
+              />
+            </div>
+            <div className="parameter-group">
+              <label htmlFor="initialValueProperty">Initial S&P 500 Investment</label>
+              <select
+                id="initialValueProperty"
+                name="initialValueProperty"
+                value={parameters.initialValueProperty || ''}
+                onChange={handleParameterChange}
+                className="parameter-select"
+              >
+                {properties.map((property, index) => (
+                  <option key={property.id} value={property.id}>
+                    Property {index + 1} ({(property.expectedPrice + property.renovationCost).toLocaleString()}€)
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="parameter-group">
+              <label htmlFor="calculationMethod">Property Value Calculation</label>
+              <select
+                id="calculationMethod"
+                name="calculationMethod"
+                value={parameters.calculationMethod}
+                onChange={handleParameterChange}
+                className="parameter-select"
+              >
+                <option value="appreciation">Property Appreciation</option>
+                <option value="roi_plus_appreciation">ROI + Property Appreciation</option>
+                <option value="appreciation_minus_maintenance">Appreciation - Maintenance</option>
+                <option value="roi_plus_appreciation_minus_maintenance">ROI + Appreciation - Maintenance</option>
+              </select>
+            </div>
+          </div>
+          {renderCustomLegend()}
+          <LineChartView
+            data={calculateValues()}
+            visibleLines={visibleLines}
+            properties={properties}
+            formatTooltipName={formatTooltipName}
+          />
+        </>
+      )}
+
+      {activeTab === 'bar' && (
+        <BarChartView properties={properties} />
+      )}
     </div>
   );
 } 

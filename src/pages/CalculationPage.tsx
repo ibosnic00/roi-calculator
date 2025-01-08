@@ -267,7 +267,7 @@ export function CalculationPage() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="neighborhood">Neighborhood</label>
+                  <label htmlFor="neighborhood">Neighbourhood</label>
                   <select
                     id="neighborhood"
                     name="neighborhood"
