@@ -6,17 +6,49 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
+  TooltipProps
 } from 'recharts'
 
 interface LineChartViewProps {
   data: any[];
   visibleLines: { [key: string]: boolean };
   properties: Property[];
-  formatTooltipName: (name: string) => string;
 }
 
-export function LineChartView({ data, visibleLines, properties, formatTooltipName }: LineChartViewProps) {
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  if (!active || !payload) return null;
+
+  return (
+    <div className="custom-tooltip">
+      <p className="tooltip-label">Year {label}</p>
+      <div className="tooltip-content">
+        <div className="tooltip-column">
+          {payload.slice(0, Math.ceil(payload.length / 2)).map((entry, index) => (
+            <div key={index} className="tooltip-item">
+              <span className="tooltip-dot" style={{ backgroundColor: entry.color }}></span>
+              <span className="tooltip-name">{entry.name}</span>
+              <span className="tooltip-value">{entry.value?.toLocaleString()}€</span>
+            </div>
+          ))}
+        </div>
+        {payload.length > 1 && (
+          <div className="tooltip-column">
+            {payload.slice(Math.ceil(payload.length / 2)).map((entry, index) => (
+              <div key={index} className="tooltip-item">
+                <span className="tooltip-dot" style={{ backgroundColor: entry.color }}></span>
+                <span className="tooltip-name">{entry.name}</span>
+                <span className="tooltip-value">{entry.value?.toLocaleString()}€</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export function LineChartView({ data, visibleLines, properties }: LineChartViewProps) {
   const colors = ['#82ca9d', '#8884d8', '#ffc658', '#ff7300', '#00C49F'];
 
   return (
@@ -47,11 +79,7 @@ export function LineChartView({ data, visibleLines, properties, formatTooltipNam
           width={window.innerWidth <= 768 ? 35 : 60}
         />
         <Tooltip 
-          formatter={(value: number, name: string) => [
-            `€${value.toLocaleString()}`,
-            formatTooltipName(name)
-          ]}
-          labelFormatter={(label) => `Year ${label}`}
+          content={<CustomTooltip />}
           itemSorter={(item) => -Number(item.value)}
         />
         

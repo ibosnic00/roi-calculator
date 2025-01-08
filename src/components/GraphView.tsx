@@ -191,16 +191,6 @@ export function GraphView({ properties }: GraphViewProps) {
     );
   };
 
-  const formatTooltipName = (name: string): string => {
-    if (name.startsWith('Property ')) {
-      return name.split(' ')[1].split('(')[0].trim();
-    }
-    if (name === 'S&P 500 Investment') {
-      return 'S&P';
-    }
-    return name;
-  };
-
   return (
     <div className="graph-container">
       <div className="graph-header">
@@ -295,7 +285,6 @@ export function GraphView({ properties }: GraphViewProps) {
             data={calculateValues()}
             visibleLines={visibleLines}
             properties={properties}
-            formatTooltipName={formatTooltipName}
           />
         </>
       )}

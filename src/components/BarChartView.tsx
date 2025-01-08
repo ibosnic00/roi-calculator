@@ -102,6 +102,7 @@ export function BarChartView({ properties }: BarChartViewProps) {
           />
           <Tooltip
             formatter={(value: number) => [selectedMetric.formatter(value), selectedMetric.label]}
+            itemSorter={(item) => -Number(item.value)}
           />
           <Bar dataKey="value" fill="#8884d8" />
         </BarChart>

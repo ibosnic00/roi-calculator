@@ -1163,3 +1163,76 @@ select.popup-input option[value=""] {
 .bar-chart-controls .popup-input {
   min-width: 150px;
 }
+
+/* Custom Tooltip Styles */
+.custom-tooltip {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  max-width: 600px;
+}
+
+.tooltip-label {
+  margin: 0 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+  color: #333;
+}
+
+.tooltip-content {
+  display: flex;
+  gap: 24px;
+}
+
+.tooltip-column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 200px;
+}
+
+.tooltip-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tooltip-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #666;
+}
+
+.tooltip-value {
+  font-weight: 500;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .custom-tooltip {
+    max-width: 300px;
+    font-size: 11px;
+  }
+
+  .tooltip-content {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tooltip-column {
+    min-width: unset;
+  }
+}
