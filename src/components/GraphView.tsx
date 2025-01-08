@@ -70,6 +70,26 @@ export function GraphView({ properties }: GraphViewProps) {
     localStorage.setItem('graphVisibility', JSON.stringify(visibleLines))
   }, [visibleLines])
 
+  const [isLegendCollapsed, setIsLegendCollapsed] = useState(() => {
+    const saved = localStorage.getItem('legendCollapsed');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('legendCollapsed', JSON.stringify(isLegendCollapsed));
+  }, [isLegendCollapsed]);
+
+  // Add new state for parameters collapse
+  const [isParametersCollapsed, setIsParametersCollapsed] = useState(() => {
+    const saved = localStorage.getItem('parametersCollapsed');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  // Add effect to save parameters collapse state
+  useEffect(() => {
+    localStorage.setItem('parametersCollapsed', JSON.stringify(isParametersCollapsed));
+  }, [isParametersCollapsed]);
+
   const calculateValues = (): DataPoint[] => {
     const data: DataPoint[] = [];
     
@@ -174,20 +194,37 @@ export function GraphView({ properties }: GraphViewProps) {
     const items = getLegendItems();
     
     return (
-      <ul className="custom-legend">
-        {items.map(item => (
-          <li 
-            key={item.id}
-            className={`legend-item ${!item.visible ? 'inactive' : ''}`}
-            onClick={() => handleLegendClick(item.dataKey)}
+      <div className={`legend-container ${isLegendCollapsed ? 'collapsed' : ''}`}>
+        <div className="legend-header">
+          <span className="legend-title">Legend</span>
+          <button 
+            className="collapse-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsLegendCollapsed((prev: boolean) => !prev);
+            }}
+            title={isLegendCollapsed ? "Expand legend" : "Collapse legend"}
           >
-            <span className="legend-color" style={{ backgroundColor: item.color }}></span>
-            <span className="legend-text" style={{ color: item.visible ? item.color : '#718096' }}>
-              {item.visible ? '☑' : '☐'} {item.name}
-            </span>
-          </li>
-        ))}
-      </ul>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 15l-6-6-6 6"/>
+            </svg>
+          </button>
+        </div>
+        <ul className={`custom-legend ${isLegendCollapsed ? 'collapsed' : ''}`}>
+          {items.map(item => (
+            <li 
+              key={item.id}
+              className={`legend-item ${!item.visible ? 'inactive' : ''}`}
+              onClick={() => handleLegendClick(item.dataKey)}
+            >
+              <span className="legend-color" style={{ backgroundColor: item.color }}></span>
+              <span className="legend-text" style={{ color: item.visible ? item.color : '#718096' }}>
+                {item.visible ? '☑' : '☐'} {item.name}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   };
 
@@ -213,71 +250,88 @@ export function GraphView({ properties }: GraphViewProps) {
 
       {activeTab === 'line' && (
         <>
-          <div className="graph-parameters">
-            <div className="parameter-group">
-              <label htmlFor="sp500Return">S&P 500 Return (%)</label>
-              <input
-                type="number"
-                id="sp500Return"
-                name="sp500Return"
-                value={parameters.sp500Return}
-                onChange={handleParameterChange}
-                step="0.1"
-              />
-            </div>
-            <div className="parameter-group">
-              <label htmlFor="baseAppreciation">Base Property Appreciation (%)</label>
-              <input
-                type="number"
-                id="baseAppreciation"
-                name="baseAppreciation"
-                value={parameters.baseAppreciation}
-                onChange={handleParameterChange}
-                step="0.1"
-              />
-            </div>
-            <div className="parameter-group">
-              <label htmlFor="years">Years</label>
-              <input
-                type="number"
-                id="years"
-                name="years"
-                value={parameters.years}
-                onChange={handleParameterChange}
-                min="1"
-                max="100"
-              />
-            </div>
-            <div className="parameter-group">
-              <label htmlFor="initialValueProperty">Initial S&P 500 Investment</label>
-              <select
-                id="initialValueProperty"
-                name="initialValueProperty"
-                value={parameters.initialValueProperty || ''}
-                onChange={handleParameterChange}
-                className="parameter-select"
+          <div className={`parameters-container ${isParametersCollapsed ? 'collapsed' : ''}`}>
+            <div className="parameters-header">
+              <span className="parameters-title">Parameters</span>
+              <button 
+                className="collapse-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsParametersCollapsed((prev: boolean) => !prev);
+                }}
+                title={isParametersCollapsed ? "Expand parameters" : "Collapse parameters"}
               >
-                {properties.map((property, index) => (
-                  <option key={property.id} value={property.id}>
-                    Property {index + 1} ({(property.expectedPrice + property.renovationCost).toLocaleString()}€)
-                  </option>
-                ))}
-              </select>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 15l-6-6-6 6"/>
+                </svg>
+              </button>
             </div>
-            <div className="parameter-group">
-              <label htmlFor="calculationMethod">Property Value Calculation</label>
-              <select
-                id="calculationMethod"
-                name="calculationMethod"
-                value={parameters.calculationMethod}
-                onChange={handleParameterChange}
-                className="parameter-select"
-              >
-                <option value="appreciation">Property Appreciation</option>
-                <option value="roi_plus_appreciation">ROI + Property Appreciation</option>
-                <option value="appreciation_minus_maintenance">Appreciation - Maintenance</option>
-                <option value="roi_plus_appreciation_minus_maintenance">ROI + Appreciation - Maintenance</option>
-              </select>
+            <div className={`graph-parameters ${isParametersCollapsed ? 'collapsed' : ''}`}>
+              <div className="parameter-group">
+                <label htmlFor="sp500Return">S&P 500 Return (%)</label>
+                <input
+                  type="number"
+                  id="sp500Return"
+                  name="sp500Return"
+                  value={parameters.sp500Return}
+                  onChange={handleParameterChange}
+                  step="0.1"
+                />
+              </div>
+              <div className="parameter-group">
+                <label htmlFor="baseAppreciation">Base Property Appreciation (%)</label>
+                <input
+                  type="number"
+                  id="baseAppreciation"
+                  name="baseAppreciation"
+                  value={parameters.baseAppreciation}
+                  onChange={handleParameterChange}
+                  step="0.1"
+                />
+              </div>
+              <div className="parameter-group">
+                <label htmlFor="years">Years</label>
+                <input
+                  type="number"
+                  id="years"
+                  name="years"
+                  value={parameters.years}
+                  onChange={handleParameterChange}
+                  min="1"
+                  max="100"
+                />
+              </div>
+              <div className="parameter-group">
+                <label htmlFor="initialValueProperty">Initial S&P 500 Investment</label>
+                <select
+                  id="initialValueProperty"
+                  name="initialValueProperty"
+                  value={parameters.initialValueProperty || ''}
+                  onChange={handleParameterChange}
+                  className="parameter-select"
+                >
+                  {properties.map((property, index) => (
+                    <option key={property.id} value={property.id}>
+                      Property {index + 1} ({(property.expectedPrice + property.renovationCost).toLocaleString()}€)
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="parameter-group">
+                <label htmlFor="calculationMethod">Property Value Calculation</label>
+                <select
+                  id="calculationMethod"
+                  name="calculationMethod"
+                  value={parameters.calculationMethod}
+                  onChange={handleParameterChange}
+                  className="parameter-select"
+                >
+                  <option value="appreciation">Property Appreciation</option>
+                  <option value="roi_plus_appreciation">ROI + Property Appreciation</option>
+                  <option value="appreciation_minus_maintenance">Appreciation - Maintenance</option>
+                  <option value="roi_plus_appreciation_minus_maintenance">ROI + Appreciation - Maintenance</option>
+                </select>
+              </div>
             </div>
           </div>
           {renderCustomLegend()}

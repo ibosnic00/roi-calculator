@@ -1236,3 +1236,123 @@ select.popup-input option[value=""] {
     min-width: unset;
   }
 }
+
+.legend-container {
+  background: white;
+  border: 0px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.legend-header {
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.collapse-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #718096;
+  padding: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+
+.collapse-button:hover {
+  background-color: #f0f0f0;
+}
+
+.collapse-button svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s;
+}
+
+.collapsed .collapse-button svg {
+  transform: rotate(180deg);
+}
+
+.custom-legend {
+  max-height: 300px;
+  overflow-y: auto;
+  transition: all 0.3s ease-in-out;
+  padding: 8px;
+  margin: 0;
+}
+
+.custom-legend.collapsed {
+  max-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.legend-title {
+  color: #718096;
+  font-size: 0.875rem;
+  padding-left: 8px;
+}
+
+.parameters-container {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.parameters-header {
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.parameters-title {
+  color: #718096;
+  font-size: 0.875rem;
+  padding-left: 8px;
+}
+
+.graph-parameters {
+  max-height: 500px;
+  overflow-y: auto;
+  transition: all 0.3s ease-in-out;
+  padding: 8px;
+  margin: 0;
+}
+
+.graph-parameters.collapsed {
+  max-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Update containers to provide space for headers when collapsed */
+.legend-container.collapsed,
+.parameters-container.collapsed {
+  min-height: unset;
+}
+
+.legend-container,
+.parameters-container {
+  background: white;
+  border: 0px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
