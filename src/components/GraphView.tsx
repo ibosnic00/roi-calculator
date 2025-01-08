@@ -1,14 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Property } from '../types/Property'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts'
 import { LineChartView } from './LineChartView';
 import { BarChartView } from './BarChartView';
 
@@ -156,7 +147,6 @@ export function GraphView({ properties }: GraphViewProps) {
     }));
   };
 
-  const data = calculateValues();
   const colors = ['#82ca9d', '#8884d8', '#ffc658', '#ff7300', '#00C49F'];
 
   // Create a separate array for legend items

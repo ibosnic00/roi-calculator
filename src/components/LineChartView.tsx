@@ -52,6 +52,7 @@ export function LineChartView({ data, visibleLines, properties, formatTooltipNam
             formatTooltipName(name)
           ]}
           labelFormatter={(label) => `Year ${label}`}
+          itemSorter={(item) => -Number(item.value)}
         />
         
         {properties.map((property, index) => {

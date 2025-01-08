@@ -57,7 +57,9 @@ export function BarChartView({ properties }: BarChartViewProps) {
     });
 
     return data.sort((a, b) => {
-      return sortOrder === 'asc' ? a.value - b.value : b.value - a.value;
+      const aValue = Number(a.value) || 0;
+      const bValue = Number(b.value) || 0;
+      return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
     });
   };
 
