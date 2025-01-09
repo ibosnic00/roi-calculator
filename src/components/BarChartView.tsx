@@ -1,5 +1,5 @@
 import { Property } from '../types/Property';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useState, useRef, useEffect } from 'react';
 import { calculateReturnPercentage } from '../utils/propertyCalculations';
 
@@ -16,10 +16,18 @@ interface BarChartViewProps {
 
 type MetricType = 'roi' | 'return10' | 'return20' | 'pricePerSqm';
 
+const COLORS = {
+  default: '#8884d8',
+  byNeighborhood: {
+    colors: ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#008400', '#FFBB28', '#FF8042', '#0088FE'],
+  }
+};
+
 export function BarChartView({ properties, parameters }: BarChartViewProps) {
   const [metric, setMetric] = useState<MetricType>('roi');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [chartHeight, setChartHeight] = useState(400);
+  const [colorByNeighborhood, setColorByNeighborhood] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Adjust height based on screen width
@@ -35,6 +43,12 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
   }, []);
+
+  const getNeighborhoodColor = (neighborhood: string) => {
+    const uniqueNeighborhoods = Array.from(new Set(properties.map(p => p.neighborhood)));
+    const index = uniqueNeighborhoods.indexOf(neighborhood);
+    return COLORS.byNeighborhood.colors[index % COLORS.byNeighborhood.colors.length];
+  };
 
   const getData = () => {
     return properties.map(property => {
@@ -55,7 +69,9 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
       }
       return {
         name: `Property ${properties.indexOf(property) + 1}`,
-        value: Number(value.toFixed(2))
+        value: Number(value.toFixed(2)),
+        neighborhood: property.neighborhood,
+        color: colorByNeighborhood ? getNeighborhoodColor(property.neighborhood) : COLORS.default
       };
     }).sort((a, b) => 
       sortOrder === 'asc' ? a.value - b.value : b.value - a.value
@@ -84,6 +100,26 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
     }
   };
 
+  const renderLegend = () => {
+    if (!colorByNeighborhood) return null;
+
+    const uniqueNeighborhoods = Array.from(new Set(properties.map(p => p.neighborhood)));
+    
+    return (
+      <div className="neighborhood-legend">
+        {uniqueNeighborhoods.map((neighborhood, index) => (
+          <div key={neighborhood} className="neighborhood-legend-item">
+            <span 
+              className="color-box" 
+              style={{ backgroundColor: COLORS.byNeighborhood.colors[index % COLORS.byNeighborhood.colors.length] }}
+            />
+            <span className="neighborhood-name">{neighborhood}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div ref={containerRef} className="bar-chart-view">
       <div className="bar-chart-controls">
@@ -103,7 +139,15 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
         >
           Sort {sortOrder === 'asc' ? '↑' : '↓'}
         </button>
+        <button
+          className={`color-toggle-button ${colorByNeighborhood ? 'active' : ''}`}
+          onClick={() => setColorByNeighborhood(prev => !prev)}
+          title="Color by Neighborhood"
+        >
+          🎨
+        </button>
       </div>
+      {colorByNeighborhood && renderLegend()}
       <div className="chart-container">
         <ResponsiveContainer width="100%" height={chartHeight}>
           <BarChart data={getData()} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -129,7 +173,16 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
             <Tooltip 
               formatter={(value: number) => [formatTooltipValue(value), getMetricLabel()]}
             />
-            <Bar dataKey="value" fill="#8884d8" />
+            <Bar 
+              dataKey="value" 
+              fill="#8884d8"
+              stroke={colorByNeighborhood ? '#fff' : undefined}
+              strokeWidth={colorByNeighborhood ? 1 : 0}
+            >
+              {getData().map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -1408,3 +1408,49 @@ select.popup-input option[value=""] {
     width: 100%;
   }
 }
+
+.color-toggle-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.color-toggle-button.active {
+  background: #f0f0f0;
+  border-color: #666;
+}
+
+.neighborhood-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.neighborhood-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.color-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.neighborhood-name {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+@media (max-width: 600px) {
+  .neighborhood-legend {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
