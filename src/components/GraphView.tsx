@@ -344,7 +344,10 @@ export function GraphView({ properties }: GraphViewProps) {
       )}
 
       {activeTab === 'bar' && (
-        <BarChartView properties={properties} />
+        <BarChartView 
+          properties={properties} 
+          parameters={parameters}
+        />
       )}
     </div>
   );

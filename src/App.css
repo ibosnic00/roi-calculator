@@ -1377,3 +1377,34 @@ select.popup-input option[value=""] {
     padding: 0.25rem;
   }
 }
+
+.bar-chart-view {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.chart-container {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.bar-chart-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 1rem;
+}
+
+@media (max-width: 600px) {
+  .bar-chart-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bar-chart-controls .popup-input,
+  .bar-chart-controls .sort-button {
+    width: 100%;
+  }
+}

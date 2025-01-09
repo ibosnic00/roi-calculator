@@ -1,112 +1,138 @@
-import { useState } from 'react';
 import { Property } from '../types/Property';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useState, useRef, useEffect } from 'react';
+import { calculateReturnPercentage } from '../utils/propertyCalculations';
 
 interface BarChartViewProps {
   properties: Property[];
+  parameters: {
+    sp500Return: number;
+    baseAppreciation: number;
+    years: number;
+    initialValueProperty: number | null;
+    calculationMethod: 'appreciation' | 'roi_plus_appreciation' | 'appreciation_minus_maintenance' | 'roi_plus_appreciation_minus_maintenance';
+  };
 }
 
-type MetricOption = {
-  key: keyof Property | 'pricePerSqm';
-  label: string;
-  formatter: (value: number) => string;
-};
+type MetricType = 'roi' | 'return10' | 'return20' | 'pricePerSqm';
 
-export function BarChartView({ properties }: BarChartViewProps) {
-  const [selectedMetric, setSelectedMetric] = useState<MetricOption>({
-    key: 'roi',
-    label: 'ROI (%)',
-    formatter: (value: number) => `${value.toFixed(2)}%`
-  });
+export function BarChartView({ properties, parameters }: BarChartViewProps) {
+  const [metric, setMetric] = useState<MetricType>('roi');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [chartHeight, setChartHeight] = useState(400);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const metricOptions: MetricOption[] = [
-    {
-      key: 'roi',
-      label: 'ROI (%)',
-      formatter: (value: number) => `${value.toFixed(2)}%`
-    },
-    {
-      key: 'pricePerSqm',
-      label: 'Price per m²',
-      formatter: (value: number) => `€${value.toLocaleString()}`
-    },
-    {
-      key: 'monthlyRent',
-      label: 'Monthly Rent',
-      formatter: (value: number) => `€${value.toLocaleString()}`
-    }
-  ];
+  // Adjust height based on screen width
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.offsetWidth;
+        setChartHeight(width < 600 ? 300 : 400);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   const getData = () => {
-    const data = properties.map((property, index) => {
-      const pricePerSqm = property.expectedPrice / property.apartmentSize;
+    return properties.map(property => {
+      let value: number;
+      switch (metric) {
+        case 'roi':
+          value = property.roi;
+          break;
+        case 'return10':
+          value = calculateReturnPercentage(property, parameters, 10);
+          break;
+        case 'return20':
+          value = calculateReturnPercentage(property, parameters, 20);
+          break;
+        case 'pricePerSqm':
+          value = property.expectedPrice / property.apartmentSize;
+          break;
+      }
       return {
-        name: `Property ${index + 1}`,
-        value: selectedMetric.key === 'pricePerSqm' ? pricePerSqm : property[selectedMetric.key as keyof Property],
-        property
+        name: `Property ${properties.indexOf(property) + 1}`,
+        value: Number(value.toFixed(2))
       };
-    });
+    }).sort((a, b) => 
+      sortOrder === 'asc' ? a.value - b.value : b.value - a.value
+    );
+  };
 
-    return data.sort((a, b) => {
-      const aValue = Number(a.value) || 0;
-      const bValue = Number(b.value) || 0;
-      return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
-    });
+  const getMetricLabel = () => {
+    switch (metric) {
+      case 'roi':
+        return 'ROI (%)';
+      case 'return10':
+        return '10 Year Return (%)';
+      case 'return20':
+        return '20 Year Return (%)';
+      case 'pricePerSqm':
+        return 'Price per m²';
+    }
+  };
+
+  const formatTooltipValue = (value: number) => {
+    switch (metric) {
+      case 'pricePerSqm':
+        return `€${value.toLocaleString()}`;
+      default:
+        return `${value}%`;
+    }
   };
 
   return (
-    <div>
+    <div ref={containerRef} className="bar-chart-view">
       <div className="bar-chart-controls">
         <select
-          value={selectedMetric.key}
-          onChange={(e) => {
-            const metric = metricOptions.find(m => m.key === e.target.value);
-            if (metric) setSelectedMetric(metric);
-          }}
+          value={metric}
+          onChange={(e) => setMetric(e.target.value as MetricType)}
           className="popup-input"
         >
-          {metricOptions.map(option => (
-            <option key={option.key} value={option.key}>
-              {option.label}
-            </option>
-          ))}
+          <option value="roi">ROI</option>
+          <option value="return10">10 Year Return</option>
+          <option value="return20">20 Year Return</option>
+          <option value="pricePerSqm">Price per m²</option>
         </select>
         <button
-          onClick={() => setSortOrder(current => current === 'asc' ? 'desc' : 'asc')}
           className="sort-button"
+          onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
         >
           Sort {sortOrder === 'asc' ? '↑' : '↓'}
         </button>
       </div>
-
-      <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={getData()} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis
-            label={{
-              value: selectedMetric.label,
-              angle: -90,
-              position: 'insideLeft',
-              style: { textAnchor: 'middle' }
-            }}
-          />
-          <Tooltip
-            formatter={(value: number) => [selectedMetric.formatter(value), selectedMetric.label]}
-            itemSorter={(item) => -Number(item.value)}
-          />
-          <Bar dataKey="value" fill="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="chart-container">
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <BarChart data={getData()} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
+              dataKey="name"
+              tick={{ fontSize: window.innerWidth < 600 ? 12 : 14 }}
+            />
+            <YAxis 
+              label={{ 
+                value: getMetricLabel(), 
+                angle: -90, 
+                position: 'insideLeft',
+                style: { fontSize: window.innerWidth < 600 ? 12 : 14 }
+              }}
+              tick={{ fontSize: window.innerWidth < 600 ? 12 : 14 }}
+              tickFormatter={(value) => 
+                metric === 'pricePerSqm' 
+                  ? `€${value.toLocaleString()}`
+                  : `${value}%`
+              }
+            />
+            <Tooltip 
+              formatter={(value: number) => [formatTooltipValue(value), getMetricLabel()]}
+            />
+            <Bar dataKey="value" fill="#8884d8" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 } 
