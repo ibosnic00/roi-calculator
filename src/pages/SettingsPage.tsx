@@ -7,6 +7,7 @@ export function SettingsPage() {
   const [selectedRange, setSelectedRange] = useState(rentalData[0])
   const [isAdding, setIsAdding] = useState(false)
   const [newData, setNewData] = useState({
+    sizeRange: '',
     neighborhood: '',
     rent: ''
   })
@@ -24,9 +25,10 @@ export function SettingsPage() {
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
-    if (newData.neighborhood && newData.rent) {
-      addRent(selectedRange.minSize, newData.neighborhood, Number(newData.rent))
-      setNewData({ neighborhood: '', rent: '' })
+    if (newData.neighborhood && newData.rent && newData.sizeRange) {
+      const [minSize] = newData.sizeRange.split('-').map(Number)
+      addRent(minSize, newData.neighborhood, Number(newData.rent))
+      setNewData({ sizeRange: '', neighborhood: '', rent: '' })
       setIsAdding(false)
       setIsCustomneighborhood(false)
     }
@@ -61,7 +63,13 @@ export function SettingsPage() {
           {!isAdding ? (
             <button 
               className="add-data-button"
-              onClick={() => setIsAdding(true)}
+              onClick={() => {
+                setNewData(prev => ({
+                  ...prev,
+                  sizeRange: `${selectedRange.minSize}-${selectedRange.maxSize}`
+                }));
+                setIsAdding(true);
+              }}
             >
               + Add Data
             </button>
@@ -137,6 +145,20 @@ export function SettingsPage() {
                   ×
                 </button>
               </div>
+
+              <select
+                value={newData.sizeRange}
+                onChange={e => setNewData(prev => ({ ...prev, sizeRange: e.target.value }))}
+                required
+                className="popup-input"
+              >
+                <option value="">Select Size Range</option>
+                {rentalData.map(range => (
+                  <option key={range.minSize} value={`${range.minSize}-${range.maxSize}`}>
+                    {range.minSize} - {range.maxSize} m²
+                  </option>
+                ))}
+              </select>
               
               {isCustomneighborhood ? (
                 <input
@@ -177,7 +199,6 @@ export function SettingsPage() {
                 value={newData.rent}
                 onChange={e => setNewData(prev => ({ ...prev, rent: e.target.value }))}
                 required
-                step="1"
                 className="popup-input"
               />
               

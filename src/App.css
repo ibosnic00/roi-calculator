@@ -342,9 +342,8 @@ select:focus {
 }
 
 .add-data-section {
-  margin: 1rem 0;
+  margin: 1rem 1rem;
   display: flex;
-  justify-content: center;
 }
 
 .add-data-button {
@@ -516,7 +515,7 @@ select:focus {
 
 .form-container {
   margin: 1rem;
-  width: 100%;
+  width: auto;
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
   /* Allow container to scroll */
@@ -569,12 +568,12 @@ select:focus {
   opacity: 0.8;
 }
 
-/* Number input arrows styling */
-.popup-input[type="number"]::-webkit-inner-spin-button,
-.popup-input[type="number"]::-webkit-outer-spin-button {
-  opacity: 1;
-  height: 1.75rem;
-  margin-right: 0.5rem;
+.popup-input[type="number"]::-webkit-outer-spin-button,
+.popup-input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 /* Rental Data Form Styles */
