@@ -19,7 +19,20 @@ type MetricType = 'roi' | 'return10' | 'return20' | 'pricePerSqm';
 const COLORS = {
   default: '#8884d8',
   byNeighborhood: {
-    colors: ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#008400', '#FFBB28', '#FF8042', '#0088FE'],
+    colors: [
+      '#55647e', // Purple
+      '#F1C40F', // Bright Yellow
+      '#E67E22', // Dark Orange
+      '#008400', // Dark Green
+      '#a460dc', // Violet
+      '#E74C3C', // Red
+      '#3498DB', // Blue
+      '#1ABC9C', // Turquoise
+      '#784491', // Deep Purple
+      '#9b0303', // Sangria
+      '#3b3b3b', // Dark Gray
+      '#FFDCA3', // Light Orange
+    ],
   }
 };
 
