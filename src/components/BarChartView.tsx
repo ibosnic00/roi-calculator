@@ -120,6 +120,22 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
     );
   };
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length > 0) {
+      const data = payload[0].payload;
+      return (
+        <div className="custom-tooltip">
+          <p className="tooltip-label">{data.neighborhood}</p>
+          <div className="tooltip-content">
+            <p>{label}</p>
+            <p>{formatTooltipValue(data.value)}</p>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div ref={containerRef} className="bar-chart-view">
       <div className="bar-chart-controls">
@@ -171,7 +187,7 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
               }
             />
             <Tooltip 
-              formatter={(value: number) => [formatTooltipValue(value), getMetricLabel()]}
+              content={<CustomTooltip />}
             />
             <Bar 
               dataKey="value" 
