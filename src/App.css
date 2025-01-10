@@ -645,6 +645,11 @@ select:focus {
   min-height: 100px;
 }
 
+.tile-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .property-tile {
   background: white;
   border-radius: 8px;

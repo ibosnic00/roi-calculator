@@ -12,11 +12,11 @@ interface TableViewProps {
   onLinkChange: (id: number, link: string) => void;
 }
 
-export function TableView({ 
-  properties, 
-  onExpectedPriceChange, 
-  onNotesChange, 
-  onYearChange, 
+export function TableView({
+  properties,
+  onExpectedPriceChange,
+  onNotesChange,
+  onYearChange,
   onDelete,
   onMaintenanceCostChange,
   onLinkChange
@@ -41,8 +41,8 @@ export function TableView({
 
   return (
     <div className="table-container">
-      <Popup 
-        isOpen={isPopupOpen} 
+      <Popup
+        isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}
         onSave={selectedPropertyId ? (link) => handleLinkChange(selectedPropertyId, link) : undefined}
         initialValue={selectedProperty?.link}
@@ -53,8 +53,8 @@ export function TableView({
         <thead>
           <tr>
             <th className="index-column">#
-            <div className="unit">(link)</div></th>
-            <th>Notes</th>
+              <div className="unit">(link)</div></th>
+            <th>Neighborhood</th>
             <th>
               Asking Price
               <div className="unit">(€)</div>
@@ -71,7 +71,6 @@ export function TableView({
               Price/m²
               <div className="unit">(€)</div>
             </th>
-            <th>Neighborhood</th>
             <th>
               Rent
               <div className="unit">(€)</div>
@@ -93,41 +92,24 @@ export function TableView({
               <div className="unit">(years)</div>
             </th>
             <th>Year
-            <div className="unit">(construction)</div></th>
+              <div className="unit">(construction)</div></th>
+            <th>Notes</th>
             <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           {properties.map((property, index) => (
             <tr key={property.id}>
-              <td 
-                className="index-column" 
+              <td
+                className="index-column"
                 onClick={() => handleIndexClick(property.id)}
                 style={{ cursor: 'pointer' }}
               >
                 {index + 1}
               </td>
-              <td>
-                {editingNoteId === property.id ? (
-                  <input
-                    type="text"
-                    value={property.notes || ''}
-                    onChange={(e) => onNotesChange(property.id, e.target.value)}
-                    onBlur={() => setEditingNoteId(null)}
-                    className="notes-input"
-                    placeholder="Add notes..."
-                    autoFocus
-                  />
-                ) : (
-                  <div 
-                    onClick={() => setEditingNoteId(property.id)}
-                    className="notes-text"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {property.notes || 'Add notes...'}
-                  </div>
-                )}
-              </td>
+              {property.subneighborhood ?
+                <td>{property.subneighborhood} <div style={{ fontSize: '0.75rem', color: 'gray' }}>{property.neighborhood}</div></td>
+                : <td>{property.neighborhood}</td>}
               <td>{property.askingPrice?.toLocaleString() || '0'}</td>
               <td>
                 {editingPriceId === property.id ? (
@@ -141,7 +123,7 @@ export function TableView({
                     autoFocus
                   />
                 ) : (
-                  <div 
+                  <div
                     onClick={() => setEditingPriceId(property.id)}
                     className="expected-price-text"
                     style={{ cursor: 'pointer' }}
@@ -154,7 +136,6 @@ export function TableView({
               <td>
                 {((property.expectedPrice || 0) / (property.apartmentSize || 1)).toFixed(2)}
               </td>
-              <td>{property.neighborhood}</td>
               <td>{property.monthlyRent?.toLocaleString() || '0'}</td>
               <td>{property.renovationCost?.toLocaleString() || '0'}</td>
               <td>
@@ -170,7 +151,7 @@ export function TableView({
                     autoFocus
                   />
                 ) : (
-                  <div 
+                  <div
                     onClick={() => setEditingMaintenanceId(property.id)}
                     className="maintenance-text"
                     style={{ cursor: 'pointer' }}
@@ -194,7 +175,7 @@ export function TableView({
                     autoFocus
                   />
                 ) : (
-                  <div 
+                  <div
                     onClick={() => setEditingYearId(property.id)}
                     className="year-text"
                     style={{ cursor: 'pointer' }}
@@ -204,7 +185,28 @@ export function TableView({
                 )}
               </td>
               <td>
-                <button 
+                {editingNoteId === property.id ? (
+                  <input
+                    type="text"
+                    value={property.notes || ''}
+                    onChange={(e) => onNotesChange(property.id, e.target.value)}
+                    onBlur={() => setEditingNoteId(null)}
+                    className="notes-input"
+                    placeholder="Add notes..."
+                    autoFocus
+                  />
+                ) : (
+                  <div
+                    onClick={() => setEditingNoteId(property.id)}
+                    className="notes-text"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {property.notes || 'Add notes...'}
+                  </div>
+                )}
+              </td>
+              <td>
+                <button
                   onClick={() => onDelete(property.id)}
                   className="delete-button"
                 >

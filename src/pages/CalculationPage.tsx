@@ -4,6 +4,11 @@ import { Property } from '../types/Property'
 import { TableView } from '../components/TableView'
 import { GraphView } from '../components/GraphView'
 import { TileView } from '../components/TileView'
+import { 
+  GetSubneighbourhoodsInNeighbourhood, 
+  GetAllSubneighbourhoods, 
+  GetNeighbourhoodFromSubneighbourhood 
+} from '../utils/districtsZagreb';
 
 export function CalculationPage() {
   const { rentalData } = useRentalData()
@@ -12,6 +17,7 @@ export function CalculationPage() {
     askingPrice: '',
     apartmentSize: '',
     neighborhood: '',
+    subneighborhood: '',
     renovationCost: ''
   })
 
@@ -65,6 +71,17 @@ export function CalculationPage() {
     return (yearlyRent / totalInvestment) * 100;
   }
 
+  const resetForm = () => {
+    setFormData({
+      askingPrice: '',
+      apartmentSize: '',
+      neighborhood: '',
+      subneighborhood: '',
+      renovationCost: '0'
+    })
+    setIsFormVisible(false)
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -86,6 +103,7 @@ export function CalculationPage() {
       neighborhood: formData.neighborhood,
       renovationCost: renovationCost,
       monthlyRent: monthlyRent,
+      subneighborhood: formData.subneighborhood,
       roi: roi,
       notes: '',
       year: '',
@@ -93,15 +111,7 @@ export function CalculationPage() {
     }
 
     setProperties(prev => [...prev, newProperty])
-
-    // Reset form
-    setFormData({
-      askingPrice: '',
-      apartmentSize: '',
-      neighborhood: '',
-      renovationCost: ''
-    })
-    setIsFormVisible(false) // Hide form after submission
+    resetForm()
   }
 
   const handleExpectedPriceChange = (id: number, price: string) => {
@@ -172,8 +182,6 @@ export function CalculationPage() {
     return Array.from(neighborhoodSet).sort()
   }
 
-  const neighborhoods = getAvailableneighborhoods()
-
   const [viewMode, setViewMode] = useState<'table' | 'tiles'>(() => {
     const savedViewMode = localStorage.getItem('viewMode')
     return (savedViewMode === 'table' || savedViewMode === 'tiles') ? savedViewMode : 'tiles'
@@ -241,7 +249,7 @@ export function CalculationPage() {
                 <button
                   type="button"
                   className="close-form-button"
-                  onClick={() => setIsFormVisible(false)}
+                  onClick={resetForm}
                 >
                   ×
                 </button>
@@ -281,16 +289,61 @@ export function CalculationPage() {
                     id="neighborhood"
                     name="neighborhood"
                     value={formData.neighborhood}
-                    onChange={handleInputChange}
+                    onChange={e => {
+                      const newNeighborhood = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        neighborhood: newNeighborhood,
+                        subneighborhood: '' // Reset subneighborhood when neighborhood changes
+                      }));
+                    }}
                     required
                     className="popup-input"
                   >
-                    <option value="">Select</option>
-                    {neighborhoods.map(hood => (
-                      <option key={hood} value={hood}>
-                        {hood}
-                      </option>
+                    <option value="">Select Neighborhood</option>
+                    {getAvailableneighborhoods().map(hood => (
+                      <option key={hood} value={hood}>{hood}</option>
                     ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="subneighborhood">Subneighborhood</label>
+                  <select
+                    name="subneighborhood"
+                    value={formData.subneighborhood}
+                    onChange={e => {
+                      const newSubneighborhood = e.target.value;
+                      if (!formData.neighborhood) {
+                        const parentNeighborhood = GetNeighbourhoodFromSubneighbourhood(newSubneighborhood);
+                        if (parentNeighborhood) {
+                          setFormData(prev => ({
+                            ...prev,
+                            neighborhood: parentNeighborhood,
+                            subneighborhood: newSubneighborhood
+                          }));
+                        }
+                      } else {
+                        setFormData(prev => ({
+                          ...prev,
+                          subneighborhood: newSubneighborhood
+                        }));
+                      }
+                    }}
+                    required
+                    className="popup-input"
+                  >
+                    <option value="">Select Subneighborhood</option>
+                    {formData.neighborhood 
+                      ? GetSubneighbourhoodsInNeighbourhood(formData.neighborhood)
+                          .map(sub => (
+                            <option key={sub} value={sub}>{sub}</option>
+                          ))
+                      : GetAllSubneighbourhoods()
+                          .map(sub => (
+                            <option key={sub} value={sub}>{sub}</option>
+                          ))
+                    }
                   </select>
                 </div>
 
@@ -315,7 +368,7 @@ export function CalculationPage() {
                 <button
                   type="button"
                   className="cancel-button"
-                  onClick={() => setIsFormVisible(false)}
+                  onClick={resetForm}
                 >
                   Cancel
                 </button>

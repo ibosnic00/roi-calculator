@@ -4,6 +4,7 @@ export interface Property {
   expectedPrice: number;
   apartmentSize: number;
   neighborhood: string;
+  subneighborhood: string;
   renovationCost: number;
   monthlyRent: number;
   roi: number;
