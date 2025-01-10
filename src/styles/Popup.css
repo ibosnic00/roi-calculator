@@ -21,7 +21,11 @@
   min-width: 300px;
   max-width: 600px;
 }
-
+@media (max-width: 768px) {
+  .popup-content{
+    margin: 0.5rem;
+  }
+}
 .popup-close {
   position: absolute;
   top: 10px;

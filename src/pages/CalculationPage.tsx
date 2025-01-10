@@ -4,11 +4,12 @@ import { Property } from '../types/Property'
 import { TableView } from '../components/TableView'
 import { GraphView } from '../components/GraphView'
 import { TileView } from '../components/TileView'
-import { 
-  GetSubneighbourhoodsInNeighbourhood, 
-  GetAllSubneighbourhoods, 
-  GetNeighbourhoodFromSubneighbourhood 
+import {
+  GetSubneighbourhoodsInNeighbourhood,
+  GetAllSubneighbourhoods,
+  GetNeighbourhoodFromSubneighbourhood
 } from '../utils/districtsZagreb';
+import { NeighborhoodPopup } from '../components/NeighborhoodPopup';
 
 export function CalculationPage() {
   const { rentalData } = useRentalData()
@@ -165,8 +166,8 @@ export function CalculationPage() {
   }
 
   const handleLinkChange = (id: number, link: string) => {
-    setProperties(properties.map(property => 
-      property.id === id 
+    setProperties(properties.map(property =>
+      property.id === id
         ? { ...property, link }
         : property
     ));
@@ -212,6 +213,16 @@ export function CalculationPage() {
       return result;
     });
   };
+
+  const handleNeighborhoodChange = (id: number, neighborhood: string, subneighborhood: string | null) => {
+    setProperties(properties.map(property =>
+      property.id === id
+        ? { ...property, neighborhood, subneighborhood: subneighborhood || '' }
+        : property
+    ));
+  };
+
+  const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
 
   return (
     <>
@@ -334,15 +345,15 @@ export function CalculationPage() {
                     className="popup-input"
                   >
                     <option value="">Select Subneighborhood</option>
-                    {formData.neighborhood 
+                    {formData.neighborhood
                       ? GetSubneighbourhoodsInNeighbourhood(formData.neighborhood)
-                          .map(sub => (
-                            <option key={sub} value={sub}>{sub}</option>
-                          ))
+                        .map(sub => (
+                          <option key={sub} value={sub}>{sub}</option>
+                        ))
                       : GetAllSubneighbourhoods()
-                          .map(sub => (
-                            <option key={sub} value={sub}>{sub}</option>
-                          ))
+                        .map(sub => (
+                          <option key={sub} value={sub}>{sub}</option>
+                        ))
                     }
                   </select>
                 </div>
@@ -395,6 +406,7 @@ export function CalculationPage() {
                 onDelete={handleDelete}
                 onMaintenanceCostChange={handleMaintenanceCostChange}
                 onLinkChange={handleLinkChange}
+                onNeighborhoodChange={handleNeighborhoodChange}
               />
             ) : (
               <TileView
@@ -403,6 +415,7 @@ export function CalculationPage() {
                 onPropertyClick={setSelectedProperty}
                 onLinkChange={handleLinkChange}
                 onReorder={handleReorder}
+                onNeighborhoodChange={handleNeighborhoodChange}
               />
             )}
             <GraphView properties={properties} />
@@ -447,8 +460,20 @@ export function CalculationPage() {
                   <span>€{((selectedProperty.expectedPrice || 0) / (selectedProperty.apartmentSize || 1)).toFixed(2)}</span>
                 </div>
                 <div className="detail-row">
-                  <label>neighborhood:</label>
-                  <span>{selectedProperty.neighborhood}</span>
+                  <label >
+                    Neighborhood:
+                  </label>
+                  <span onClick={() => {
+                    if (selectedProperty) {
+                      setSelectedProperty(selectedProperty);
+                      setIsNeighborhoodPopupOpen(true);
+                    }
+                  }} style={{ cursor: 'pointer' }}>
+                    {selectedProperty.subneighborhood ?
+                      `${selectedProperty.subneighborhood} (${selectedProperty.neighborhood})` :
+                      selectedProperty.neighborhood
+                    }
+                  </span>
                 </div>
                 <div className="detail-row">
                   <label>Monthly Rent:</label>
@@ -498,13 +523,13 @@ export function CalculationPage() {
                 </div>
               </div>
               <div className="form-actions">
-                <button 
+                <button
                   className="submit-button"
                   onClick={() => setSelectedProperty(null)}
                 >
                   Save
                 </button>
-                <button 
+                <button
                   className="cancel-button"
                   onClick={() => setSelectedProperty(null)}
                 >
@@ -515,6 +540,20 @@ export function CalculationPage() {
           </div>
         </div>
       )}
+
+      {/* Neighborhood Popup */}
+      <NeighborhoodPopup
+        isOpen={isNeighborhoodPopupOpen}
+        onClose={() => setIsNeighborhoodPopupOpen(false)}
+        onSave={(neighborhood, subneighborhood) => {
+          if (selectedProperty) {
+            handleNeighborhoodChange(selectedProperty.id, neighborhood, subneighborhood);
+            setIsNeighborhoodPopupOpen(false);
+          }
+        }}
+        initialNeighborhood={selectedProperty?.neighborhood}
+        initialSubneighborhood={selectedProperty?.subneighborhood}
+      />
     </>
   )
 } 

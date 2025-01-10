@@ -15,6 +15,7 @@ import {
     rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import type { Active, DragEndEvent } from '@dnd-kit/core';
+import { NeighborhoodPopup } from './NeighborhoodPopup';
 
 interface TileViewProps {
     properties: Property[];
@@ -22,6 +23,7 @@ interface TileViewProps {
     onPropertyClick: (property: Property) => void;
     onLinkChange: (id: number, link: string) => void;
     onReorder: (startIndex: number, endIndex: number) => void;
+    onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
 }
 
 const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick }: any) => {
@@ -85,10 +87,11 @@ const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick
     );
 };
 
-export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, onReorder }: TileViewProps) {
+export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, onReorder, onNeighborhoodChange }: TileViewProps) {
     const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [activeId, setActiveId] = useState<Active | null>(null);
+    const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -146,6 +149,19 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
                     onSave={selectedPropertyId ? (link) => handleLinkChange(selectedPropertyId, link) : undefined}
                     initialValue={selectedProperty?.link}
                     isReadOnly={!!selectedProperty?.link}
+                />
+
+                <NeighborhoodPopup
+                    isOpen={isNeighborhoodPopupOpen}
+                    onClose={() => setIsNeighborhoodPopupOpen(false)}
+                    onSave={(neighborhood, subneighborhood) => {
+                        if (selectedPropertyId) {
+                            onNeighborhoodChange(selectedPropertyId, neighborhood, subneighborhood);
+                            setIsNeighborhoodPopupOpen(false);
+                        }
+                    }}
+                    initialNeighborhood={selectedProperty?.neighborhood}
+                    initialSubneighborhood={selectedProperty?.subneighborhood}
                 />
 
                 <SortableContext items={properties.map(p => p.id)} strategy={rectSortingStrategy}>

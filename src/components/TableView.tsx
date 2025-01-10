@@ -1,6 +1,7 @@
 import { Property } from '../types/Property'
 import { useState } from 'react';
 import { Popup } from './Popup';
+import { NeighborhoodPopup } from './NeighborhoodPopup';
 
 interface TableViewProps {
   properties: Property[];
@@ -10,6 +11,7 @@ interface TableViewProps {
   onDelete: (id: number) => void;
   onMaintenanceCostChange: (id: number, cost: string) => void;
   onLinkChange: (id: number, link: string) => void;
+  onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
 }
 
 export function TableView({
@@ -19,7 +21,8 @@ export function TableView({
   onYearChange,
   onDelete,
   onMaintenanceCostChange,
-  onLinkChange
+  onLinkChange,
+  onNeighborhoodChange
 }: TableViewProps) {
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [editingPriceId, setEditingPriceId] = useState<number | null>(null);
@@ -27,6 +30,7 @@ export function TableView({
   const [editingYearId, setEditingYearId] = useState<number | null>(null);
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
 
   const handleIndexClick = (propertyId: number) => {
     setSelectedPropertyId(propertyId);
@@ -47,6 +51,19 @@ export function TableView({
         onSave={selectedPropertyId ? (link) => handleLinkChange(selectedPropertyId, link) : undefined}
         initialValue={selectedProperty?.link}
         isReadOnly={!!selectedProperty?.link}
+      />
+
+      <NeighborhoodPopup
+        isOpen={isNeighborhoodPopupOpen}
+        onClose={() => setIsNeighborhoodPopupOpen(false)}
+        onSave={(neighborhood, subneighborhood) => {
+          if (selectedPropertyId) {
+            onNeighborhoodChange(selectedPropertyId, neighborhood, subneighborhood);
+            setIsNeighborhoodPopupOpen(false);
+          }
+        }}
+        initialNeighborhood={selectedProperty?.neighborhood}
+        initialSubneighborhood={selectedProperty?.subneighborhood}
       />
 
       <table className="properties-table">
@@ -107,9 +124,22 @@ export function TableView({
               >
                 {index + 1}
               </td>
-              {property.subneighborhood ?
-                <td>{property.subneighborhood} <div style={{ fontSize: '0.75rem', color: 'gray' }}>{property.neighborhood}</div></td>
-                : <td>{property.neighborhood}</td>}
+              {property.subneighborhood ? (
+                <td onClick={() => {
+                  setSelectedPropertyId(property.id);
+                  setIsNeighborhoodPopupOpen(true);
+                }} style={{ cursor: 'pointer' }}>
+                  {property.subneighborhood} 
+                  <div style={{ fontSize: '0.75rem', color: 'gray' }}>{property.neighborhood}</div>
+                </td>
+              ) : (
+                <td onClick={() => {
+                  setSelectedPropertyId(property.id);
+                  setIsNeighborhoodPopupOpen(true);
+                }} style={{ cursor: 'pointer' }}>
+                  {property.neighborhood}
+                </td>
+              )}
               <td>{property.askingPrice?.toLocaleString() || '0'}</td>
               <td>
                 {editingPriceId === property.id ? (
