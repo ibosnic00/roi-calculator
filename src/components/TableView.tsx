@@ -2,6 +2,7 @@ import { Property } from '../types/Property'
 import { useState } from 'react';
 import { Popup } from './Popup';
 import { NeighborhoodPopup } from './NeighborhoodPopup';
+import { GetFullName } from '../utils/districtsZagreb';
 
 interface TableViewProps {
   properties: Property[];
@@ -129,15 +130,17 @@ export function TableView({
                   setSelectedPropertyId(property.id);
                   setIsNeighborhoodPopupOpen(true);
                 }} style={{ cursor: 'pointer' }}>
-                  {property.subneighborhood} 
-                  <div style={{ fontSize: '0.75rem', color: 'gray' }}>{property.neighborhood}</div>
+                  {property.subneighborhood}
+                  <div style={{ fontSize: '0.75rem', color: 'gray' }}>
+                    {GetFullName(property.neighborhood)}
+                  </div>
                 </td>
               ) : (
                 <td onClick={() => {
                   setSelectedPropertyId(property.id);
                   setIsNeighborhoodPopupOpen(true);
                 }} style={{ cursor: 'pointer' }}>
-                  {property.neighborhood}
+                  {GetFullName(property.neighborhood)}
                 </td>
               )}
               <td>{property.askingPrice?.toLocaleString() || '0'}</td>
