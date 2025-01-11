@@ -1,5 +1,28 @@
+// Short names mapping
+const districtShortNames: { [key: string]: string } = {
+    "crnomerec": "Črnomerec",
+    "donja-dubrava": "Donja Dubrava",
+    "brezovica": "Brezovica",
+    "donji-grad": "Donji Grad",
+    "gornja-dubrava": "Gornja Dubrava",
+    "gornji-grad-medvescak": "Gornji Grad - Medveščak",
+    "maksimir": "Maksimir",
+    "novi-zagreb-istok": "Novi Zagreb - Istok",
+    "novi-zagreb-zapad": "Novi Zagreb - Zapad",
+    "pescenica-zitnjak": "Pešćenica - Žitnjak",
+    "podsljeme": "Podsljeme",
+    "sesvete": "Sesvete",
+    "stenjevec": "Stenjevec",
+    "tresnjevka-jug": "Trešnjevka - Jug",
+    "tresnjevka-sjever": "Trešnjevka - Sjever",
+    "trnje": "Trnje",
+    "zagreb-okolica": "Zagreb - Okolica",
+    "podsused-vrapce": "Podsused - Vrapče"
+};
+
+// Modify the neighbourhoods map to use short names
 const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
-    "Črnomerec": [
+    "crnomerec": [
         "Bijenik",
         "Črnomerec",
         "Fraterščica",
@@ -16,7 +39,32 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Vrhovec",
         "Završje",
     ],
-    "Donja Dubrava": [
+    "pescenica-zitnjak": [
+        "Bogdani",
+        "Borongaj",
+        "Borongajski lug",
+        "Ivanja Reka",
+        "Borovje",
+        "Donje Svetice",
+        "Dubec",
+        "Ferenščica",
+        "Folnegovićevo naselje",
+        "Gate - Gmajna",
+        "Kozari",
+        "Kozari bok",
+        "Kozari put",
+        "Peščenica",
+        "Petruševec",
+        "Resničina",
+        "Resnik",
+        "Savica - Šanci",
+        "Struge",
+        "Trstik",
+        "Volovčica",
+        "Vukomerec",
+        "Žitnjak",
+    ],
+    "donja-dubrava": [
         "Čulinec",
         "Donja Dubrava",
         "Dubrava",
@@ -25,7 +73,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Retkovec",
         "Trnava",
     ],
-    "Brezovica": [
+    "brezovica": [
         "Brezovica",
         "Brebernica",
         "Demerje",
@@ -47,8 +95,14 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Strmec",
         "Zadvorsko",
     ],
-    "Donji Grad": ["Donji grad"],
-    "Gornja Dubrava": [
+    "donji-grad": [
+        "Donji Grad",
+        "Cvjetni trg",
+        "Zrinjevac",
+        "Strossmayerov trg",
+        "Tomislavov trg"
+    ],
+    "gornja-dubrava": [
         "Branovec",
         "Budaki",
         "Cesari",
@@ -87,7 +141,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Trupeljaki",
         "Žgulići",
     ],
-    "Gornji Grad - Medveščak": [
+    "gornji-grad-medvescak": [
         "Britanac",
         "Centar",
         "Dolac",
@@ -106,7 +160,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Voćarsko naselje",
         "Zelengaj",
     ],
-    "Maksimir": [
+    "maksimir": [
         "Donji Bukovac",
         "Gornji Bukovac",
         "Lašćina",
@@ -116,7 +170,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Srebrnjak",
         "Svetice",
     ],
-    "Novi Zagreb - Istok": [
+    "novi-zagreb-istok": [
         "Bundek",
         "Buzin",
         "Dugave",
@@ -131,7 +185,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Veliko Polje",
         "Zapruđe",
     ],
-    "Novi Zagreb - Zapad": [
+    "novi-zagreb-zapad": [
         "Blato",
         "Botinec",
         "Donji Čehi",
@@ -155,32 +209,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Trnsko",
         "Trokut",
     ],
-    "Peščenica - Žitnjak": [
-        "Bogdani",
-        "Borongaj",
-        "Borongajski lug",
-        "Ivanja Reka",
-        "Borovje",
-        "Donje Svetice",
-        "Dubec",
-        "Ferenščica",
-        "Folnegovićevo naselje",
-        "Gate - Gmajna",
-        "Kozari",
-        "Kozari bok",
-        "Kozari put",
-        "Peščenica",
-        "Petruševec",
-        "Resničina",
-        "Resnik",
-        "Savica - Šanci",
-        "Struge",
-        "Trstik",
-        "Volovčica",
-        "Vukomerec",
-        "Žitnjak",
-    ],
-    "Podsljeme": [
+    "podsljeme": [
         "Bačun",
         "Bidrovec",
         "Dedići",
@@ -194,7 +223,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Slanovec",
         "Sljeme",
     ],
-    "Sesvete": [
+    "sesvete": [
         "Adamovec",
         "Belovar",
         "Blaguša",
@@ -269,7 +298,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Zavječe",
         "Žerjavinec",
     ],
-    "Stenjevec": [
+    "stenjevec": [
         "Donje Vrapče",
         "Jankomir",
         "Malešnica",
@@ -277,7 +306,7 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Stenjevec",
         "Špansko",
     ],
-    "Trešnjevka - Jug": [
+    "tresnjevka-jug": [
         "Gajevo",
         "Gredice",
         "Horvati",
@@ -288,12 +317,12 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Staglišće",
         "Vrbani",
     ],
-    "Trešnjevka - Sjever": [
+    "tresnjevka-sjever": [
         "Rudeš",
         "Trešnjevka",
         "Voltino",
     ],
-    "Trnje": [
+    "trnje": [
         "Cvjetno naselje",
         "Kanal",
         "Kruge",
@@ -303,18 +332,43 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
         "Trnje",
         "Vrbik",
     ],
-    "Zagreb - Okolica": [
+    "zagreb-okolica": [
         "Brezovica",
         "Dumovec",
     ],
+    "podsused-vrapce": [
+        "Podsused",
+        "Vrapče",
+        "Gajnice",
+        "Gornje Vrapče",
+        "Perjavica",
+        "Borčec",
+        "Gornji Stenjevec"
+    ],
 };
 
-export function GetSubneighbourhoodsInNeighbourhood(neighbourhoods: string): string[] {
-    return neighbourhoodsAndSubneighbourhoods[neighbourhoods] || [];
+export function GetFullName(shortName: string): string {
+    return districtShortNames[shortName] || shortName;
+}
+
+export function GetShortName(fullName: string): string {
+    const entry = Object.entries(districtShortNames).find(([_, value]) => value === fullName);
+    const result = entry ? entry[0] : fullName;
+    return result;
+}
+
+export function GetSubneighbourhoodsInNeighbourhood(neighbourhood: string): string[] {
+    // First try with the short name directly, then try to get the short name if a full name was provided
+    const shortName = neighbourhoodsAndSubneighbourhoods[neighbourhood] ? 
+        neighbourhood : 
+        GetShortName(neighbourhood);
+    
+    return neighbourhoodsAndSubneighbourhoods[shortName] || [];
 }
 
 export function GetAllDistricts(): string[] {
-    return Object.keys(neighbourhoodsAndSubneighbourhoods).sort();
+    // Return full names
+    return Object.values(districtShortNames).sort();
 }
 
 export function GetAllSubneighbourhoods(): string[] {
@@ -328,10 +382,10 @@ export function GetAllSubneighbourhoods(): string[] {
 }
 
 export function GetNeighbourhoodFromSubneighbourhood(subneighbourhood: string): string | null {
-    for (const neighbourhood in neighbourhoodsAndSubneighbourhoods) {
-        if (neighbourhoodsAndSubneighbourhoods[neighbourhood].includes(subneighbourhood)) {
-            return neighbourhood;
+    for (const shortName in neighbourhoodsAndSubneighbourhoods) {
+        if (neighbourhoodsAndSubneighbourhoods[shortName].includes(subneighbourhood)) {
+            return districtShortNames[shortName];
         }
     }
-    return null; // if the neighbourhood is not found
+    return null;
 }

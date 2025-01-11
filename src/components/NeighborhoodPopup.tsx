@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { GetAllDistricts, GetSubneighbourhoodsInNeighbourhood } from '../utils/districtsZagreb';
+import { GetAllDistricts, GetSubneighbourhoodsInNeighbourhood, GetShortName } from '../utils/districtsZagreb';
 import '../styles/Popup.css';
 
 interface NeighborhoodPopupProps {
@@ -28,7 +28,9 @@ export function NeighborhoodPopup({
     if (!isOpen) return null;
 
     const handleSave = () => {
-        onSave(neighborhood, subneighborhood || null);
+        if (neighborhood) {
+            onSave(GetShortName(neighborhood), subneighborhood || null);
+        }
         onClose();
     };
 
@@ -46,8 +48,9 @@ export function NeighborhoodPopup({
                             setNeighborhood(e.target.value);
                             setSubneighborhood('');
                         }}
+                        className="popup-input"
                     >
-                        <option value="">Select neighborhood</option>
+                        <option value="">Select Neighbourhood</option>
                         {districts.map((district) => (
                             <option key={district} value={district}>
                                 {district}

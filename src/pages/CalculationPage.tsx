@@ -7,7 +7,9 @@ import { TileView } from '../components/TileView'
 import {
   GetSubneighbourhoodsInNeighbourhood,
   GetAllSubneighbourhoods,
-  GetNeighbourhoodFromSubneighbourhood
+  GetNeighbourhoodFromSubneighbourhood,
+  GetFullName,
+  GetShortName
 } from '../utils/districtsZagreb';
 import { NeighborhoodPopup } from '../components/NeighborhoodPopup';
 
@@ -101,7 +103,7 @@ export function CalculationPage() {
       askingPrice: price,
       expectedPrice: price,
       apartmentSize: size,
-      neighborhood: formData.neighborhood,
+      neighborhood: GetShortName(formData.neighborhood),
       renovationCost: renovationCost,
       monthlyRent: monthlyRent,
       subneighborhood: formData.subneighborhood,
@@ -305,7 +307,7 @@ export function CalculationPage() {
                       setFormData(prev => ({
                         ...prev,
                         neighborhood: newNeighborhood,
-                        subneighborhood: '' // Reset subneighborhood when neighborhood changes
+                        subneighborhood: ''
                       }));
                     }}
                     required
@@ -460,9 +462,7 @@ export function CalculationPage() {
                   <span>€{((selectedProperty.expectedPrice || 0) / (selectedProperty.apartmentSize || 1)).toFixed(2)}</span>
                 </div>
                 <div className="detail-row">
-                  <label >
-                    Neighborhood:
-                  </label>
+                  <label>Neighbourhood:</label>
                   <span onClick={() => {
                     if (selectedProperty) {
                       setSelectedProperty(selectedProperty);
@@ -470,8 +470,8 @@ export function CalculationPage() {
                     }
                   }} style={{ cursor: 'pointer' }}>
                     {selectedProperty.subneighborhood ?
-                      `${selectedProperty.subneighborhood} (${selectedProperty.neighborhood})` :
-                      selectedProperty.neighborhood
+                      `${selectedProperty.subneighborhood} (${GetFullName(selectedProperty.neighborhood)})` :
+                      GetFullName(selectedProperty.neighborhood)
                     }
                   </span>
                 </div>

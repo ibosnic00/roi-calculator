@@ -16,6 +16,7 @@ import {
 } from '@dnd-kit/sortable';
 import type { Active, DragEndEvent } from '@dnd-kit/core';
 import { NeighborhoodPopup } from './NeighborhoodPopup';
+import { GetFullName } from '../utils/districtsZagreb';
 
 interface TileViewProps {
     properties: Property[];
@@ -58,7 +59,7 @@ const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick
                     >
                         #{index + 1}
                         <span className="notes">
-                            {property.subneighborhood || property.neighborhood || 'No neighborhood'}
+                            {property.subneighborhood || GetFullName(property.neighborhood) || 'No neighborhood'}
                         </span>
                     </span>
                     <button
