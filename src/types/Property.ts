@@ -12,4 +12,5 @@ export interface Property {
   year: string;
   maintenanceCostPerSqm: number;
   link?: string;
+  isFavorite?: boolean;
 } 

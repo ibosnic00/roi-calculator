@@ -25,9 +25,10 @@ interface TileViewProps {
     onLinkChange: (id: number, link: string) => void;
     onReorder: (startIndex: number, endIndex: number) => void;
     onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
+    onFavoriteToggle: (id: number) => void;
 }
 
-const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick }: any) => {
+const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick, onFavoriteToggle }: any) => {
     const {
         attributes,
         listeners,
@@ -62,15 +63,26 @@ const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick
                             {property.subneighborhood || GetFullName(property.neighborhood) || 'No neighborhood'}
                         </span>
                     </span>
-                    <button
-                        className="delete-button"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onDelete(property.id);
-                        }}
-                    >
-                        ×
-                    </button>
+                    <div className="tile-actions">
+                        <button
+                            className={`favorite-button ${property.isFavorite ? 'active' : ''}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onFavoriteToggle(property.id);
+                            }}
+                        >
+                            {property.isFavorite ? '★' : '☆'}
+                        </button>
+                        <button
+                            className="delete-button"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(property.id);
+                            }}
+                        >
+                            ×
+                        </button>
+                    </div>
                 </div>
                 <div className="tile-content">
                     <div className="tile-price">
@@ -88,7 +100,7 @@ const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick
     );
 };
 
-export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, onReorder, onNeighborhoodChange }: TileViewProps) {
+export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, onReorder, onNeighborhoodChange, onFavoriteToggle }: TileViewProps) {
     const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [activeId, setActiveId] = useState<Active | null>(null);
@@ -174,6 +186,7 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
                             onDelete={onDelete}
                             onPropertyClick={onPropertyClick}
                             onIndexClick={handleIndexClick}
+                            onFavoriteToggle={onFavoriteToggle}
                         />
                     ))}
                 </SortableContext>

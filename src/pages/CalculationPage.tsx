@@ -228,6 +228,23 @@ export function CalculationPage() {
 
   const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
 
+  // Add state for favorites filter
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+
+  // Add handler for toggling favorite status
+  const handleFavoriteToggle = (id: number) => {
+    setProperties(properties.map(property =>
+      property.id === id
+        ? { ...property, isFavorite: !property.isFavorite }
+        : property
+    ));
+  };
+
+  // Filter properties based on favorites toggle
+  const filteredProperties = showOnlyFavorites 
+    ? properties.filter(p => p.isFavorite)
+    : properties;
+
   return (
     <>
       {!isFormVisible ? (
@@ -237,22 +254,34 @@ export function CalculationPage() {
               className="add-property-button"
               onClick={() => setIsFormVisible(true)}
             >
-              + Add Property
+              + ADD NEW
             </button>
           </div>
-          <div className="view-toggle">
-            <button
-              className={`toggle-button ${viewMode === 'table' ? 'active' : ''}`}
-              onClick={() => setViewMode('table')}
-            >
-              Table
-            </button>
-            <button
-              className={`toggle-button ${viewMode === 'tiles' ? 'active' : ''}`}
-              onClick={() => setViewMode('tiles')}
-            >
-              Tiles
-            </button>
+          <div className="view-controls">
+            <div className="view-toggle">
+              <button
+                className={`toggle-button ${viewMode === 'table' ? 'active' : ''}`}
+                onClick={() => setViewMode('table')}
+              >
+                Table
+              </button>
+              <button
+                className={`toggle-button ${viewMode === 'tiles' ? 'active' : ''}`}
+                onClick={() => setViewMode('tiles')}
+              >
+                Tiles
+              </button>
+            </div>
+            
+            <label className="favorites-toggle-label">
+              <input
+                type="checkbox"
+                checked={showOnlyFavorites}
+                onChange={() => setShowOnlyFavorites(!showOnlyFavorites)}
+                className="favorites-toggle-input"
+              />
+              <span className="favorites-toggle-text">SHOW FAVORITES ONLY</span>
+            </label>
           </div>
         </div>
       ) : (
@@ -403,7 +432,7 @@ export function CalculationPage() {
             )}
             {viewMode === 'table' ? (
               <TableView
-                properties={properties}
+                properties={filteredProperties}
                 onExpectedPriceChange={handleExpectedPriceChange}
                 onNotesChange={handleNotesChange}
                 onYearChange={handleYearChange}
@@ -411,15 +440,17 @@ export function CalculationPage() {
                 onMaintenanceCostChange={handleMaintenanceCostChange}
                 onLinkChange={handleLinkChange}
                 onNeighborhoodChange={handleNeighborhoodChange}
+                onFavoriteToggle={handleFavoriteToggle}
               />
             ) : (
               <TileView
-                properties={properties}
+                properties={filteredProperties}
                 onDelete={handleDelete}
                 onPropertyClick={setSelectedProperty}
                 onLinkChange={handleLinkChange}
                 onReorder={handleReorder}
                 onNeighborhoodChange={handleNeighborhoodChange}
+                onFavoriteToggle={handleFavoriteToggle}
               />
             )}
             <GraphView properties={properties} />

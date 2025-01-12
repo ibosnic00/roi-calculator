@@ -13,6 +13,7 @@ interface TableViewProps {
   onMaintenanceCostChange: (id: number, cost: string) => void;
   onLinkChange: (id: number, link: string) => void;
   onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
+  onFavoriteToggle: (id: number) => void;
 }
 
 export function TableView({
@@ -23,7 +24,8 @@ export function TableView({
   onDelete,
   onMaintenanceCostChange,
   onLinkChange,
-  onNeighborhoodChange
+  onNeighborhoodChange,
+  onFavoriteToggle
 }: TableViewProps) {
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [editingPriceId, setEditingPriceId] = useState<number | null>(null);
@@ -112,6 +114,7 @@ export function TableView({
             <th>Year
               <div className="unit">(construction)</div></th>
             <th>Notes</th>
+            <th>Favorite</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -237,6 +240,14 @@ export function TableView({
                     {property.notes || 'Add notes...'}
                   </div>
                 )}
+              </td>
+              <td>
+                <button
+                  className={`favorite-button ${property.isFavorite ? 'active' : ''}`}
+                  onClick={() => onFavoriteToggle(property.id)}
+                >
+                  {property.isFavorite ? '★' : '☆'}
+                </button>
               </td>
               <td>
                 <button
