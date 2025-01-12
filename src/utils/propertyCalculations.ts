@@ -19,7 +19,7 @@ export const calculatePropertyValue = (
   // Calculate yearly value based on selected method
   for (let i = 0; i < year; i++) {
     const appreciation = value * (parameters.baseAppreciation / 100);
-    const maintenance = property.maintenanceCostPerSqm * property.apartmentSize;
+    const maintenance = property.maintenanceCostPerSqm * property.apartmentSize + property.renovationCost;
     const roi = (property.monthlyRent * 12);
 
     switch (parameters.calculationMethod) {
