@@ -2,6 +2,7 @@ import { Property } from '../types/Property';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useState, useRef, useEffect } from 'react';
 import { calculateReturnPercentage } from '../utils/propertyCalculations';
+import { GetFullName } from '../utils/districtsZagreb';
 
 interface BarChartViewProps {
   properties: Property[];
@@ -77,7 +78,7 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
           value = calculateReturnPercentage(property, parameters, 20);
           break;
         case 'pricePerSqm':
-          value = property.expectedPrice / property.apartmentSize;
+          value = (property.expectedPrice + property.renovationCost) / property.apartmentSize;
           break;
       }
       return {
@@ -126,7 +127,7 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
               className="color-box" 
               style={{ backgroundColor: COLORS.byNeighborhood.colors[index % COLORS.byNeighborhood.colors.length] }}
             />
-            <span className="neighborhood-name">{neighborhood}</span>
+            <span className="neighborhood-name">{GetFullName(neighborhood)}</span>
           </div>
         ))}
       </div>

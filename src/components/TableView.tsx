@@ -167,7 +167,7 @@ export function TableView({
               </td>
               <td>{property.apartmentSize}</td>
               <td>
-                {((property.expectedPrice || 0) / (property.apartmentSize || 1)).toFixed(2)}
+                {(((property.expectedPrice || 0) + (property.renovationCost || 0)) / (property.apartmentSize || 1)).toFixed(2)}
               </td>
               <td>{property.monthlyRent?.toLocaleString() || '0'}</td>
               <td>{property.renovationCost?.toLocaleString() || '0'}</td>
