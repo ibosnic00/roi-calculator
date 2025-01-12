@@ -57,7 +57,9 @@ export function CalculationPage() {
 
     if (!range) return 0
 
-    return range.averageRents[neighborhood] || 0
+    // Convert short name to full name before looking up rent
+    const fullName = GetFullName(neighborhood)
+    return range.averageRents[fullName] || 0
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
