@@ -21,6 +21,11 @@ interface Parameters {
   calculationMethod: 'appreciation' | 'roi_plus_appreciation' | 'appreciation_minus_maintenance' | 'roi_plus_appreciation_minus_maintenance';
 }
 
+interface VisibilityState {
+  [key: string]: boolean;
+  sp500Value: boolean;
+}
+
 export function GraphView({ properties }: GraphViewProps) {
   const [activeTab, setActiveTab] = useState<'line' | 'bar'>('line');
   // Load initial parameters from localStorage or use defaults
@@ -50,17 +55,17 @@ export function GraphView({ properties }: GraphViewProps) {
     }
   }, [properties])
 
-  // Add state for line visibility with persistence
-  const [visibleLines, setVisibleLines] = useState<{ [key: string]: boolean }>(() => {
+  // Modify visibility state to use property IDs
+  const [visibleLines, setVisibleLines] = useState<VisibilityState>(() => {
     const savedVisibility = localStorage.getItem('graphVisibility')
     if (savedVisibility) {
       return JSON.parse(savedVisibility)
     }
-    const initial: { [key: string]: boolean } = {
+    const initial: VisibilityState = {
       sp500Value: false
     }
-    properties.forEach((_, index) => {
-      initial[`property${index}`] = true
+    properties.forEach(property => {
+      initial[`property-${property.id}`] = true
     })
     return initial
   })
@@ -93,16 +98,13 @@ export function GraphView({ properties }: GraphViewProps) {
   const calculateValues = (): DataPoint[] => {
     const data: DataPoint[] = [];
     
-    // Get selected property's value or default to first property
     const selectedProperty = properties.find(p => p.id === parameters.initialValueProperty) || properties[0];
     const initialSP500Value = selectedProperty ? (selectedProperty.expectedPrice + selectedProperty.renovationCost) : 0;
     let sp500Value = initialSP500Value;
 
-    // Initialize data array with years
     for (let year = 0; year <= parameters.years; year++) {
       data[year] = {
         year,
-        // Only include S&P 500 if visible
         ...(visibleLines.sp500Value && {
           sp500Value: Math.round(sp500Value)
         })
@@ -110,9 +112,15 @@ export function GraphView({ properties }: GraphViewProps) {
       sp500Value *= (1 + parameters.sp500Return / 100);
     }
 
-    // Calculate values for each visible property
-    properties.forEach((property, index) => {
-      const propertyKey = `property${index}`;
+    properties.forEach((property) => {
+      const propertyKey = `property-${property.id}`;
+      // Initialize visibility for new properties
+      if (visibleLines[propertyKey] === undefined) {
+        setVisibleLines(prev => ({
+          ...prev,
+          [propertyKey]: true
+        }));
+      }
       if (visibleLines[propertyKey]) {
         const totalInvestment = property.expectedPrice + property.renovationCost;
         let propertyValue = totalInvestment;
@@ -169,14 +177,14 @@ export function GraphView({ properties }: GraphViewProps) {
 
   const colors = ['#82ca9d', '#8884d8', '#ffc658', '#ff7300', '#00C49F'];
 
-  // Create a separate array for legend items
+  // Update getLegendItems to use property IDs
   const getLegendItems = () => {
     const items = properties.map((property, index) => ({
       id: property.id,
-      dataKey: `property${index}`,
+      dataKey: `property-${property.id}`,
       name: `Property ${index + 1} (ROI: ${property.roi.toFixed(1)}%)`,
       color: colors[index % colors.length],
-      visible: visibleLines[`property${index}`]
+      visible: visibleLines[`property-${property.id}`]
     }));
 
     items.push({

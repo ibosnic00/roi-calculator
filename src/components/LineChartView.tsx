@@ -83,7 +83,7 @@ export function LineChartView({ data, visibleLines, properties }: LineChartViewP
                 <Tooltip content={<CustomTooltip />} />
 
                 {properties.map((property, index) => {
-                    const propertyKey = `property${index}`;
+                    const propertyKey = `property-${property.id}`;
                     return visibleLines[propertyKey] ? (
                         <Line
                             key={property.id}

@@ -453,7 +453,9 @@ export function CalculationPage() {
                 onFavoriteToggle={handleFavoriteToggle}
               />
             )}
-            <GraphView properties={properties} />
+            <GraphView 
+              properties={showOnlyFavorites ? filteredProperties : properties} 
+            />
           </>
         )}
       </div>
