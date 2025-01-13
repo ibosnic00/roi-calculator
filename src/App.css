@@ -612,7 +612,7 @@ select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.5rem 0rem 1.5rem;
 }
 
 .view-toggle {
@@ -1463,81 +1463,239 @@ select.popup-input option[value=""] {
 .view-controls {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.1rem;
     align-items: center;
+    justify-content: center;
+    background: #f7fafc;
+    border-radius: 8px;
 }
 
-.favorites-toggle-label {
+.show-controls {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.75rem;
+    gap: 0.15rem;
+}
+
+.show-label {
+    font-size: 0.65rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.show-buttons {
+    display: flex;
+    gap: 0.25rem;
+    background: white;
+    padding: 0.25rem;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+.show-button {
+    background: none;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    color: #a0aec0;
+    width: 1.5rem;
+    height: 1.5rem;
+    filter: grayscale(1);
+}
+
+.show-button:hover {
+    background: #edf2f7;
     color: #4a5568;
+    filter: grayscale(0);
+}
+
+.show-button.active {
+    background: #e2e8f0;
+    color: #2d3748;
+    filter: grayscale(0);
+}
+
+.view-toggle {
+    display: flex;
+    background: white;
+    padding: 0.25rem;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
     cursor: pointer;
-    margin-bottom: 0;
+    font-size: 0.875rem;
+    color: #718096;
+    border-radius: 4px;
+    transition: all 0.2s;
 }
 
-.favorites-toggle-input {
-    margin: 0;
-    cursor: pointer;
+.toggle-button:hover {
+    background: #edf2f7;
+    color: #4a5568;
 }
 
-.favorites-toggle-text {
-    user-select: none;
+.toggle-button.active {
+    background: #e2e8f0;
+    color: #2d3748;
+    font-weight: 500;
 }
 
-.favorite-button {
+.sold-button {
+    color: #48bb78;  /* Green color for money */
+    filter: grayscale(1);
+    opacity: 0.5;
+}
+
+.sold-button:hover {
+    opacity: 0.8;
+    filter: grayscale(0.5);
+    transform: scale(1.1);
+}
+
+.sold-button.active {
+    opacity: 1;
+    filter: grayscale(0);
+}
+
+.favorite-button,
+.sold-button {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0.25rem;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     line-height: 1;
-    opacity: 0.5;
     transition: all 0.2s;
-    color: #3182ce;  /* Blue color to match theme */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    filter: grayscale(1);
+    opacity: 0.5;
 }
 
-.favorite-button:hover {
-    opacity: 0.8;
-    transform: scale(1.1);
+.favorite-button {
+    color: #3182ce;  /* Change from gold to blue to match theme */
 }
 
 .favorite-button.active {
     opacity: 1;
+    filter: grayscale(0);
+    color: #3182ce;  /* Ensure active state uses the same blue */
 }
 
-.custom-size-range {
+/* Update show-button when it's the favorite star */
+.show-button:last-child {
+    color: #3182ce;  /* Make the show favorites button blue as well */
+}
+
+/* Add specific styles for table view buttons */
+.properties-table .favorite-button,
+.properties-table .sold-button {
+    margin: 0 auto;  /* Center in table cell */
+}
+
+/* Add specific styles for tile view buttons */
+.property-tile .favorite-button,
+.property-tile .sold-button {
+    padding: 0.15rem;  /* Slightly smaller padding in tiles */
+}
+
+.tile-actions {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    background: rgba(247, 250, 252, 0.8);  /* Light background */
+    padding: 0.25rem;
+    border-radius: 6px;
+    margin-left: auto;  /* Push to the right */
+}
+
+/* Adjust the tile header to accommodate the actions */
+.tile-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.size-input {
-    width: 100px;
+/* Make buttons in tile actions more compact */
+.tile-actions .favorite-button,
+.tile-actions .sold-button,
+.tile-actions .delete-button {
+    padding: 0.15rem;
+    font-size: 1rem;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
-.cancel-button.small {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
+/* Add separator between buttons */
+.tile-actions > button:not(:last-child) {
+    border-right: 1px solid #e2e8f0;
+    margin-right: 0.25rem;
+    padding-right: 0.25rem;
 }
 
-.rent-edit-form {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+/* Adjust hover states for tile action buttons */
+.tile-actions button:hover {
+    transform: scale(1.15);
 }
 
-.current-rent {
-    color: #4a5568;
-    font-size: 0.875rem;
-}
-
-.rental-data-table td {
-    transition: background-color 0.2s;
-}
-
-.rental-data-table td:nth-child(2):hover {
+/* Update table row styles for sold items */
+.properties-table tr.sold-row {
+    opacity: 0.7;
     background-color: #f7fafc;
+    color: #718096;  /* Grayed out text */
+}
+
+.properties-table tr.sold-row td {
+    color: #718096;  /* Ensure all text in cells is grayed */
+}
+
+.properties-table tr.sold-row input,
+.properties-table tr.sold-row .expected-price-text,
+.properties-table tr.sold-row .notes-text,
+.properties-table tr.sold-row .year-text,
+.properties-table tr.sold-row .maintenance-text {
+    color: #718096;
+    opacity: 0.8;
+}
+
+/* Update tile styles for sold items */
+.property-tile.sold {
+    opacity: 0.7;
+    background-color: #f7fafc;
+    border-color: #e2e8f0;
+}
+
+.property-tile.sold .tile-content {
+    color: #718096;
+}
+
+.property-tile.sold .tile-price,
+.property-tile.sold .tile-roi,
+.property-tile.sold .tile-notes,
+.property-tile.sold .tile-index {
+    color: #718096;
+    opacity: 0.8;
+}
+
+/* Add hover effect to show it's still interactive */
+.property-tile.sold:hover {
+    opacity: 0.8;
+    border-color: #cbd5e0;
 }

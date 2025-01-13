@@ -26,9 +26,10 @@ interface TileViewProps {
     onReorder: (startIndex: number, endIndex: number) => void;
     onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
     onFavoriteToggle: (id: number) => void;
+    onSoldToggle: (id: number) => void;
 }
 
-const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick, onFavoriteToggle }: any) => {
+const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick, onFavoriteToggle, onSoldToggle }: any) => {
     const {
         attributes,
         listeners,
@@ -48,7 +49,7 @@ const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick
         <div
             ref={setNodeRef}
             style={style}
-            className={`property-tile ${isDragging ? 'dragging' : ''}`}
+            className={`property-tile ${isDragging ? 'dragging' : ''} ${property.isSold ? 'sold' : ''}`}
             {...attributes}
             {...listeners}
         >
@@ -72,6 +73,15 @@ const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick
                             }}
                         >
                             {property.isFavorite ? '★' : '☆'}
+                        </button>
+                        <button
+                            className={`sold-button ${property.isSold ? 'active' : ''}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onSoldToggle(property.id);
+                            }}
+                        >
+                            💸
                         </button>
                         <button
                             className="delete-button"
@@ -100,7 +110,7 @@ const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick
     );
 };
 
-export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, onReorder, onNeighborhoodChange, onFavoriteToggle }: TileViewProps) {
+export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, onReorder, onNeighborhoodChange, onFavoriteToggle, onSoldToggle }: TileViewProps) {
     const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [activeId, setActiveId] = useState<Active | null>(null);
@@ -187,6 +197,7 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
                             onPropertyClick={onPropertyClick}
                             onIndexClick={handleIndexClick}
                             onFavoriteToggle={onFavoriteToggle}
+                            onSoldToggle={onSoldToggle}
                         />
                     ))}
                 </SortableContext>

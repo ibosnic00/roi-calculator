@@ -236,6 +236,29 @@ export function GraphView({ properties }: GraphViewProps) {
     );
   };
 
+  // Add effect to handle sold properties visibility
+  useEffect(() => {
+    setVisibleLines(prev => {
+      const newVisibility = { ...prev };
+      properties.forEach(property => {
+        const propertyKey = `property-${property.id}`;
+        // If property is sold and currently visible, hide it
+        if (property.isSold && newVisibility[propertyKey]) {
+          newVisibility[propertyKey] = false;
+        }
+        // If property is unsold and was previously hidden due to being sold, show it
+        else if (!property.isSold && newVisibility[propertyKey] === false) {
+          newVisibility[propertyKey] = true;
+        }
+        // Initialize visibility for new properties
+        else if (newVisibility[propertyKey] === undefined) {
+          newVisibility[propertyKey] = !property.isSold;
+        }
+      });
+      return newVisibility;
+    });
+  }, [properties]);
+
   return (
     <div className="graph-container">
       <div className="graph-header">

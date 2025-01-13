@@ -228,8 +228,25 @@ export function CalculationPage() {
 
   const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
 
-  // Add state for favorites filter
-  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  // Initialize show controls state with localStorage values
+  const [showSold, setShowSold] = useState(() => {
+    const saved = localStorage.getItem('showSold');
+    return saved ? JSON.parse(saved) : true;  // Default to true
+  });
+
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(() => {
+    const saved = localStorage.getItem('showOnlyFavorites');
+    return saved ? JSON.parse(saved) : false;  // Default to false
+  });
+
+  // Add effects to save state changes
+  useEffect(() => {
+    localStorage.setItem('showSold', JSON.stringify(showSold));
+  }, [showSold]);
+
+  useEffect(() => {
+    localStorage.setItem('showOnlyFavorites', JSON.stringify(showOnlyFavorites));
+  }, [showOnlyFavorites]);
 
   // Add handler for toggling favorite status
   const handleFavoriteToggle = (id: number) => {
@@ -240,10 +257,25 @@ export function CalculationPage() {
     ));
   };
 
-  // Filter properties based on favorites toggle
-  const filteredProperties = showOnlyFavorites 
-    ? properties.filter(p => p.isFavorite)
-    : properties;
+  // Update handleSoldToggle function
+  const handleSoldToggle = (id: number) => {
+    setProperties(properties.map(property =>
+        property.id === id
+            ? { ...property, isSold: !property.isSold }
+            : property
+    ));
+  };
+
+  // Modify the filtering logic
+  const filteredProperties = properties.filter(p => {
+    // If showing only favorites, property must be favorite
+    if (showOnlyFavorites && !p.isFavorite) return false;
+    
+    // If not showing sold properties, hide them (even if they're favorites)
+    if (!showSold && p.isSold) return false;
+    
+    return true;
+  });
 
   return (
     <>
@@ -258,6 +290,7 @@ export function CalculationPage() {
             </button>
           </div>
           <div className="view-controls">
+
             <div className="view-toggle">
               <button
                 className={`toggle-button ${viewMode === 'table' ? 'active' : ''}`}
@@ -272,16 +305,28 @@ export function CalculationPage() {
                 Tiles
               </button>
             </div>
+
             
-            <label className="favorites-toggle-label">
-              <input
-                type="checkbox"
-                checked={showOnlyFavorites}
-                onChange={() => setShowOnlyFavorites(!showOnlyFavorites)}
-                className="favorites-toggle-input"
-              />
-              <span className="favorites-toggle-text">SHOW FAVORITES ONLY</span>
-            </label>
+            <div className="show-controls">
+              <span className="show-label">Show</span>
+              <div className="show-buttons">
+                <button
+                  className={`show-button ${showSold ? 'active' : ''}`}
+                  onClick={() => setShowSold(!showSold)}
+                  title="Show/Hide Sold"
+                >
+                  💸
+                </button>
+                <button
+                  className={`show-button ${showOnlyFavorites ? 'active' : ''}`}
+                  onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+                  title="Show Favorites Only"
+                >
+                  ★
+                </button>
+              </div>
+            </div>
+            
           </div>
         </div>
       ) : (
@@ -441,6 +486,7 @@ export function CalculationPage() {
                 onLinkChange={handleLinkChange}
                 onNeighborhoodChange={handleNeighborhoodChange}
                 onFavoriteToggle={handleFavoriteToggle}
+                onSoldToggle={handleSoldToggle}
               />
             ) : (
               <TileView
@@ -451,6 +497,7 @@ export function CalculationPage() {
                 onReorder={handleReorder}
                 onNeighborhoodChange={handleNeighborhoodChange}
                 onFavoriteToggle={handleFavoriteToggle}
+                onSoldToggle={handleSoldToggle}
               />
             )}
             <GraphView 

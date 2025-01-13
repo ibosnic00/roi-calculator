@@ -14,6 +14,7 @@ interface TableViewProps {
   onLinkChange: (id: number, link: string) => void;
   onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
   onFavoriteToggle: (id: number) => void;
+  onSoldToggle: (id: number) => void;
 }
 
 export function TableView({
@@ -25,7 +26,8 @@ export function TableView({
   onMaintenanceCostChange,
   onLinkChange,
   onNeighborhoodChange,
-  onFavoriteToggle
+  onFavoriteToggle,
+  onSoldToggle
 }: TableViewProps) {
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [editingPriceId, setEditingPriceId] = useState<number | null>(null);
@@ -115,12 +117,13 @@ export function TableView({
               <div className="unit">(construction)</div></th>
             <th>Notes</th>
             <th>Favorite</th>
+            <th>Sold</th>
             <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           {properties.map((property, index) => (
-            <tr key={property.id}>
+            <tr key={property.id} className={property.isSold ? 'sold-row' : ''}>
               <td
                 className="index-column"
                 onClick={() => handleIndexClick(property.id)}
@@ -247,6 +250,14 @@ export function TableView({
                   onClick={() => onFavoriteToggle(property.id)}
                 >
                   {property.isFavorite ? '★' : '☆'}
+                </button>
+              </td>
+              <td>
+                <button
+                  className={`sold-button ${property.isSold ? 'active' : ''}`}
+                  onClick={() => onSoldToggle(property.id)}
+                >
+                  💸
                 </button>
               </td>
               <td>
