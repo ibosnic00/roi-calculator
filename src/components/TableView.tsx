@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Popup } from './Popup';
 import { NeighborhoodPopup } from './NeighborhoodPopup';
 import { GetFullName } from '../utils/districtsZagreb';
+import { RentEditPopup } from './RentEditPopup';
 
 interface TableViewProps {
   properties: Property[];
@@ -15,6 +16,7 @@ interface TableViewProps {
   onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
   onFavoriteToggle: (id: number) => void;
   onSoldToggle: (id: number) => void;
+  onRentChange: (id: number, rent: number) => void;
 }
 
 export function TableView({
@@ -27,7 +29,8 @@ export function TableView({
   onLinkChange,
   onNeighborhoodChange,
   onFavoriteToggle,
-  onSoldToggle
+  onSoldToggle,
+  onRentChange
 }: TableViewProps) {
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [editingPriceId, setEditingPriceId] = useState<number | null>(null);
@@ -36,6 +39,7 @@ export function TableView({
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
+  const [editingRentId, setEditingRentId] = useState<number | null>(null);
 
   const handleIndexClick = (propertyId: number) => {
     setSelectedPropertyId(propertyId);
@@ -69,6 +73,19 @@ export function TableView({
         }}
         initialNeighborhood={selectedProperty?.neighborhood}
         initialSubneighborhood={selectedProperty?.subneighborhood}
+      />
+
+      <RentEditPopup
+        isOpen={editingRentId !== null}
+        onClose={() => setEditingRentId(null)}
+        onSave={(rent) => {
+          if (editingRentId) {
+            onRentChange(editingRentId, rent);
+            setEditingRentId(null);
+          }
+        }}
+        currentRent={properties.find(p => p.id === editingRentId)?.monthlyRent || 0}
+        neighborhood={selectedProperty?.neighborhood || ''}
       />
 
       <table className="properties-table">
@@ -175,7 +192,12 @@ export function TableView({
               <td>
                 {(((property.expectedPrice || 0) + (property.renovationCost || 0)) / (property.apartmentSize || 1)).toFixed(2)}
               </td>
-              <td>{property.monthlyRent?.toLocaleString() || '0'}</td>
+              <td 
+                onClick={() => setEditingRentId(property.id)}
+                style={{ cursor: 'pointer' }}
+              >
+                {property.monthlyRent?.toLocaleString() || '0'}
+              </td>
               <td>{property.renovationCost?.toLocaleString() || '0'}</td>
               <td>
                 {editingMaintenanceId === property.id ? (

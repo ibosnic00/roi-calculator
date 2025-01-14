@@ -125,4 +125,23 @@
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-wrapper .popup-link-input {
+  width: auto;
+  flex: 1;
+  margin: 0;
+}
+
+/* Remove spinner for Firefox */
+.input-wrapper .popup-link-input::-webkit-outer-spin-button,
+.input-wrapper .popup-link-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 } 

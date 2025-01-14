@@ -12,6 +12,7 @@ import {
   GetShortName
 } from '../utils/districtsZagreb';
 import { NeighborhoodPopup } from '../components/NeighborhoodPopup';
+import { RentEditPopup } from '../components/RentEditPopup';
 
 export function CalculationPage() {
   const { rentalData } = useRentalData()
@@ -277,6 +278,24 @@ export function CalculationPage() {
     return true;
   });
 
+  // Add new handler for rent changes
+  const handleRentChange = (id: number, rent: number) => {
+    setProperties(properties.map(property => {
+      if (property.id === id) {
+        const newRoi = calculateROI(property.expectedPrice, rent, property.renovationCost);
+        return {
+          ...property,
+          monthlyRent: rent,
+          roi: newRoi
+        };
+      }
+      return property;
+    }));
+  };
+
+  // Add new state for rent editing
+  const [editingRentId, setEditingRentId] = useState<number | null>(null);
+
   return (
     <>
       {!isFormVisible ? (
@@ -487,6 +506,7 @@ export function CalculationPage() {
                 onNeighborhoodChange={handleNeighborhoodChange}
                 onFavoriteToggle={handleFavoriteToggle}
                 onSoldToggle={handleSoldToggle}
+                onRentChange={handleRentChange}
               />
             ) : (
               <TileView
@@ -559,7 +579,14 @@ export function CalculationPage() {
                 </div>
                 <div className="detail-row">
                   <label>Monthly Rent:</label>
-                  <span>€{selectedProperty.monthlyRent.toLocaleString()}</span>
+                  <span 
+                    onClick={() => {
+                      setEditingRentId(selectedProperty.id);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    €{selectedProperty.monthlyRent.toLocaleString()}
+                  </span>
                 </div>
                 <div className="detail-row">
                   <label>Renovation Cost:</label>
@@ -635,6 +662,20 @@ export function CalculationPage() {
         }}
         initialNeighborhood={selectedProperty?.neighborhood}
         initialSubneighborhood={selectedProperty?.subneighborhood}
+      />
+
+      {/* Add RentEditPopup */}
+      <RentEditPopup
+        isOpen={editingRentId !== null}
+        onClose={() => setEditingRentId(null)}
+        onSave={(rent) => {
+          if (editingRentId) {
+            handleRentChange(editingRentId, rent);
+            setEditingRentId(null);
+          }
+        }}
+        currentRent={properties.find(p => p.id === editingRentId)?.monthlyRent || 0}
+        neighborhood={selectedProperty?.neighborhood || ''}
       />
     </>
   )
