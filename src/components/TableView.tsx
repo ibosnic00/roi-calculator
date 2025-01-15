@@ -43,13 +43,23 @@ export function TableView({
   const [editingRentId, setEditingRentId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const handleIndexClick = (propertyId: number) => {
-    setSelectedPropertyId(propertyId);
-    setIsPopupOpen(true);
+  const handleIndexClick = (property: Property) => {
+    if (property.link) {
+      window.open(property.link, '_blank');
+    } else {
+      setSelectedPropertyId(property.id);
+      setIsPopupOpen(true);
+    }
   };
 
   const handleLinkChange = (id: number, link: string) => {
     onLinkChange(id, link);
+  };
+
+  const handleIndexRightClick = (e: React.MouseEvent, property: Property) => {
+    e.preventDefault(); // Prevent default context menu
+    setSelectedPropertyId(property.id);
+    setIsPopupOpen(true);
   };
 
   const selectedProperty = properties.find(p => p.id === selectedPropertyId);
@@ -159,9 +169,10 @@ export function TableView({
           {properties.map((property, index) => (
             <tr key={property.id} className={property.isSold ? 'sold-row' : ''}>
               <td
-                className="index-column"
-                onClick={() => handleIndexClick(property.id)}
-                style={{ cursor: 'pointer' }}
+                className={`index-column ${property.link ? 'has-link' : ''}`}
+                onClick={() => handleIndexClick(property)}
+                onContextMenu={(e) => handleIndexRightClick(e, property)}
+                style={{ cursor: property.link ? 'pointer' : 'default' }}
               >
                 {index + 1}
               </td>

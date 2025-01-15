@@ -1711,3 +1711,51 @@ select.popup-input option[value=""] {
 .property-tile.sold .tile-index {
   color: #718096;  /* Lighter gray but still visible in dark mode */
 }
+
+/* Add subtle background for index cells with links */
+.index-column.has-link {
+  background-color: rgba(49, 130, 206, 0.1);  /* Very light blue background */
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.index-column.has-link::after {
+  content: "Right click to edit, left click to open";
+  position: absolute;
+  display: none;
+  background: #2d3748;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1;
+  bottom: 100%;
+  left: 0%;
+  transform: translateX(-0%);
+}
+
+.index-column.has-link:hover::after {
+  display: block;
+}
+
+/* Add new tooltip for cells without link */
+.index-column:not(.has-link)::after {
+  content: "Click to add link";
+  position: absolute;
+  display: none;
+  background: #2d3748;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1;
+  bottom: 100%;
+  left: 0%;
+  transform: translateX(-0%);
+}
+
+.index-column:not(.has-link):hover::after {
+  display: block;
+}
