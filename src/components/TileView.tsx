@@ -17,6 +17,7 @@ import {
 import type { Active, DragEndEvent } from '@dnd-kit/core';
 import { NeighborhoodPopup } from './NeighborhoodPopup';
 import { GetFullName } from '../utils/districtsZagreb';
+import { ConfirmationPopup } from './ConfirmationPopup';
 
 interface TileViewProps {
     properties: Property[];
@@ -29,7 +30,7 @@ interface TileViewProps {
     onSoldToggle: (id: number) => void;
 }
 
-const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick, onFavoriteToggle, onSoldToggle }: any) => {
+const SortableTile = ({ property, index, onPropertyClick, onIndexClick, onFavoriteToggle, onSoldToggle, onDeleteClick }: any) => {
     const {
         attributes,
         listeners,
@@ -87,7 +88,7 @@ const SortableTile = ({ property, index, onDelete, onPropertyClick, onIndexClick
                             className="delete-button"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                onDelete(property.id);
+                                onDeleteClick(property.id);
                             }}
                         >
                             ×
@@ -115,6 +116,7 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [activeId, setActiveId] = useState<Active | null>(null);
     const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
+    const [deleteId, setDeleteId] = useState<number | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -194,6 +196,7 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
                             property={property}
                             index={index}
                             onDelete={onDelete}
+                            onDeleteClick={setDeleteId}
                             onPropertyClick={onPropertyClick}
                             onIndexClick={handleIndexClick}
                             onFavoriteToggle={onFavoriteToggle}
@@ -226,6 +229,21 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
                         </div>
                     ) : null}
                 </DragOverlay>
+
+                <ConfirmationPopup
+                    isOpen={deleteId !== null}
+                    onClose={() => setDeleteId(null)}
+                    onConfirm={() => {
+                        if (deleteId !== null) {
+                            onDelete(deleteId);
+                            setDeleteId(null);
+                        }
+                    }}
+                    propertyInfo={properties.find(p => p.id === deleteId) && {
+                        neighborhood: GetFullName(properties.find(p => p.id === deleteId)!.subneighborhood),
+                        expectedPrice: properties.find(p => p.id === deleteId)!.expectedPrice
+                    }}
+                />
             </div>
         </DndContext>
     );

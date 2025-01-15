@@ -4,6 +4,7 @@ import { Popup } from './Popup';
 import { NeighborhoodPopup } from './NeighborhoodPopup';
 import { GetFullName } from '../utils/districtsZagreb';
 import { RentEditPopup } from './RentEditPopup';
+import { ConfirmationPopup } from './ConfirmationPopup';
 
 interface TableViewProps {
   properties: Property[];
@@ -40,6 +41,7 @@ export function TableView({
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
   const [editingRentId, setEditingRentId] = useState<number | null>(null);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const handleIndexClick = (propertyId: number) => {
     setSelectedPropertyId(propertyId);
@@ -86,6 +88,21 @@ export function TableView({
         }}
         currentRent={properties.find(p => p.id === editingRentId)?.monthlyRent || 0}
         neighborhood={selectedProperty?.neighborhood || ''}
+      />
+
+      <ConfirmationPopup
+        isOpen={deleteId !== null}
+        onClose={() => setDeleteId(null)}
+        onConfirm={() => {
+          if (deleteId !== null) {
+            onDelete(deleteId);
+            setDeleteId(null);
+          }
+        }}
+        propertyInfo={properties.find(p => p.id === deleteId) && {
+          neighborhood: GetFullName(properties.find(p => p.id === deleteId)!.subneighborhood),
+          expectedPrice: properties.find(p => p.id === deleteId)!.expectedPrice
+        }}
       />
 
       <table className="properties-table">
@@ -284,7 +301,7 @@ export function TableView({
               </td>
               <td>
                 <button
-                  onClick={() => onDelete(property.id)}
+                  onClick={() => setDeleteId(property.id)}
                   className="delete-button"
                 >
                   ×

@@ -692,6 +692,14 @@ select:focus {
 
 .tile-content {
   padding: 1rem;
+  color: #2d3748;  /* Dark gray for better visibility */
+}
+
+.tile-price,
+.tile-roi,
+.tile-notes,
+.tile-index {
+  color: #2d3748;  /* Ensure all text elements are visible */
 }
 
 /* Property Detail Styles */
@@ -1693,4 +1701,13 @@ select.popup-input option[value=""] {
 .property-tile.sold:hover {
     opacity: 0.8;
     border-color: #cbd5e0;
+}
+
+/* For sold items, use a lighter gray but still visible */
+.property-tile.sold .tile-content,
+.property-tile.sold .tile-price,
+.property-tile.sold .tile-roi,
+.property-tile.sold .tile-notes,
+.property-tile.sold .tile-index {
+  color: #718096;  /* Lighter gray but still visible in dark mode */
 }

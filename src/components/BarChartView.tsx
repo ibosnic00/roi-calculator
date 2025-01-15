@@ -164,8 +164,9 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
           <option value="pricePerSqm">Price per m²</option>
         </select>
         <button
-          className="sort-button"
           onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+          className="sort-button"
+          style={{ color: '#2d3748' }}
         >
           Sort {sortOrder === 'asc' ? '↑' : '↓'}
         </button>
