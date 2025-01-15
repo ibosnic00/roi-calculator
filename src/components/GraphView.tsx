@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Property } from '../types/Property'
 import { LineChartView } from './LineChartView';
 import { BarChartView } from './BarChartView';
 
 interface GraphViewProps {
   properties: Property[];
+  onShowFavorites: (handler: () => void) => void;
 }
 
 interface DataPoint {
@@ -26,7 +27,7 @@ interface VisibilityState {
   sp500Value: boolean;
 }
 
-export function GraphView({ properties }: GraphViewProps) {
+export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
   const [activeTab, setActiveTab] = useState<'line' | 'bar'>('line');
   // Load initial parameters from localStorage or use defaults
   const [parameters, setParameters] = useState<Parameters>(() => {
@@ -124,21 +125,23 @@ export function GraphView({ properties }: GraphViewProps) {
       if (visibleLines[propertyKey]) {
         const totalInvestment = property.expectedPrice + property.renovationCost;
         let propertyValue = totalInvestment;
-        const yearlyNetRental = property.monthlyRent * 12 * 0.8;
+        const rentTax = 0.13;
         
         const propertyAppreciation = (() => {
           switch (parameters.calculationMethod) {
             case 'appreciation':
               return parameters.baseAppreciation / 100;
             case 'roi_plus_appreciation':
-              return parameters.baseAppreciation / 100 + (property.roi / 100);
-            case 'appreciation_minus_maintenance':
+              return parameters.baseAppreciation / 100 + ((property.roi / 100) * (1-rentTax) );
+            case 'appreciation_minus_maintenance': {
+              const yearlyMaintenanceCost = property.maintenanceCostPerSqm * property.apartmentSize;
+              const maintenancePercentage = (yearlyMaintenanceCost / (property.expectedPrice + property.renovationCost)) * 100;
+              return parameters.baseAppreciation / 100 - (maintenancePercentage / 100);
+            }
             case 'roi_plus_appreciation_minus_maintenance': {
               const yearlyMaintenanceCost = property.maintenanceCostPerSqm * property.apartmentSize;
               const maintenancePercentage = (yearlyMaintenanceCost / (property.expectedPrice + property.renovationCost)) * 100;
-              return parameters.calculationMethod === 'appreciation_minus_maintenance'
-                ? parameters.baseAppreciation / 100 - (maintenancePercentage / 100)
-                : parameters.baseAppreciation / 100 + (property.roi / 100) - (maintenancePercentage / 100);
+              return parameters.baseAppreciation / 100 + ((property.roi / 100) * (1-rentTax)) - (maintenancePercentage / 100);
             }
             default:
               return parameters.baseAppreciation / 100;
@@ -146,7 +149,7 @@ export function GraphView({ properties }: GraphViewProps) {
         })();
 
         for (let year = 0; year <= parameters.years; year++) {
-          data[year][propertyKey] = Math.round(propertyValue + yearlyNetRental * year);
+          data[year][propertyKey] = Math.round(propertyValue);
           propertyValue *= (1 + propertyAppreciation);
         }
       }
@@ -236,28 +239,44 @@ export function GraphView({ properties }: GraphViewProps) {
     );
   };
 
-  // Add effect to handle sold properties visibility
+  // Modify the effect to preserve visibility state when properties change
   useEffect(() => {
     setVisibleLines(prev => {
       const newVisibility = { ...prev };
       properties.forEach(property => {
         const propertyKey = `property-${property.id}`;
-        // If property is sold and currently visible, hide it
-        if (property.isSold && newVisibility[propertyKey]) {
-          newVisibility[propertyKey] = false;
-        }
-        // If property is unsold and was previously hidden due to being sold, show it
-        else if (!property.isSold && newVisibility[propertyKey] === false) {
-          newVisibility[propertyKey] = true;
-        }
-        // Initialize visibility for new properties
-        else if (newVisibility[propertyKey] === undefined) {
+        // Only set visibility for new properties or handle sold state changes
+        if (newVisibility[propertyKey] === undefined) {
+          // Initialize new property visibility
           newVisibility[propertyKey] = !property.isSold;
+        } else if (property.isSold && newVisibility[propertyKey]) {
+          // Hide if newly sold
+          newVisibility[propertyKey] = false;
+        } else if (!property.isSold && newVisibility[propertyKey] === false && prev[propertyKey] === undefined) {
+          // Show if unsold and was hidden due to being sold (but not if manually hidden)
+          newVisibility[propertyKey] = true;
         }
       });
       return newVisibility;
     });
   }, [properties]);
+
+  // Move showOnlyFavorites outside of the component or use useCallback
+  const showOnlyFavorites = useCallback(() => {
+    setVisibleLines(prev => {
+      const newVisibility = { ...prev };
+      properties.forEach(property => {
+        const propertyKey = `property-${property.id}`;
+        newVisibility[propertyKey] = property.isFavorite || false;
+      });
+      return newVisibility;
+    });
+  }, [properties]); // Include properties in dependencies
+
+  // Update the useEffect to run only once when the component mounts
+  useEffect(() => {
+    onShowFavorites(showOnlyFavorites);
+  }, []); // Empty dependency array
 
   return (
     <div className="graph-container">

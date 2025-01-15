@@ -296,6 +296,17 @@ export function CalculationPage() {
   // Add new state for rent editing
   const [editingRentId, setEditingRentId] = useState<number | null>(null);
 
+  const [showFavoritesHandler, setShowFavoritesHandler] = useState<(() => void) | null>(null);
+
+  const handleShowFavoritesClick = () => {
+    setShowOnlyFavorites((prev: boolean) => {
+      if (!prev && showFavoritesHandler) {
+        showFavoritesHandler();
+      }
+      return !prev;
+    });
+  };
+
   return (
     <>
       {!isFormVisible ? (
@@ -338,7 +349,7 @@ export function CalculationPage() {
                 </button>
                 <button
                   className={`show-button ${showOnlyFavorites ? 'active' : ''}`}
-                  onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+                  onClick={handleShowFavoritesClick}
                   title="Show Favorites Only"
                 >
                   ★
@@ -521,7 +532,8 @@ export function CalculationPage() {
               />
             )}
             <GraphView 
-              properties={showOnlyFavorites ? filteredProperties : properties} 
+              properties={showOnlyFavorites ? filteredProperties : properties}
+              onShowFavorites={(handler) => setShowFavoritesHandler(() => handler)}
             />
           </>
         )}

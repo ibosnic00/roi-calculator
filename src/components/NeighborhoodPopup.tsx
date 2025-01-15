@@ -73,8 +73,18 @@ export function NeighborhoodPopup({
                     )}
 
                     <div className="popup-buttons">
-                        <button onClick={handleSave}>Save</button>
-                        <button onClick={onClose}>Cancel</button>
+                        <button 
+                            className="popup-save"
+                            onClick={handleSave}
+                        >
+                            Save
+                        </button>
+                        <button 
+                            className="popup-cancel" 
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </div>

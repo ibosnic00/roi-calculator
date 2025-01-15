@@ -20,6 +20,8 @@
   position: relative;
   min-width: 300px;
   max-width: 600px;
+  color: #2d3748;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 @media (max-width: 768px) {
   .popup-content{
@@ -42,11 +44,14 @@
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  color: #2d3748;
+  background-color: #ffffff;
 }
 
 .popup-link-text {
   word-break: break-all;
   margin: 10px 0;
+  color: #2d3748;
 }
 
 .popup-link-text a {

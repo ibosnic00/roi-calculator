@@ -1495,7 +1495,7 @@ select.popup-input option[value=""] {
 
 .show-button {
     background: none;
-    border: none;
+    border: 0;
     border-radius: 4px;
     padding: 0.5rem;
     cursor: pointer;
@@ -1505,20 +1505,20 @@ select.popup-input option[value=""] {
     justify-content: center;
     font-size: 1.125rem;
     color: #a0aec0;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.75rem;
+    height: 1.75rem;
     filter: grayscale(1);
 }
 
 .show-button:hover {
     background: #edf2f7;
-    color: #4a5568;
+    color: #96b1df;
     filter: grayscale(0);
 }
 
 .show-button.active {
-    background: #e2e8f0;
-    color: #2d3748;
+    background: #3182ce;
+    color: #d9e0ec;
     filter: grayscale(0);
 }
 
@@ -1595,11 +1595,6 @@ select.popup-input option[value=""] {
     opacity: 1;
     filter: grayscale(0);
     color: #3182ce;  /* Ensure active state uses the same blue */
-}
-
-/* Update show-button when it's the favorite star */
-.show-button:last-child {
-    color: #3182ce;  /* Make the show favorites button blue as well */
 }
 
 /* Add specific styles for table view buttons */
