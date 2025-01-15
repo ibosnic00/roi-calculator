@@ -5,6 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="/building-icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zagreb ROI Calculator</title>
+    <script>
+      (function(){
+        let redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
