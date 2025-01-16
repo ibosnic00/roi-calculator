@@ -21,6 +21,8 @@ import { ConfirmationPopup } from './ConfirmationPopup';
 
 interface TileViewProps {
     properties: Property[];
+    showOnlyFavorites: boolean;
+    hideSold: boolean;
     onDelete: (id: number) => void;
     onPropertyClick: (property: Property) => void;
     onLinkChange: (id: number, link: string) => void;
@@ -111,7 +113,18 @@ const SortableTile = ({ property, index, onPropertyClick, onIndexClick, onFavori
     );
 };
 
-export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, onReorder, onNeighborhoodChange, onFavoriteToggle, onSoldToggle }: TileViewProps) {
+export function TileView({ 
+    properties, 
+    showOnlyFavorites,
+    hideSold,
+    onDelete,
+    onPropertyClick,
+    onLinkChange,
+    onReorder,
+    onNeighborhoodChange,
+    onFavoriteToggle,
+    onSoldToggle
+}: TileViewProps) {
     const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [activeId, setActiveId] = useState<Active | null>(null);
@@ -138,8 +151,23 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
 
         if (over && active.id !== over.id) {
             const oldIndex = properties.findIndex((p) => p.id === active.id);
-            const newIndex = properties.findIndex((p) => p.id === over.id);
-            onReorder(oldIndex, newIndex);
+            const visibleProperties = properties.filter(p => 
+                (!showOnlyFavorites || p.isFavorite) && 
+                (hideSold || !p.isSold)
+            );
+            
+            const visibleOldIndex = visibleProperties.findIndex(p => p.id === active.id);
+            const visibleNewIndex = visibleProperties.findIndex(p => p.id === over.id);
+            
+            // Calculate the actual new index in the full array
+            let actualNewIndex = oldIndex + (visibleNewIndex - visibleOldIndex);
+            
+            // Adjust for moving to the end
+            if (visibleNewIndex === visibleProperties.length - 1) {
+                actualNewIndex = properties.length - 1;
+            }
+            
+            onReorder(oldIndex, actualNewIndex);
         }
         setActiveId(null);
     };
@@ -160,6 +188,11 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
 
     const selectedProperty = properties.find(p => p.id === selectedPropertyId);
     const activeProperty = properties.find(p => p.id === activeId?.id);
+
+    const visibleProperties = properties.filter(p => 
+        (!showOnlyFavorites || p.isFavorite) && 
+        (hideSold || !p.isSold)
+    );
 
     return (
         <DndContext
@@ -189,8 +222,8 @@ export function TileView({ properties, onDelete, onPropertyClick, onLinkChange, 
                     initialSubneighborhood={selectedProperty?.subneighborhood}
                 />
 
-                <SortableContext items={properties.map(p => p.id)} strategy={rectSortingStrategy}>
-                    {properties.map((property, index) => (
+                <SortableContext items={visibleProperties.map(p => p.id)} strategy={rectSortingStrategy}>
+                    {visibleProperties.map((property, index) => (
                         <SortableTile
                             key={property.id}
                             property={property}

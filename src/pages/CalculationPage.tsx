@@ -521,7 +521,9 @@ export function CalculationPage() {
               />
             ) : (
               <TileView
-                properties={filteredProperties}
+                properties={properties}
+                showOnlyFavorites={showOnlyFavorites}
+                hideSold={showSold}
                 onDelete={handleDelete}
                 onPropertyClick={setSelectedProperty}
                 onLinkChange={handleLinkChange}
