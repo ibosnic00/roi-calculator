@@ -1,0 +1,471 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 95%;
+  max-width: 600px;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  margin: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 transparent;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 4px;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.modal-content select {
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  color: #2d3748;
+  background-color: white;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.modal-content select:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.modal-content select option {
+  padding: 0.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-actions button[type="submit"] {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+}
+
+.modal-actions button[type="submit"]:hover {
+  background-color: #2c5282;
+}
+
+.modal-actions button[type="button"] {
+  background-color: white;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-actions button[type="button"]:hover {
+  background-color: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.investments-list {
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.investment-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.investment-item span {
+  flex: 1;
+}
+
+.investment-item button {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.investment-item button:hover {
+  background: #f7fafc;
+}
+
+.investment-item button:last-child {
+  color: #e53e3e;
+  border-color: #e53e3e;
+}
+
+.investment-item button:last-child:hover {
+  background: #e53e3e;
+  color: white;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  color: #4a5568;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: auto;
+  color: #2d3748;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.summary-table {
+  margin: 2rem 0;
+  overflow-x: auto;
+  padding: 0.5rem;
+}
+
+.summary-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+.summary-table th,
+.summary-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.summary-table th {
+  background: #f7fafc;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.summary-table tr:last-child td {
+  border-bottom: none;
+}
+
+.summary-table td {
+  color: #2d3748;
+}
+
+.summary-table .action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.summary-table .action-buttons button {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  color: #4a5568;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-table .action-buttons button:hover {
+  background: #f7fafc;
+}
+
+.summary-table .action-buttons .delete-button {
+  color: #e53e3e;
+}
+
+.summary-table .action-buttons .delete-button:hover {
+  background: #fff5f5;
+}
+
+.summary-table th:last-child,
+.summary-table td:last-child {
+  text-align: right;
+  padding-right: 1rem;
+}
+
+.delete-confirmation {
+  max-width: 400px;
+}
+
+.delete-confirmation p {
+  margin: 1rem 0;
+  color: #4a5568;
+}
+
+.delete-confirmation .modal-actions .delete-button {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+}
+
+.delete-confirmation .modal-actions .delete-button:hover {
+  background-color: #c53030;
+}
+
+.bank-loan-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #f7fafc;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.bank-loan-info>label {
+  color: #4a5568;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.bank-loan-info .form-group {
+  margin-bottom: 0.5rem;
+}
+
+.bank-loan-info .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.bank-loan-input {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+.bank-loan-input input {
+  padding: 0.25rem;
+}
+
+/* Adjust chart container */
+.comparison-chart {
+  padding: 0.5rem 1rem;
+}
+
+@media (max-width: 768px) {
+  .bank-loan-input {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-content {
+    padding: 1rem;
+  }
+
+  .modal-actions button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  /* Adjust table for mobile */
+  .summary-table {
+    margin: 1rem 0;
+  }
+
+  .summary-table table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .summary-table th,
+  .summary-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  /* Make form inputs more touch-friendly */
+  .form-group input,
+  .form-group select {
+    padding: 0.5rem;
+    font-size: 16px;
+    /* Prevents iOS zoom on focus */
+  }
+
+  .bank-loan-info {
+    padding: 0.75rem;
+  }
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: column;
+    margin: 0;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .page-header button {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+/* Add Property Button */
+.add-investment-button-container {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.add-investment-button {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-investment-button:hover {
+  background-color: #2c5282;
+  transform: translateY(-1px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h2 {
+  margin: 0;
+  color: #2d3748;
+}
+
+.chart-controls {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+  background: #f7fafc;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.chart-controls .control-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chart-controls label {
+  color: #4a5568;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chart-controls input {
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  width: 80px;
+  font-size: 0.875rem;
+}
+
+.chart-controls input:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.1);
+}
+
+@media (max-width: 768px) {
+  .chart-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .chart-controls .control-group {
+    justify-content: space-between;
+  }
+
+  .chart-controls input {
+    width: 120px;
+  }
+}

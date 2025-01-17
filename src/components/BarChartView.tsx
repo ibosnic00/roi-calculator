@@ -11,7 +11,7 @@ interface BarChartViewProps {
     baseAppreciation: number;
     years: number;
     initialValueProperty: number | null;
-    calculationMethod: 'appreciation' | 'roi_plus_appreciation' | 'appreciation_minus_maintenance' | 'roi_plus_appreciation_minus_maintenance';
+    calculationMethod: 'roi' | 'roi_minus_maintenance' | 'appreciation' | 'roi_plus_appreciation' | 'appreciation_minus_maintenance' | 'roi_plus_appreciation_minus_maintenance';
   };
 }
 

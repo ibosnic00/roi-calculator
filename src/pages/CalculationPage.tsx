@@ -261,9 +261,9 @@ export function CalculationPage() {
   // Update handleSoldToggle function
   const handleSoldToggle = (id: number) => {
     setProperties(properties.map(property =>
-        property.id === id
-            ? { ...property, isSold: !property.isSold }
-            : property
+      property.id === id
+        ? { ...property, isSold: !property.isSold }
+        : property
     ));
   };
 
@@ -271,10 +271,10 @@ export function CalculationPage() {
   const filteredProperties = properties.filter(p => {
     // If showing only favorites, property must be favorite
     if (showOnlyFavorites && !p.isFavorite) return false;
-    
+
     // If not showing sold properties, hide them (even if they're favorites)
     if (!showSold && p.isSold) return false;
-    
+
     return true;
   });
 
@@ -310,55 +310,59 @@ export function CalculationPage() {
   return (
     <>
       {!isFormVisible ? (
-        <div className="page-header">
-          <div className="add-property-button-container">
-            <button
-              className="add-property-button"
-              onClick={() => setIsFormVisible(true)}
-            >
-              + ADD NEW
-            </button>
+        <>
+          <div className="page-header">
+            <h2>Investment Calculator</h2>
           </div>
-          <div className="view-controls">
-
-            <div className="view-toggle">
+          <div className="page-header">
+            <div className="add-property-button-container">
               <button
-                className={`toggle-button ${viewMode === 'table' ? 'active' : ''}`}
-                onClick={() => setViewMode('table')}
+                className="add-property-button"
+                onClick={() => setIsFormVisible(true)}
               >
-                Table
-              </button>
-              <button
-                className={`toggle-button ${viewMode === 'tiles' ? 'active' : ''}`}
-                onClick={() => setViewMode('tiles')}
-              >
-                Tiles
+                + ADD NEW
               </button>
             </div>
+            <div className="view-controls">
 
-            
-            <div className="show-controls">
-              <span className="show-label">Show</span>
-              <div className="show-buttons">
+              <div className="view-toggle">
                 <button
-                  className={`show-button ${showSold ? 'active' : ''}`}
-                  onClick={() => setShowSold(!showSold)}
-                  title="Show/Hide Sold"
+                  className={`toggle-button ${viewMode === 'table' ? 'active' : ''}`}
+                  onClick={() => setViewMode('table')}
                 >
-                  💸
+                  Table
                 </button>
                 <button
-                  className={`show-button ${showOnlyFavorites ? 'active' : ''}`}
-                  onClick={handleShowFavoritesClick}
-                  title="Show Favorites Only"
+                  className={`toggle-button ${viewMode === 'tiles' ? 'active' : ''}`}
+                  onClick={() => setViewMode('tiles')}
                 >
-                  ★
+                  Tiles
                 </button>
               </div>
+
+
+              <div className="show-controls">
+                <span className="show-label">Show</span>
+                <div className="show-buttons">
+                  <button
+                    className={`show-button ${showSold ? 'active' : ''}`}
+                    onClick={() => setShowSold(!showSold)}
+                    title="Show/Hide Sold"
+                  >
+                    💸
+                  </button>
+                  <button
+                    className={`show-button ${showOnlyFavorites ? 'active' : ''}`}
+                    onClick={handleShowFavoritesClick}
+                    title="Show Favorites Only"
+                  >
+                    ★
+                  </button>
+                </div>
+              </div>
+
             </div>
-            
-          </div>
-        </div>
+          </div></>
       ) : (
         <div className="form-overlay">
           <div className="form-container">
@@ -533,7 +537,7 @@ export function CalculationPage() {
                 onSoldToggle={handleSoldToggle}
               />
             )}
-            <GraphView 
+            <GraphView
               properties={showOnlyFavorites ? filteredProperties : properties}
               onShowFavorites={(handler) => setShowFavoritesHandler(() => handler)}
             />
@@ -593,7 +597,7 @@ export function CalculationPage() {
                 </div>
                 <div className="detail-row">
                   <label>Monthly Rent:</label>
-                  <span 
+                  <span
                     onClick={() => {
                       setEditingRentId(selectedProperty.id);
                     }}

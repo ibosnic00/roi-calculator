@@ -19,7 +19,7 @@ interface Parameters {
   baseAppreciation: number;
   years: number;
   initialValueProperty: number | null;
-  calculationMethod: 'appreciation' | 'roi_plus_appreciation' | 'appreciation_minus_maintenance' | 'roi_plus_appreciation_minus_maintenance';
+  calculationMethod: 'roi' | 'roi_minus_maintenance' | 'appreciation' | 'roi_plus_appreciation' | 'appreciation_minus_maintenance' | 'roi_plus_appreciation_minus_maintenance';
 }
 
 interface VisibilityState {
@@ -98,7 +98,7 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
 
   const calculateValues = (): DataPoint[] => {
     const data: DataPoint[] = [];
-    
+
     const selectedProperty = properties.find(p => p.id === parameters.initialValueProperty) || properties[0];
     const initialSP500Value = selectedProperty ? (selectedProperty.expectedPrice + selectedProperty.renovationCost) : 0;
     let sp500Value = initialSP500Value;
@@ -123,34 +123,48 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
         }));
       }
       if (visibleLines[propertyKey]) {
-        const totalInvestment = property.expectedPrice + property.renovationCost;
-        let propertyValue = totalInvestment;
+        let currentValue = property.expectedPrice;
+        let rentIncome = 0;
         const rentTax = 0.13;
-        
-        const propertyAppreciation = (() => {
-          switch (parameters.calculationMethod) {
-            case 'appreciation':
-              return parameters.baseAppreciation / 100;
-            case 'roi_plus_appreciation':
-              return parameters.baseAppreciation / 100 + ((property.roi / 100) * (1-rentTax) );
-            case 'appreciation_minus_maintenance': {
-              const yearlyMaintenanceCost = property.maintenanceCostPerSqm * property.apartmentSize;
-              const maintenancePercentage = (yearlyMaintenanceCost / (property.expectedPrice + property.renovationCost)) * 100;
-              return parameters.baseAppreciation / 100 - (maintenancePercentage / 100);
-            }
-            case 'roi_plus_appreciation_minus_maintenance': {
-              const yearlyMaintenanceCost = property.maintenanceCostPerSqm * property.apartmentSize;
-              const maintenancePercentage = (yearlyMaintenanceCost / (property.expectedPrice + property.renovationCost)) * 100;
-              return parameters.baseAppreciation / 100 + ((property.roi / 100) * (1-rentTax)) - (maintenancePercentage / 100);
-            }
-            default:
-              return parameters.baseAppreciation / 100;
-          }
-        })();
 
+        // Calculate yearly value based on selected method
         for (let year = 0; year <= parameters.years; year++) {
-          data[year][propertyKey] = Math.round(propertyValue);
-          propertyValue *= (1 + propertyAppreciation);
+          if (year > 0) {
+            const propertyAppreciation = (parameters.baseAppreciation || 0) / 100;
+            const maintenance = property.maintenanceCostPerSqm * property.apartmentSize + property.renovationCost;
+
+
+            const yearlyRent = (property.monthlyRent || 0) * 12 * (1 - rentTax);
+            const maintenancePercentage = maintenance / currentValue;
+
+            let totalReturn = propertyAppreciation;
+
+            switch (parameters.calculationMethod) {
+              case 'roi':
+                totalReturn = 0;
+                rentIncome += yearlyRent;
+                break;
+              case 'roi_minus_maintenance':
+                totalReturn = -maintenancePercentage;
+                rentIncome += yearlyRent;
+                break;
+              case 'roi_plus_appreciation':
+                totalReturn = propertyAppreciation;
+                rentIncome += yearlyRent;
+                break;
+              case 'appreciation_minus_maintenance':
+              case 'roi_plus_appreciation_minus_maintenance':
+                totalReturn = Number((propertyAppreciation - maintenancePercentage).toFixed(2));
+                rentIncome += yearlyRent;
+                break;
+              default: // 'appreciation'
+                totalReturn = propertyAppreciation;
+                break;
+            }
+
+            currentValue *= (1 + totalReturn);
+          }
+          data[year][propertyKey] = Number((currentValue + rentIncome).toFixed(0));
         }
       }
     });
@@ -162,10 +176,10 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
     const { name, value } = e.target;
     setParameters(prev => ({
       ...prev,
-      [name]: name === 'calculationMethod' 
-        ? value 
-        : name === 'initialValueProperty' 
-          ? Number(value) || null 
+      [name]: name === 'calculationMethod'
+        ? value
+        : name === 'initialValueProperty'
+          ? Number(value) || null
           : Number(value)
     }));
   };
@@ -203,12 +217,12 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
 
   const renderCustomLegend = () => {
     const items = getLegendItems();
-    
+
     return (
       <div className={`legend-container ${isLegendCollapsed ? 'collapsed' : ''}`}>
         <div className="legend-header">
           <span className="legend-title">Legend</span>
-          <button 
+          <button
             className="collapse-button"
             onClick={(e) => {
               e.stopPropagation();
@@ -217,13 +231,13 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
             title={isLegendCollapsed ? "Expand legend" : "Collapse legend"}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 15l-6-6-6 6"/>
+              <path d="M18 15l-6-6-6 6" />
             </svg>
           </button>
         </div>
         <ul className={`custom-legend ${isLegendCollapsed ? 'collapsed' : ''}`}>
           {items.map(item => (
-            <li 
+            <li
               key={item.id}
               className={`legend-item ${!item.visible ? 'inactive' : ''}`}
               onClick={() => handleLegendClick(item.dataKey)}
@@ -303,7 +317,7 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
           <div className={`parameters-container ${isParametersCollapsed ? 'collapsed' : ''}`}>
             <div className="parameters-header">
               <span className="parameters-title">Parameters</span>
-              <button 
+              <button
                 className="collapse-button"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -312,7 +326,7 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
                 title={isParametersCollapsed ? "Expand parameters" : "Collapse parameters"}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M18 15l-6-6-6 6"/>
+                  <path d="M18 15l-6-6-6 6" />
                 </svg>
               </button>
             </div>
@@ -376,6 +390,8 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
                   onChange={handleParameterChange}
                   className="parameter-select"
                 >
+                  <option value="roi">ROI Only</option>
+                  <option value="roi_minus_maintenance">ROI - Maintenance</option>
                   <option value="appreciation">Property Appreciation</option>
                   <option value="roi_plus_appreciation">ROI + Property Appreciation</option>
                   <option value="appreciation_minus_maintenance">Appreciation - Maintenance</option>
@@ -394,8 +410,8 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
       )}
 
       {activeTab === 'bar' && (
-        <BarChartView 
-          properties={properties} 
+        <BarChartView
+          properties={properties}
           parameters={parameters}
         />
       )}

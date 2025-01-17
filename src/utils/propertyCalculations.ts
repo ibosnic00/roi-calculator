@@ -5,7 +5,7 @@ interface CalculationParameters {
   baseAppreciation: number;
   years: number;
   initialValueProperty: number | null;
-  calculationMethod: 'appreciation' | 'roi_plus_appreciation' | 'appreciation_minus_maintenance' | 'roi_plus_appreciation_minus_maintenance';
+  calculationMethod: 'roi' | 'roi_minus_maintenance' | 'appreciation' | 'roi_plus_appreciation' | 'appreciation_minus_maintenance' | 'roi_plus_appreciation_minus_maintenance';
 }
 
 export const calculatePropertyValue = (
@@ -13,32 +13,48 @@ export const calculatePropertyValue = (
   parameters: CalculationParameters,
   year: number
 ): number => {
-  const initialValue = property.expectedPrice;
-  let value = initialValue;
+  let currentValue = property.expectedPrice;
+  let rentIncome = 0;
+  const rentTax = 0.13;
 
   // Calculate yearly value based on selected method
   for (let i = 0; i < year; i++) {
-    const appreciation = value * (parameters.baseAppreciation / 100);
+    const propertyAppreciation = (parameters.baseAppreciation || 0) / 100;
     const maintenance = property.maintenanceCostPerSqm * property.apartmentSize;
-    const roi = (property.monthlyRent * 12);
+
+
+    const yearlyRent = (property.monthlyRent || 0) * 12 * (1 - rentTax);
+    const maintenancePercentage = maintenance / currentValue;
+
+    let totalReturn = propertyAppreciation;
 
     switch (parameters.calculationMethod) {
-      case 'appreciation':
-        value += appreciation;
+      case 'roi':
+        totalReturn = 0;
+        rentIncome += yearlyRent;
+        break;
+      case 'roi_minus_maintenance':
+        totalReturn = -maintenancePercentage;
+        rentIncome += yearlyRent;
         break;
       case 'roi_plus_appreciation':
-        value += appreciation + roi;
+        totalReturn = propertyAppreciation;
+        rentIncome += yearlyRent;
         break;
       case 'appreciation_minus_maintenance':
-        value += appreciation - maintenance;
-        break;
       case 'roi_plus_appreciation_minus_maintenance':
-        value += appreciation + roi - maintenance;
+        totalReturn = Number((propertyAppreciation - maintenancePercentage).toFixed(2));
+        rentIncome += yearlyRent;
+        break;
+      default: // 'appreciation'
+        totalReturn = propertyAppreciation;
         break;
     }
+    currentValue *= (1 + totalReturn);
+
   }
 
-  return value;
+  return currentValue + rentIncome;
 };
 
 export const calculateReturnPercentage = (

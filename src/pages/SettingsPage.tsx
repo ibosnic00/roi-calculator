@@ -5,7 +5,7 @@ import { RentEditPopup } from '../components/RentEditPopup'
 
 export function SettingsPage() {
   const { rentalData, removeRent, addRent, addNewSizeRange } = useRentalData()
-  
+
   // Initialize selectedRange from localStorage or default to first range
   const [selectedRange, setSelectedRange] = useState(() => {
     const savedRange = localStorage.getItem('selectedRentalRange');
@@ -81,9 +81,12 @@ export function SettingsPage() {
     }
   };
 
-  return (
+  return (<>
+
+    <div className="page-header">
+      <h2>Rental Data</h2>
+    </div>
     <div className="settings-container">
-      <h2 color='black'>Rental Data</h2>
       <div className={isAdding ? 'content-blur' : ''}>
         <div className="rental-data-tabs">
           {[...rentalData]
@@ -101,7 +104,7 @@ export function SettingsPage() {
 
         <div className="add-data-section">
           {!isAdding ? (
-            <button 
+            <button
               className="add-data-button"
               onClick={() => {
                 setNewData(prev => ({
@@ -120,13 +123,13 @@ export function SettingsPage() {
           <table className="rental-data-table">
             <thead>
               <tr>
-                <th 
+                <th
                   onClick={() => handleSort('neighborhood')}
                   style={{ cursor: 'pointer' }}
                 >
                   neighborhood {sortField === 'neighborhood' && (sortDirection === 'asc' ? '↑' : '↓')}
                 </th>
-                <th 
+                <th
                   onClick={() => handleSort('rent')}
                   style={{ cursor: 'pointer' }}
                 >
@@ -139,7 +142,7 @@ export function SettingsPage() {
               {Object.entries(selectedRange.averageRents)
                 .sort(([aneighborhood, aRent], [bneighborhood, bRent]) => {
                   if (sortField === 'neighborhood') {
-                    return sortDirection === 'asc' 
+                    return sortDirection === 'asc'
                       ? aneighborhood.localeCompare(bneighborhood)
                       : bneighborhood.localeCompare(aneighborhood)
                   } else {
@@ -151,7 +154,7 @@ export function SettingsPage() {
                 .map(([neighborhood, rent]) => (
                   <tr key={neighborhood}>
                     <td>{neighborhood}</td>
-                    <td 
+                    <td
                       onClick={() => setEditingRent({ neighborhood, rent })}
                       style={{ cursor: 'pointer' }}
                     >
@@ -179,8 +182,8 @@ export function SettingsPage() {
             <form onSubmit={handleAdd} className="rental-data-form">
               <div className="form-header">
                 <h3>Add Rental Data</h3>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="close-form-button"
                   onClick={() => {
                     setIsAdding(false)
@@ -211,8 +214,8 @@ export function SettingsPage() {
                       required
                       className="popup-input size-input"
                     />
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="cancel-button small"
                       onClick={() => {
                         setIsCustomSizeRange(false);
@@ -245,7 +248,7 @@ export function SettingsPage() {
                   </select>
                 )}
               </div>
-              
+
               {isCustomneighborhood ? (
                 <input
                   type="text"
@@ -278,7 +281,7 @@ export function SettingsPage() {
                   <option value="new">Enter New neighborhood</option>
                 </select>
               )}
-              
+
               <input
                 type="number"
                 placeholder="Monthly Rent (€)"
@@ -287,13 +290,13 @@ export function SettingsPage() {
                 required
                 className="popup-input"
               />
-              
+
               <div className="form-actions">
                 <button type="submit" className="submit-button">
                   Add Data
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="cancel-button"
                   onClick={() => {
                     setIsAdding(false)
@@ -316,5 +319,6 @@ export function SettingsPage() {
         neighborhood={editingRent?.neighborhood || ''}
       />
     </div>
+  </>
   )
 } 
