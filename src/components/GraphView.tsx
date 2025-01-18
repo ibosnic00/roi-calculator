@@ -2,16 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { Property } from '../types/Property'
 import { LineChartView } from './LineChartView';
 import { BarChartView } from './BarChartView';
+import { calculateValues } from '../utils/propertyCalculations';
 
 interface GraphViewProps {
   properties: Property[];
   onShowFavorites: (handler: () => void) => void;
-}
-
-interface DataPoint {
-  year: number;
-  [key: string]: number | undefined;
-  sp500Value?: number;
 }
 
 interface Parameters {
@@ -96,81 +91,7 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
     localStorage.setItem('parametersCollapsed', JSON.stringify(isParametersCollapsed));
   }, [isParametersCollapsed]);
 
-  const calculateValues = (): DataPoint[] => {
-    const data: DataPoint[] = [];
-
-    const selectedProperty = properties.find(p => p.id === parameters.initialValueProperty) || properties[0];
-    const initialSP500Value = selectedProperty ? (selectedProperty.expectedPrice + selectedProperty.renovationCost) : 0;
-    let sp500Value = initialSP500Value;
-
-    for (let year = 0; year <= parameters.years; year++) {
-      data[year] = {
-        year,
-        ...(visibleLines.sp500Value && {
-          sp500Value: Math.round(sp500Value)
-        })
-      };
-      sp500Value *= (1 + parameters.sp500Return / 100);
-    }
-
-    properties.forEach((property) => {
-      const propertyKey = `property-${property.id}`;
-      // Initialize visibility for new properties
-      if (visibleLines[propertyKey] === undefined) {
-        setVisibleLines(prev => ({
-          ...prev,
-          [propertyKey]: true
-        }));
-      }
-      if (visibleLines[propertyKey]) {
-        let currentValue = property.expectedPrice;
-        let rentIncome = 0;
-        const rentTax = 0.13;
-
-        // Calculate yearly value based on selected method
-        for (let year = 0; year <= parameters.years; year++) {
-          if (year > 0) {
-            const propertyAppreciation = (parameters.baseAppreciation || 0) / 100;
-            const maintenance = property.maintenanceCostPerSqm * property.apartmentSize + property.renovationCost;
-
-
-            const yearlyRent = (property.monthlyRent || 0) * 12 * (1 - rentTax);
-            const maintenancePercentage = maintenance / currentValue;
-
-            let totalReturn = propertyAppreciation;
-
-            switch (parameters.calculationMethod) {
-              case 'roi':
-                totalReturn = 0;
-                rentIncome += yearlyRent;
-                break;
-              case 'roi_minus_maintenance':
-                totalReturn = -maintenancePercentage;
-                rentIncome += yearlyRent;
-                break;
-              case 'roi_plus_appreciation':
-                totalReturn = propertyAppreciation;
-                rentIncome += yearlyRent;
-                break;
-              case 'appreciation_minus_maintenance':
-              case 'roi_plus_appreciation_minus_maintenance':
-                totalReturn = Number((propertyAppreciation - maintenancePercentage).toFixed(2));
-                rentIncome += yearlyRent;
-                break;
-              default: // 'appreciation'
-                totalReturn = propertyAppreciation;
-                break;
-            }
-
-            currentValue *= (1 + totalReturn);
-          }
-          data[year][propertyKey] = Number((currentValue + rentIncome).toFixed(0));
-        }
-      }
-    });
-
-    return data;
-  };
+  const values = calculateValues(properties, parameters, visibleLines, setVisibleLines);
 
   const handleParameterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -402,7 +323,7 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
           </div>
           {renderCustomLegend()}
           <LineChartView
-            data={calculateValues()}
+            data={values}
             visibleLines={visibleLines}
             properties={properties}
           />

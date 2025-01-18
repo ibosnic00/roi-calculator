@@ -14,4 +14,5 @@ export interface Property {
   link?: string;
   isFavorite?: boolean;
   isSold?: boolean;
+  isCustomRent?: boolean;
 } 

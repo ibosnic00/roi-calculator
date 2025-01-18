@@ -100,6 +100,10 @@ export function AddInvestmentModal({ onClose, onAdd, options, editingInvestment 
     onAdd(investment);
   };
 
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    event.target.select();
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -173,6 +177,7 @@ export function AddInvestmentModal({ onClose, onAdd, options, editingInvestment 
                   placeholder="Initial Amount"
                   value={formData.initialAmount}
                   onChange={e => setFormData({ ...formData, initialAmount: e.target.value })}
+                  onFocus={handleFocus}
                   required
                 />
               </div>
@@ -186,6 +191,7 @@ export function AddInvestmentModal({ onClose, onAdd, options, editingInvestment 
                       placeholder="Monthly Rent"
                       value={formData.monthlyRent}
                       onChange={e => setFormData({ ...formData, monthlyRent: e.target.value })}
+                      onFocus={handleFocus}
                       required
                     />
                   </div>
@@ -196,6 +202,7 @@ export function AddInvestmentModal({ onClose, onAdd, options, editingInvestment 
                       placeholder="Property Appreciation"
                       value={formData.propertyAppreciation}
                       onChange={e => setFormData({ ...formData, propertyAppreciation: e.target.value })}
+                      onFocus={handleFocus}
                       required
                     />
                   </div>

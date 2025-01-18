@@ -17,45 +17,52 @@ export const generateInvestmentData = (investment: Investment, years: number = 3
   let currentValue = investment.initialAmount;
   let rentIncome = 0;
   let bankLoanPaidAmount = 0;
+  let bankInterestPaidAmount = 0;
   let yearlyLoanPayment = monthlyPayment * 12;
+  let yearlyMaintenanceAmount = 0;
   const loanWithInterest = yearlyLoanPayment * (investment.loanTerm || 0);
   let remainingLoans = investment.type.includes('loan') ? loanWithInterest : 0;
-  let remainingInterest = (remainingLoans) / (investment.loanTerm || 0);
+  let remainingInterest = remainingLoans - (investment.loanAmount || 0);
+  const yearlyInterest = remainingInterest / (investment.loanTerm || 0);
+  // Calculate property appreciation based on calculation method
+  const propertyAppreciation = (investment.propertyAppreciation || 0) / 100;
+  const yearlyRent = (investment.monthlyRent || 0) * 12 * (1 - rentTax);
+  const maintenancePercentage = 0.01;
+  let totalMaintenance = 0;
 
   for (let year = 0; year <= years; year++) {
     if (year > 0) {
       if (investment.type.includes('property')) {
-        // Calculate property appreciation based on calculation method
-        const propertyAppreciation = (investment.propertyAppreciation || 0) / 100;
-        const yearlyRent = (investment.monthlyRent || 0) * 12 * (1 - rentTax);
-        const maintenancePercentage = 0.01;
-
-        let totalReturn = 0;
+        let propertyValueIncreaseFactor = 0;
+        let maintenanceDecreaseFactor = 0;
+        yearlyMaintenanceAmount = 0;
 
         switch (investment.calculationMethod) {
           case 'roi':
-            totalReturn = 0;
             rentIncome += yearlyRent;
             break;
           case 'roi_minus_maintenance':
-            totalReturn = -maintenancePercentage;
+            maintenanceDecreaseFactor = maintenancePercentage;
             rentIncome += yearlyRent;
             break;
           case 'roi_plus_appreciation':
-            totalReturn = propertyAppreciation;
+            propertyValueIncreaseFactor = propertyAppreciation;
             rentIncome += yearlyRent;
             break;
           case 'appreciation_minus_maintenance':
           case 'roi_plus_appreciation_minus_maintenance':
-            totalReturn = Number((propertyAppreciation - maintenancePercentage).toFixed(2));
+            propertyValueIncreaseFactor = propertyAppreciation;
+            maintenanceDecreaseFactor = maintenancePercentage;
             rentIncome += yearlyRent;
             break;
           default: // 'appreciation'
-            totalReturn = propertyAppreciation;
+            propertyValueIncreaseFactor = propertyAppreciation;
             break;
         }
-        
-        currentValue *= (1 + totalReturn);
+
+        currentValue = Number((currentValue * (1 + propertyValueIncreaseFactor)).toFixed(0));
+        yearlyMaintenanceAmount = Number((currentValue * maintenanceDecreaseFactor).toFixed(0));
+        totalMaintenance += yearlyMaintenanceAmount;
       } else if (investment.type.includes('sp500')) {
         const return_rate = (investment.sp500Return || 0) / 100;
 
@@ -72,8 +79,11 @@ export const generateInvestmentData = (investment: Investment, years: number = 3
       // Subtract mortgage payments only if loan is not yet paid off
       if (investment.type.includes('loan') && remainingInterest > 0) {
         const paymentThisYear = Math.min(yearlyLoanPayment, remainingLoans);
+        const interestThisYear = Math.min(yearlyInterest, remainingInterest);
         bankLoanPaidAmount += paymentThisYear;
+        bankInterestPaidAmount += interestThisYear;
         remainingLoans -= paymentThisYear;
+        remainingInterest -= interestThisYear;
       }
     }
 
@@ -81,23 +91,27 @@ export const generateInvestmentData = (investment: Investment, years: number = 3
     switch (investment.calculationMethod) {
       case 'roi':
       case 'roi_plus_appreciation':
-      case 'roi_minus_maintenance':
         dataToPush = currentValue + rentIncome;
         break;
+      case 'roi_minus_maintenance':
+        dataToPush = currentValue + rentIncome - totalMaintenance;
+        break;
       case 'roi_plus_appreciation_minus_maintenance':
-        dataToPush = currentValue + rentIncome - bankLoanPaidAmount;
+        dataToPush = currentValue + rentIncome - bankInterestPaidAmount - totalMaintenance;
         break;
       case 'appreciation_minus_maintenance':
       default: // 'appreciation'        
-        dataToPush = currentValue;
+        dataToPush = currentValue - totalMaintenance;
         break;
     }
-    
+
     data.push({
       year,
       [`investment-${investment.id}`]: dataToPush
     });
   }
+
+
 
   return data;
 };
@@ -136,10 +150,10 @@ export const generateSummaryData = (investment: Investment, years: number = 30, 
 
   for (let year = 0; year <= years; year++) {
     if (year > 0) {
-      if (investment.type.includes('property')) {        
+      if (investment.type.includes('property')) {
         rentIncome += yearlyRent;
-        currentValue *= (1 + propertyAppreciation);
-        maintenance += currentValue * maintenancePercentage;
+        currentValue = Number((currentValue * (1 + propertyAppreciation)).toFixed(0));
+        maintenance += Number((currentValue * maintenancePercentage).toFixed(0));
 
       } else if (investment.type.includes('sp500')) {
         const return_rate = (investment.sp500Return || 0) / 100;
@@ -169,6 +183,7 @@ export const generateSummaryData = (investment: Investment, years: number = 30, 
   data.totalMaintenance = maintenance;
   data.totalLoanInterest = (loanWithInterest - originalLoan);
   data.downpayment = data.initialValue - originalLoan;
+
 
   return data;
 };

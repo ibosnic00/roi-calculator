@@ -44,32 +44,31 @@ export function InvestmentComparisonOverview({
                     <div className="value-content">
                         <div className="amount">{formatCurrency(InitialValue)}</div>
                         <div className="years">{TotalInvestmentLength} years</div>
+                            <div className="years">
+                                <span>{formatCurrency(DownpaymentAmount)}</span>
+                                <span className="label"> downpayment</span>
+                            </div>
                     </div>
-                </div>
-
-                {/* Bank Loan Section */}
-                <div className="overview-box loan-breakdown">
-                    <h2>BANK LOAN</h2>
-                    <div className="loan-content">
-                        <div className="loan-amount">
-                            <span>{formatCurrency(BankLoanAmount)}</span>
-                            <span>LOAN</span>
-                        </div>
-                        <div className="loan-years">
-                            <span>{BankLoanLengthInYears}</span>
-                            <span>YEARS</span>
-                        </div>
-                        <div className="loan-interest">
-                            <span>{formatCurrency(TotalInterest)}</span>
-                            <span className="label">INTEREST</span>
-                        </div>
-                        <div className="loan-interest">
-                            <span>{formatCurrency(monthlyPayment)}</span>
-                            <span className="label">MONTHLY PAYMENT</span>
-                        </div>
-                        <div className="loan-downpayment">
-                            <span>{formatCurrency(DownpaymentAmount)}</span>
-                            <span className="label">downpayment</span>
+                    {/* Bank Loan Section */}
+                    <div className="overview-box loan-breakdown">
+                        <h2>BANK LOAN</h2>
+                        <div className="loan-content">
+                            <div className="loan-amount">
+                                <span>{formatCurrency(BankLoanAmount)}</span>
+                                <span>loan amount</span>
+                            </div>
+                            <div className="loan-years">
+                                <span>{BankLoanLengthInYears}</span>
+                                <span>years</span>
+                            </div>
+                            <div className="loan-interest">
+                                <span>{formatCurrency(TotalInterest)}</span>
+                                <span className="label">total interest</span>
+                            </div>
+                            <div className="loan-interest">
+                                <span>{formatCurrency(monthlyPayment)}</span>
+                                <span className="label">monthly installment</span>
+                            </div>
                         </div>
                     </div>
                 </div>

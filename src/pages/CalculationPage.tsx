@@ -40,13 +40,17 @@ export function CalculationPage() {
   useEffect(() => {
     setProperties(prevProperties =>
       prevProperties.map(property => {
-        const newRent = getAverageRentFromContext(property.neighborhood, property.apartmentSize)
-        const newRoi = calculateROI(property.expectedPrice, newRent, property.renovationCost)
-        return {
-          ...property,
-          monthlyRent: newRent,
-          roi: newRoi
+        // Only update properties that don't have custom rent
+        if (!property.isCustomRent) {
+          const newRent = getAverageRentFromContext(property.neighborhood, property.apartmentSize)
+          const newRoi = calculateROI(property.expectedPrice, newRent, property.renovationCost)
+          return {
+            ...property,
+            monthlyRent: newRent,
+            roi: newRoi
+          }
         }
+        return property;
       })
     )
   }, [rentalData])
@@ -280,13 +284,14 @@ export function CalculationPage() {
 
   // Add new handler for rent changes
   const handleRentChange = (id: number, rent: number) => {
-    setProperties(properties.map(property => {
+    setProperties(prevProperties => prevProperties.map(property => {
       if (property.id === id) {
         const newRoi = calculateROI(property.expectedPrice, rent, property.renovationCost);
         return {
           ...property,
           monthlyRent: rent,
-          roi: newRoi
+          roi: newRoi,
+          isCustomRent: true // Add flag to indicate manual override
         };
       }
       return property;
