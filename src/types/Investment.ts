@@ -37,3 +37,16 @@ export interface ChartData {
   year: number;
   [key: string]: number;
 } 
+
+
+export interface SummaryData {
+  initialValue: number;
+  totalInvestmentLengthInYears: number;
+  totalApreciation: number;
+  totalRentIncome: number;
+  totalMaintenance: number;
+  bankLoanLengthInYears: number;
+  bankLoanAmount: number;
+  downpayment: number;
+  totalLoanInterest: number;
+} 

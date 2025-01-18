@@ -2,8 +2,9 @@ import { useState, useMemo, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Investment, InvestmentType } from '../types/Investment';
 import { AddInvestmentModal } from '../components/AddInvestmentModal';
-import { calculateMortgagePayment, calculateYearlyIncome, calculateYearlyMaintenance, generateInvestmentData, mergeChartData } from '../utils/investmentCalculations';
+import { generateSummaryData, generateInvestmentData, mergeChartData } from '../utils/investmentCalculations';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { InvestmentComparisonOverview } from '../components/InvestmentComparisonOverview';
 
 
 export function InvestmentComparisonPage() {
@@ -65,22 +66,23 @@ export function InvestmentComparisonPage() {
   // Calculate summary data for each investment
   const summaryData = useMemo(() => {
     return investments.map(investment => {
-      const yearlyIncome = calculateYearlyIncome(investment);
-      let yearlyDebtPayment = investment.type.includes('loan') && investment.interestRate && investment.loanTerm
-        ? ((calculateMortgagePayment(investment.loanAmount || 0, investment.interestRate, investment.loanTerm) * 12))
-        : 0;
-      if (investment.type.includes('property')) {
-        yearlyDebtPayment += calculateYearlyMaintenance(investment);
-      }
+      let summary = generateSummaryData(investment, years, rentTax / 100);
 
       return {
         name: investment.name,
-        yearlyIncome,
-        yearlyDebtPayment,
+        initialValue: summary.initialValue,
+        totalInvestmentLengthInYears: summary.totalInvestmentLengthInYears,
+        totalApreciation: summary.totalApreciation,
+        totalRentIncome: summary.totalRentIncome,
+        totalMaintenance: summary.totalMaintenance,
+        bankLoanLengthInYears: summary.bankLoanLengthInYears,
+        bankLoanAmount: summary.bankLoanAmount,
+        downpayment: summary.downpayment,
+        totalLoanInterest: summary.totalLoanInterest,
         calculationMethod: getCalculationMethodLabel(investment.calculationMethod, investment.type)
       };
     });
-  }, [investments]);
+  }, [investments, years, rentTax]);
 
   // Add a helper function for formatting numbers
   function formatCurrency(value: number): string {
@@ -100,6 +102,9 @@ export function InvestmentComparisonPage() {
       setDeletingInvestment(null);
     }
   };
+
+  // Add new state for selected investment details
+  const [selectedInvestment, setSelectedInvestment] = useState<typeof summaryData[0] | null>(null);
 
   return (
     <div className="investment-comparison">
@@ -125,9 +130,7 @@ export function InvestmentComparisonPage() {
                 <tr>
                   <th>Investment</th>
                   <th>Calculation Method</th>
-                  <th>Yearly Income</th>
-                  <th>Yearly Debt Payment</th>
-                  <th>Net Yearly Cash Flow</th>
+                  <th>Details</th>
                   <th style={{ paddingRight: '1.5rem' }}>Actions</th>
                 </tr>
               </thead>
@@ -136,9 +139,14 @@ export function InvestmentComparisonPage() {
                   <tr key={index}>
                     <td>{summary.name}</td>
                     <td>{summary.calculationMethod}</td>
-                    <td>{formatCurrency(summary.yearlyIncome)}</td>
-                    <td>{formatCurrency(summary.yearlyDebtPayment)}</td>
-                    <td>{formatCurrency(summary.yearlyIncome - summary.yearlyDebtPayment)}</td>
+                    <td>
+                      <button 
+                        className="details-button"
+                        onClick={() => setSelectedInvestment(summary)}
+                      >
+                        View Details
+                      </button>
+                    </td>
                     <td className="action-buttons">
                       <button
                         onClick={() => handleEdit(investments[index])}
@@ -240,6 +248,31 @@ export function InvestmentComparisonPage() {
               <button onClick={confirmDelete} className="delete-button">Delete</button>
               <button onClick={() => setDeletingInvestment(null)}>Cancel</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add the details modal */}
+      {selectedInvestment && (
+        <div className="modal-overlay" onClick={() => setSelectedInvestment(null)}>
+          <div className="investment-details-container" onClick={e => e.stopPropagation()}>
+            <InvestmentComparisonOverview
+              InitialValue={selectedInvestment.initialValue}
+              BankLoanLengthInYears={selectedInvestment.bankLoanLengthInYears}
+              TotalInvestmentLength={selectedInvestment.totalInvestmentLengthInYears}
+              TotalAppreciation={selectedInvestment.totalApreciation}
+              TotalMaintenance={selectedInvestment.totalMaintenance}
+              BankLoanAmount={selectedInvestment.bankLoanAmount}
+              TotalInterest={selectedInvestment.totalLoanInterest}
+              DownpaymentAmount={selectedInvestment.downpayment}
+              TotalRentIncome={selectedInvestment.totalRentIncome}
+            />
+            <button 
+              className="close-button"
+              onClick={() => setSelectedInvestment(null)}
+            >
+              ×
+            </button>
           </div>
         </div>
       )}

@@ -1,0 +1,215 @@
+.investment-container {
+    max-width: 90rem;
+    margin: 0 auto;
+    padding: 0.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    color-scheme: light;
+    background-color: white;
+    color: #2d3748;
+  }
+  
+  @media (min-width: 768px) {
+    .investment-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .left-column,
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .initial-values {
+    background-color: rgb(239 246 255);
+    border: 1px solid rgb(191 219 254);
+    padding: 1rem;
+  }
+  
+  .initial-values h2 {
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .values-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .values-content .amount {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .values-content .years {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+  
+  .financial-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .financial-breakdown > div {
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .financial-breakdown p {
+    display: flex;
+    margin: 0;
+    justify-content: space-between;
+  }
+  
+  .bank-loan {
+    background-color: rgb(219 234 254);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .bank-loan .loan-years {
+    font-size: 0.875rem;
+    color: rgb(59 130 246);
+    margin-top: 0.25rem;
+  }
+  
+  .interest {
+    background-color: rgb(254 249 195);
+  }
+  
+  .downpayment {
+    background-color: rgb(254 226 226);
+  }
+  
+  .rent {
+    background-color: rgb(220 252 231);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .rent-breakdown {
+    font-size: 0.75rem;
+    color: rgb(17, 90, 44);
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .appreciation-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .with-appreciation {
+    background-color: rgb(254 252 232);
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .with-appreciation h3 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  
+  .with-appreciation .amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .with-appreciation .detail {
+    font-size: 0.875rem;
+    color: rgb(75 85 99);
+  }
+  
+  .after-maintenance {
+    background-color: rgb(254 242 242);
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .after-maintenance p {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+  }
+  
+  .maintenance-detail {
+    font-size: 0.875rem;
+    color: rgb(75 85 99);
+    margin-top: 0.25rem;
+  }
+  
+  .comparison-section {
+    padding: 1rem;
+    background-color: rgb(249 250 251);
+  }
+  
+  .comparison-section h3 {
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .comparison-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .comparison-content > div {
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    background-color: rgb(243 244 246);
+  }
+  
+  .comparison-content p {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem;
+  }
+  
+  .comparison-content p span:last-child {
+    font-weight: 700;
+  }
+  
+  /* Force text colors for all elements */
+  .investment-container h2,
+  .investment-container h3,
+  .investment-container p,
+  .investment-container span {
+    color: #2d3748;
+  }
+
+  .values-content .amount,
+  .values-content .years,
+  .financial-breakdown p span,
+  .with-appreciation .amount,
+  .after-maintenance p span,
+  .comparison-content p span {
+    color: #2d3748;
+  }
+
+  /* Update specific elements that might need different colors */
+  .rent-breakdown {
+    color: rgb(17, 90, 44) !important;
+  }
+
+  .bank-loan .loan-years {
+    color: rgb(59 130 246) !important;
+  }
+
+  .with-appreciation .detail,
+  .maintenance-detail {
+    color: rgb(75 85 99) !important;
+  }
+  
+  
