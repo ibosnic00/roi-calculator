@@ -2,11 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/roi-calculator/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/roi-calculator/building-icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-    <script type="module" crossorigin src="/roi-calculator/assets/index-CRKJ7JAj.js"></script>
-    <link rel="stylesheet" crossorigin href="/roi-calculator/assets/index-BYL7bVWm.css">
+    <title>Zagreb ROI Calculator</title>
+    <script>
+      (function(){
+        let redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/roi-calculator/assets/index-C0wTlVYG.js"></script>
+    <link rel="stylesheet" crossorigin href="/roi-calculator/assets/index-6YbONVEO.css">
   </head>
   <body>
     <div id="root"></div>
