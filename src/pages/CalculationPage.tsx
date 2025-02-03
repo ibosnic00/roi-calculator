@@ -458,7 +458,6 @@ export function CalculationPage() {
                         }));
                       }
                     }}
-                    required
                     className="popup-input"
                   >
                     <option value="">Select Subneighborhood</option>
