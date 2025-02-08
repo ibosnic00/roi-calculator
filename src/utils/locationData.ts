@@ -1,8 +1,4 @@
-interface LocationData {
-  [city: string]: {
-    [district: string]: string[];
-  };
-}
+import { LocationData } from '../types/LocationData';
 
 export async function loadLocationData(): Promise<LocationData> {
   try {
@@ -42,4 +38,15 @@ export function getCityNeighborhoods(locationData: LocationData, city: string): 
   });
 
   return Array.from(cityNeighborhoods).sort();
+}
+
+export function findLocationByNeighborhood(locationData: LocationData, neighborhood: string): { city: string; district: string } | null {
+  for (const [city, districts] of Object.entries(locationData)) {
+    for (const [district, neighborhoods] of Object.entries(districts)) {
+      if (neighborhoods.includes(neighborhood)) {
+        return { city, district };
+      }
+    }
+  }
+  return null;
 } 

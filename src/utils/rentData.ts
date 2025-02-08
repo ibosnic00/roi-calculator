@@ -1,5 +1,3 @@
-import { loadLocationData } from './locationData';
-
 interface District {
     name: string;
     averageRentSmall: number | null;
@@ -11,12 +9,25 @@ interface CityData {
     districts: District[];
 }
 
-interface LocationData {
+interface RentLocationData {
     [city: string]: CityData;
 }
 
+async function loadRentData(): Promise<RentLocationData> {
+    try {
+        const response = await fetch(`${import.meta.env.BASE_URL}rent_data.json`);
+        if (!response.ok) {
+            throw new Error('Failed to load rent data');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading rent data:', error);
+        return {};
+    }
+}
+
 export const getAverageRentFromContext = async (city: string, district: string, size: number): Promise<number | null> => {
-    const locationData: LocationData = await loadLocationData();
+    const locationData = await loadRentData();
     const cityData = locationData[city];
     if (!cityData) return null;
 

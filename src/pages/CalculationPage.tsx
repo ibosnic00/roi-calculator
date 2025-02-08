@@ -1,20 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRentalData } from '../contexts/RentalDataContext'
 import { Property } from '../types/Property'
+import { LocationData } from '../types/LocationData'
 import { TableView } from '../components/TableView'
 import { GraphView } from '../components/GraphView'
 import { TileView } from '../components/TileView'
 import { GetFullName } from '../utils/districtsZagreb';
 import { NeighborhoodPopup } from '../components/NeighborhoodPopup';
 import { RentEditPopup } from '../components/RentEditPopup';
-import { loadLocationData, getAllNeighborhoods, getCityNeighborhoods } from '../utils/locationData';
+import { loadLocationData, getAllNeighborhoods, getCityNeighborhoods, findLocationByNeighborhood as findLocationInData } from '../utils/locationData';
 import '../styles/CalculationPage.css';
-
-interface LocationData {
-  [city: string]: {
-    [district: string]: string[];
-  };
-}
 
 export function CalculationPage() {
   const { rentalData } = useRentalData()
@@ -29,6 +24,11 @@ export function CalculationPage() {
     renovationCost: ''
   })
   const [isCustomNeighborhood, setIsCustomNeighborhood] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Load location data
   useEffect(() => {
@@ -96,6 +96,20 @@ export function CalculationPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
+    
+    if (name === 'neighborhood' && value && !isCustomNeighborhood) {
+      const location = findLocationInData(locationData, value);
+      if (location) {
+        setFormData(prev => ({
+          ...prev,
+          city: location.city,
+          district: location.district,
+          [name]: value
+        }));
+        return;
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -112,37 +126,6 @@ export function CalculationPage() {
     name.split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
-
-  const findLocationByNeighborhood = (neighborhoodName: string): { city: string; district: string } | null => {
-    const normalizedSearch = neighborhoodName.toLowerCase().trim();
-
-    for (const [city, districts] of Object.entries(locationData)) {
-      for (const [district, neighborhoods] of Object.entries(districts)) {
-        if (neighborhoods.some(n => n.toLowerCase() === normalizedSearch)) {
-          return { city, district };
-        }
-      }
-    }
-    return null;
-  }
-
-  const handleNeighborhoodInput = (value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      neighborhood: value
-    }));
-
-    // Try to find and auto-select city and district
-    const location = findLocationByNeighborhood(value);
-    if (location) {
-      setFormData(prev => ({
-        ...prev,
-        city: location.city,
-        district: location.district,
-        neighborhood: value
-      }));
-    }
-  }
 
   const resetForm = () => {
     setFormData({
@@ -381,6 +364,47 @@ export function CalculationPage() {
     });
   };
 
+  const filterNeighborhoods = (neighborhoods: string[]) => {
+    if (!searchTerm) return neighborhoods;
+    const search = searchTerm.toLowerCase();
+    return neighborhoods.filter(n => n.toLowerCase().includes(search));
+  };
+
+  const updateDropdownPosition = () => {
+    if (inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width
+      });
+    }
+  };
+
+  // Update position when dropdown opens
+  useEffect(() => {
+    if (isDropdownOpen) {
+      updateDropdownPosition();
+      // Update position on scroll or resize
+      window.addEventListener('scroll', updateDropdownPosition);
+      window.addEventListener('resize', updateDropdownPosition);
+
+      // Add click outside handler
+      function handleClickOutside(event: MouseEvent) {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+          setIsDropdownOpen(false);
+        }
+      }
+      document.addEventListener('mousedown', handleClickOutside);
+
+      return () => {
+        window.removeEventListener('scroll', updateDropdownPosition);
+        window.removeEventListener('resize', updateDropdownPosition);
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isDropdownOpen]);
+
   return (
     <>
       {!isFormVisible ? (
@@ -530,56 +554,66 @@ export function CalculationPage() {
                 </div>
 
                 <div className="form-group">
-                  <button
-                    className="toggle-input-type"
-                    onClick={() => setIsCustomNeighborhood(!isCustomNeighborhood)}
-                  >
-                    {isCustomNeighborhood ? 'Select from list' : 'Type manually'}
-                  </button>
                   <label htmlFor="neighborhood">
                     Neighbourhood
                   </label>
-
-                  {isCustomNeighborhood ? (
+                  <div className="custom-select" ref={dropdownRef}>
                     <input
+                      ref={inputRef}
                       type="text"
                       id="neighborhood"
-                      name="neighborhood"
-                      value={formData.neighborhood}
-                      onChange={(e) => handleNeighborhoodInput(e.target.value)}
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        if (!e.target.value) {
+                          setFormData(prev => ({ ...prev, neighborhood: '' }));
+                        }
+                      }}
+                      onFocus={() => {
+                        setIsDropdownOpen(true);
+                        updateDropdownPosition();
+                      }}
+                      placeholder="Type to search"
                       className="popup-input"
-                      placeholder="Enter name"
                       autoComplete="off"
                     />
-                  ) : (
-                    <select
-                      id="neighborhood"
-                      name="neighborhood"
-                      value={formData.neighborhood}
-                      onChange={handleInputChange}
-                      className="popup-input"
-                    >
-                      <option value="">Select Neighbourhood</option>
-                      {formData.city ? (
-                        formData.district ? (
-                          // Show neighborhoods from selected district
-                          locationData[formData.city][formData.district].map(neighborhood => (
-                            <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
-                          ))
-                        ) : (
-                          // Show all neighborhoods from selected city
-                          getCityNeighborhoods(locationData, formData.city).map(neighborhood => (
-                            <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
-                          ))
-                        )
-                      ) : (
-                        // Show all neighborhoods from all cities
-                        getAllNeighborhoods(locationData).map(neighborhood => (
-                          <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
-                        ))
-                      )}
-                    </select>
-                  )}
+                    {isDropdownOpen && (
+                      <div 
+                        className="dropdown-list"
+                        style={{
+                          top: `${dropdownPosition.top}px`,
+                          left: `${dropdownPosition.left}px`,
+                          width: `${dropdownPosition.width}px`
+                        }}
+                      >
+                        {filterNeighborhoods(
+                          formData.city
+                            ? (formData.district
+                              ? locationData[formData.city][formData.district]
+                              : getCityNeighborhoods(locationData, formData.city))
+                            : getAllNeighborhoods(locationData)
+                        ).map(neighborhood => (
+                          <div
+                            key={neighborhood}
+                            className={`dropdown-item ${formData.neighborhood === neighborhood ? 'selected' : ''}`}
+                            onClick={() => {
+                              const e = {
+                                target: {
+                                  name: 'neighborhood',
+                                  value: neighborhood
+                                }
+                              } as React.ChangeEvent<HTMLInputElement>;
+                              handleInputChange(e);
+                              setSearchTerm(neighborhood);
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            {neighborhood}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="form-group">
