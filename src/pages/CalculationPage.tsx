@@ -7,7 +7,7 @@ import { TileView } from '../components/TileView'
 import { GetFullName } from '../utils/districtsZagreb';
 import { NeighborhoodPopup } from '../components/NeighborhoodPopup';
 import { RentEditPopup } from '../components/RentEditPopup';
-import { loadLocationData } from '../utils/locationData';
+import { loadLocationData, getAllNeighborhoods, getCityNeighborhoods } from '../utils/locationData';
 import '../styles/CalculationPage.css';
 
 interface LocationData {
@@ -558,14 +558,26 @@ export function CalculationPage() {
                       value={formData.neighborhood}
                       onChange={handleInputChange}
                       className="popup-input"
-                      disabled={!formData.district}
                     >
                       <option value="">Select Neighbourhood</option>
-                      {formData.city && formData.district &&
-                        locationData[formData.city][formData.district].map(neighborhood => (
+                      {formData.city ? (
+                        formData.district ? (
+                          // Show neighborhoods from selected district
+                          locationData[formData.city][formData.district].map(neighborhood => (
+                            <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
+                          ))
+                        ) : (
+                          // Show all neighborhoods from selected city
+                          getCityNeighborhoods(locationData, formData.city).map(neighborhood => (
+                            <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
+                          ))
+                        )
+                      ) : (
+                        // Show all neighborhoods from all cities
+                        getAllNeighborhoods(locationData).map(neighborhood => (
                           <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
                         ))
-                      }
+                      )}
                     </select>
                   )}
                 </div>
