@@ -1,0 +1,115 @@
+
+Average Rent for 1 - 35 m2
+Neighborhood,Rent,Sample Size
+Donji Grad,€715,25
+Gornji Grad - Medveščak,€621,20
+Trešnjevka - Sjever,€565,35
+Donja Dubrava,€561,13
+Trešnjevka - Jug,€545,21
+Peščenica - Žitnjak,€542,10
+Sesvete,€538,13
+Trnje,€536,25
+Črnomerec,€520,10
+Gornja Dubrava,€513,11
+Podsljeme,€510,2
+Novi Zagreb - Istok,€505,10
+Maksimir,€500,24
+Novi Zagreb - Zapad,€460,16
+Podsused - Vrapče,€434,7
+Stenjevec,€424,7
+
+Average Rent for 36 - 50 m2
+Neighborhood,Rent,Sample Size
+Donji Grad,€879,46
+Gornji Grad - Medveščak,€833,34
+Maksimir,€718,34
+Gornja Dubrava,€713,16
+Trnje,€696,45
+Novi Zagreb - Zapad,€692,40
+Trešnjevka - Jug,€690,47
+Trešnjevka - Sjever,€677,53
+Črnomerec,€658,35
+Novi Zagreb - Istok,€653,23
+Peščenica - Žitnjak,€651,23
+Stenjevec,€621,36
+Podsljeme,€608,5
+Podsused - Vrapče,€568,7
+Donja Dubrava,€527,22
+Sesvete,€500,7
+Brezovica,€250,1
+
+Average Rent for 51 - 65 m2
+Neighborhood,Rent,Sample Size
+Gornji Grad - Medveščak,€969,36
+Donji Grad,€959,42
+Stenjevec,€899,31
+Gornja Dubrava,€851,17
+Trešnjevka - Jug,€845,49
+Podsljeme,€844,10
+Trešnjevka - Sjever,€841,65
+Peščenica - Žitnjak,€814,60
+Trnje,€799,57
+Črnomerec,€798,24
+Maksimir,€795,43
+Novi Zagreb - Istok,€780,22
+Podsused - Vrapče,€763,15
+Novi Zagreb - Zapad,€761,43
+Donja Dubrava,€707,17
+Sesvete,€536,18
+
+Average Rent for 66 - 80 m2
+Neighborhood,Rent,Sample Size
+Donji Grad,€1232,50
+Gornja Dubrava,€1031,22
+Podsljeme,€1024,19
+Črnomerec,€1003,40
+Trnje,€992,44
+Gornji Grad - Medveščak,€985,35
+Trešnjevka - Sjever,€971,45
+Trešnjevka - Jug,€952,40
+Maksimir,€933,35
+Stenjevec,€902,26
+Podsused - Vrapče,€835,14
+Novi Zagreb - Zapad,€806,15
+Peščenica - Žitnjak,€738,15
+Novi Zagreb - Istok,€695,11
+Donja Dubrava,€680,13
+Sesvete,€635,9
+
+Average Rent for 81 - 100 m2
+Neighborhood,Rent,Sample Size
+Donji Grad,€1462,77
+Gornji Grad - Medveščak,€1389,62
+Trnje,€1381,16
+Maksimir,€1306,45
+Trešnjevka - Sjever,€1255,27
+Trešnjevka - Jug,€1240,13
+Črnomerec,€1181,20
+Podsljeme,€1140,12
+Peščenica - Žitnjak,€1082,15
+Stenjevec,€957,11
+Novi Zagreb - Istok,€951,16
+Sesvete,€890,5
+Podsused - Vrapče,€835,7
+Gornja Dubrava,€808,14
+Novi Zagreb - Zapad,€808,12
+Donja Dubrava,€762,8
+
+Average Rent for 101+ m2
+Neighborhood,Rent,Sample Size
+Peščenica - Žitnjak,€2100,20
+Gornji Grad - Medveščak,€2011,151
+Trnje,€1985,10
+Podsljeme,€1930,57
+Maksimir,€1921,90
+Donji Grad,€1897,145
+Črnomerec,€1854,63
+Trešnjevka - Sjever,€1636,19
+Novi Zagreb - Zapad,€1541,12
+Trešnjevka - Jug,€1517,7
+Podsused - Vrapče,€1444,9
+Novi Zagreb - Istok,€1416,3
+Stenjevec,€1414,9
+Donja Dubrava,€833,12
+Gornja Dubrava,€731,12
+Sesvete,€650,13
