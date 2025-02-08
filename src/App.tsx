@@ -13,7 +13,7 @@ function App() {
       <BrowserRouter basename="/roi-calculator">
         <div className="container">
           <header>
-          <Link to="/" title="Home"><h1>Zagreb</h1></Link>
+          <Link to="/" title="Home"><h1>Croatia</h1></Link>
             <nav className="main-nav">
               <Link to="/calculator" title="Calculator"><IoCalculatorOutline size={24} /></Link>
               <Link to="/investment" title="Investment Comparison"><IoTrendingUpOutline size={24} /></Link>

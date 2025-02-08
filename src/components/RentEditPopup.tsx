@@ -1,20 +1,59 @@
 import { useState, useEffect } from 'react';
 import '../styles/Popup.css';
+import { useRentalData } from '../contexts/RentalDataContext';
+import { GetFullName } from '../utils/districtsZagreb';
 
 interface RentEditPopupProps {
     isOpen: boolean;
     onClose: () => void;
     onSave: (rent: number) => void;
     currentRent: number;
-    neighborhood: string;
+    district: string;
+    city?: string;
+    apartmentSize?: number;
 }
 
-export function RentEditPopup({ isOpen, onClose, onSave, currentRent, neighborhood }: RentEditPopupProps) {
+export function RentEditPopup({ 
+    isOpen, 
+    onClose, 
+    onSave, 
+    currentRent, 
+    district,
+    city,
+    apartmentSize
+}: RentEditPopupProps) {
+    const { rentalData } = useRentalData();
     const [inputValue, setInputValue] = useState('0');
+    const [suggestedRent, setSuggestedRent] = useState<number | null>(null);
 
     useEffect(() => {
-        setInputValue('0');
-    }, [currentRent, isOpen]);
+        setInputValue(currentRent.toString());
+
+        // Calculate suggested rent if we have all the necessary data
+        if (city && district && apartmentSize) {
+            // Find the city data
+            const cityData = rentalData.find(data => 
+                data.city.toLowerCase() === city.toLowerCase()
+            );
+
+            if (cityData) {
+                // Find the appropriate size range
+                const range = cityData.rentData.find(range =>
+                    apartmentSize >= range.minSize && apartmentSize <= range.maxSize
+                );
+
+                if (range) {
+                    // For Zagreb, convert district name to full name
+                    const districtName = city.toLowerCase() === 'zagreb' 
+                        ? GetFullName(district)
+                        : district;
+
+                    const rent = range.averageRents[districtName]?.rent || null;
+                    setSuggestedRent(rent);
+                }
+            }
+        }
+    }, [currentRent, isOpen, city, district, apartmentSize, rentalData]);
 
     if (!isOpen) return null;
 
@@ -31,11 +70,17 @@ export function RentEditPopup({ isOpen, onClose, onSave, currentRent, neighborho
     return (
         <div className="popup-overlay" onClick={handleClose}>
             <div className="popup-content" onClick={e => e.stopPropagation()}>
-                <h3>Edit Rent for {neighborhood}</h3>
+                <h3>Edit Rent for {district}</h3>
                 <div>
                     <div className="popup-link-text">
                         Current value: €{currentRent}
                     </div>
+                    
+                    {suggestedRent !== null && (
+                        <div className="popup-link-text">
+                            Suggested value: €{suggestedRent}
+                        </div>
+                    )}
                     
                     <div className="input-wrapper">
                         <div className="popup-link-text">

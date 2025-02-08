@@ -348,7 +348,11 @@ const neighbourhoodsAndSubneighbourhoods: { [key: string]: string[] } = {
 };
 
 export function GetFullName(shortName: string): string {
-    return districtShortNames[shortName] || shortName;
+    if (!shortName) return '';
+    const name = districtShortNames[shortName] || shortName;
+    return name.split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
 }
 
 export function GetShortName(fullName: string): string {

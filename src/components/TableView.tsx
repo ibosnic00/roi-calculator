@@ -14,7 +14,7 @@ interface TableViewProps {
   onDelete: (id: number) => void;
   onMaintenanceCostChange: (id: number, cost: string) => void;
   onLinkChange: (id: number, link: string) => void;
-  onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
+  onNeighborhoodChange: (id: number, district: string, neighbourhood: string | null, city: string) => void;
   onFavoriteToggle: (id: number) => void;
   onSoldToggle: (id: number) => void;
   onRentChange: (id: number, rent: number) => void;
@@ -77,14 +77,15 @@ export function TableView({
       <NeighborhoodPopup
         isOpen={isNeighborhoodPopupOpen}
         onClose={() => setIsNeighborhoodPopupOpen(false)}
-        onSave={(neighborhood, subneighborhood) => {
+        onSave={(district, neighbourhood, city) => {
           if (selectedPropertyId) {
-            onNeighborhoodChange(selectedPropertyId, neighborhood, subneighborhood);
+            onNeighborhoodChange(selectedPropertyId, district, neighbourhood, city);
             setIsNeighborhoodPopupOpen(false);
           }
         }}
-        initialNeighborhood={selectedProperty?.neighborhood}
-        initialSubneighborhood={selectedProperty?.subneighborhood}
+        initialDistrict={selectedProperty?.district}
+        initialNeighbourhood={selectedProperty?.neighborhoodz}
+        initialCity={selectedProperty?.city}
       />
 
       <RentEditPopup
@@ -97,7 +98,9 @@ export function TableView({
           }
         }}
         currentRent={properties.find(p => p.id === editingRentId)?.monthlyRent || 0}
-        neighborhood={selectedProperty?.neighborhood || ''}
+        district={selectedProperty?.district || ''}
+        city={selectedProperty?.city}
+        apartmentSize={selectedProperty?.apartmentSize}
       />
 
       <ConfirmationPopup
@@ -110,7 +113,7 @@ export function TableView({
           }
         }}
         propertyInfo={properties.find(p => p.id === deleteId) && {
-          neighborhood: GetFullName(properties.find(p => p.id === deleteId)!.subneighborhood),
+          district: GetFullName(properties.find(p => p.id === deleteId)!.district),
           expectedPrice: properties.find(p => p.id === deleteId)!.expectedPrice
         }}
       />
@@ -120,7 +123,7 @@ export function TableView({
           <tr>
             <th className="index-column">#
               <div className="unit">(link)</div></th>
-            <th>Neighborhood</th>
+            <th>District/Neighbourhood</th>
             <th>
               Asking Price
               <div className="unit">(€)</div>
@@ -176,14 +179,16 @@ export function TableView({
               >
                 {index + 1}
               </td>
-              {property.subneighborhood ? (
+              {property.neighborhoodz ? (
                 <td onClick={() => {
                   setSelectedPropertyId(property.id);
                   setIsNeighborhoodPopupOpen(true);
                 }} style={{ cursor: 'pointer' }}>
-                  {property.subneighborhood}
+                  {property.neighborhoodz}
                   <div style={{ fontSize: '0.75rem', color: 'gray' }}>
-                    {GetFullName(property.neighborhood)}
+                    {property.city ? property.city.split('-')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' ') : 'Zagreb'}
                   </div>
                 </td>
               ) : (
@@ -191,7 +196,12 @@ export function TableView({
                   setSelectedPropertyId(property.id);
                   setIsNeighborhoodPopupOpen(true);
                 }} style={{ cursor: 'pointer' }}>
-                  {GetFullName(property.neighborhood)}
+                  {GetFullName(property.district)}
+                  <div style={{ fontSize: '0.75rem', color: 'gray' }}>
+                    {property.city ? property.city.split('-')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' ') : 'Zagreb'}
+                  </div>
                 </td>
               )}
               <td>{property.askingPrice?.toLocaleString() || '0'}</td>

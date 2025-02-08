@@ -1,0 +1,15 @@
+.toggle-input-type {
+  padding: 0.05rem;
+  font-size: 0.75rem;
+  color: #4b5563;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle-input-type:hover {
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
+}

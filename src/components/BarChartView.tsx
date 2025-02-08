@@ -58,9 +58,11 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
     return () => window.removeEventListener('resize', updateHeight);
   }, []);
 
-  const getNeighborhoodColor = (neighborhood: string) => {
-    const uniqueNeighborhoods = Array.from(new Set(properties.map(p => p.neighborhood)));
-    const index = uniqueNeighborhoods.indexOf(neighborhood);
+  const getNeighborhoodColor = (district: string, city: string) => {
+    const uniqueLocations = Array.from(new Set(properties.map(p => 
+      `${p.city || 'Zagreb'}-${p.district}`
+    )));
+    const index = uniqueLocations.indexOf(`${city}-${district}`);
     return COLORS.byNeighborhood.colors[index % COLORS.byNeighborhood.colors.length];
   };
 
@@ -81,11 +83,18 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
           value = (property.expectedPrice + property.renovationCost) / property.apartmentSize;
           break;
       }
+
+      const city = property.city || 'Zagreb';
+      const formattedCity = city.split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+      const districtName = city.toLowerCase() === 'zagreb' ? GetFullName(property.district) : property.district;
+
       return {
         name: `Property ${properties.indexOf(property) + 1}`,
         value: Number(value.toFixed(2)),
-        neighborhood: property.neighborhood,
-        color: colorByNeighborhood ? getNeighborhoodColor(property.neighborhood) : COLORS.default
+        neighborhood: `${districtName} (${formattedCity})`,
+        color: colorByNeighborhood ? getNeighborhoodColor(property.district, city) : COLORS.default
       };
     }).sort((a, b) => 
       sortOrder === 'asc' ? a.value - b.value : b.value - a.value
@@ -117,19 +126,38 @@ export function BarChartView({ properties, parameters }: BarChartViewProps) {
   const renderLegend = () => {
     if (!colorByNeighborhood) return null;
 
-    const uniqueNeighborhoods = Array.from(new Set(properties.map(p => p.neighborhood)));
+    // Create unique combinations using a more reliable method
+    const uniqueNeighborhoods = Array.from(
+      new Map(
+        properties.map(p => [
+          `${p.city || 'Zagreb'}-${p.district}`,
+          {
+            district: p.district,
+            city: p.city || 'Zagreb'
+          }
+        ])
+      ).values()
+    );
     
     return (
       <div className="neighborhood-legend">
-        {uniqueNeighborhoods.map((neighborhood, index) => (
-          <div key={neighborhood} className="neighborhood-legend-item">
-            <span 
-              className="color-box" 
-              style={{ backgroundColor: COLORS.byNeighborhood.colors[index % COLORS.byNeighborhood.colors.length] }}
-            />
-            <span className="neighborhood-name">{GetFullName(neighborhood)}</span>
-          </div>
-        ))}
+        {uniqueNeighborhoods.map(({ district, city }) => {
+          const formattedCity = city.split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+          
+          return (
+            <div key={`${city}-${district}`} className="neighborhood-legend-item">
+              <span 
+                className="color-box" 
+                style={{ backgroundColor: getNeighborhoodColor(district, city) }}
+              />
+              <span className="neighborhood-name">
+                {city.toLowerCase() === 'zagreb' ? GetFullName(district) : district} ({formattedCity})
+              </span>
+            </div>
+          );
+        })}
       </div>
     );
   };

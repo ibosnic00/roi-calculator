@@ -5,7 +5,7 @@ interface ConfirmationPopupProps {
   onClose: () => void;
   onConfirm: () => void;
   propertyInfo?: {
-    neighborhood: string;
+    district: string;
     expectedPrice: number;
   };
 }
@@ -23,7 +23,7 @@ export function ConfirmationPopup({ isOpen, onClose, onConfirm, propertyInfo }: 
           display: 'block',
           margin: '0.5rem 0'
         }}>
-          {propertyInfo.neighborhood} - €{propertyInfo.expectedPrice.toLocaleString()}
+          {propertyInfo.district} - €{propertyInfo.expectedPrice.toLocaleString()}
         </span>
       </>
     : "Are you sure you want to delete this property?";

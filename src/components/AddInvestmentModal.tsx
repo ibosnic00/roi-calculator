@@ -46,9 +46,9 @@ export function AddInvestmentModal({ onClose, onAdd, options, editingInvestment 
   // Update form when property is selected
   useEffect(() => {
     if (selectedProperty && selectedType.includes('property')) {
-      const propertyName = selectedProperty.subneighborhood
-        ? `${selectedProperty.subneighborhood} [€${selectedProperty.expectedPrice.toLocaleString()}]`
-        : `${selectedProperty.neighborhood} [€${selectedProperty.expectedPrice.toLocaleString()}]`;
+      const propertyName = selectedProperty.neighborhoodz
+        ? `${selectedProperty.neighborhoodz} [€${selectedProperty.expectedPrice.toLocaleString()}]`
+        : `${selectedProperty.district} [€${selectedProperty.expectedPrice.toLocaleString()}]`;
 
       setFormData(prev => ({
         ...prev,
@@ -141,9 +141,9 @@ export function AddInvestmentModal({ onClose, onAdd, options, editingInvestment 
                 <option value="">Select Existing Property</option>
                 {existingProperties.map((property, index) => (
                   <option key={property.id} value={property.id}>
-                    {property.subneighborhood
-                      ? `${index + 1} - ${property.subneighborhood} [€${property.expectedPrice.toLocaleString()}]`
-                      : `${index + 1} - ${property.neighborhood} [€${property.expectedPrice.toLocaleString()}]`
+                    {property.neighborhoodz
+                      ? `${index + 1} - ${property.neighborhoodz} [€${property.expectedPrice.toLocaleString()}]`
+                      : `${index + 1} - ${property.district} [€${property.expectedPrice.toLocaleString()}]`
                     }
                   </option>
                 ))}

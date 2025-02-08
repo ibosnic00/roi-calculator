@@ -27,7 +27,7 @@ interface TileViewProps {
     onPropertyClick: (property: Property) => void;
     onLinkChange: (id: number, link: string) => void;
     onReorder: (startIndex: number, endIndex: number) => void;
-    onNeighborhoodChange: (id: number, neighborhood: string, subneighborhood: string | null) => void;
+    onNeighborhoodChange: (id: number, district: string, neighbourhood: string | null, city: string) => void;
     onFavoriteToggle: (id: number) => void;
     onSoldToggle: (id: number) => void;
 }
@@ -64,7 +64,7 @@ const SortableTile = ({ property, index, onPropertyClick, onIndexClick, onFavori
                     >
                         #{index + 1}
                         <span className="notes">
-                            {property.subneighborhood || GetFullName(property.neighborhood) || 'No neighborhood'}
+                            {property.neighborhoodz || GetFullName(property.district) || 'No neighborhood'}
                         </span>
                     </span>
                     <div className="tile-actions">
@@ -212,14 +212,15 @@ export function TileView({
                 <NeighborhoodPopup
                     isOpen={isNeighborhoodPopupOpen}
                     onClose={() => setIsNeighborhoodPopupOpen(false)}
-                    onSave={(neighborhood, subneighborhood) => {
+                    onSave={(district, neighbourhood, city) => {
                         if (selectedPropertyId) {
-                            onNeighborhoodChange(selectedPropertyId, neighborhood, subneighborhood);
+                            onNeighborhoodChange(selectedPropertyId, district, neighbourhood, city);
                             setIsNeighborhoodPopupOpen(false);
                         }
                     }}
-                    initialNeighborhood={selectedProperty?.neighborhood}
-                    initialSubneighborhood={selectedProperty?.subneighborhood}
+                    initialDistrict={selectedProperty?.district}
+                    initialNeighbourhood={selectedProperty?.neighborhoodz}
+                    initialCity={selectedProperty?.city}
                 />
 
                 <SortableContext items={visibleProperties.map(p => p.id)} strategy={rectSortingStrategy}>
@@ -249,7 +250,7 @@ export function TileView({
                                 </div>
                                 <div className="tile-content">
                                     <div className="tile-notes">
-                                        {activeProperty.neighborhood || 'No neighborhood'}
+                                        {activeProperty.district || 'No neighborhood'}
                                     </div>
                                     <div className="tile-price">
                                         €{activeProperty.expectedPrice.toLocaleString()}
@@ -273,7 +274,7 @@ export function TileView({
                         }
                     }}
                     propertyInfo={properties.find(p => p.id === deleteId) && {
-                        neighborhood: GetFullName(properties.find(p => p.id === deleteId)!.subneighborhood),
+                        district: GetFullName(properties.find(p => p.id === deleteId)!.district),
                         expectedPrice: properties.find(p => p.id === deleteId)!.expectedPrice
                     }}
                 />

@@ -4,26 +4,40 @@ import { Property } from '../types/Property'
 import { TableView } from '../components/TableView'
 import { GraphView } from '../components/GraphView'
 import { TileView } from '../components/TileView'
-import {
-  GetSubneighbourhoodsInNeighbourhood,
-  GetAllSubneighbourhoods,
-  GetNeighbourhoodFromSubneighbourhood,
-  GetFullName,
-  GetShortName
-} from '../utils/districtsZagreb';
+import { GetFullName } from '../utils/districtsZagreb';
 import { NeighborhoodPopup } from '../components/NeighborhoodPopup';
 import { RentEditPopup } from '../components/RentEditPopup';
+import { loadLocationData } from '../utils/locationData';
+import '../styles/CalculationPage.css';
+
+interface LocationData {
+  [city: string]: {
+    [district: string]: string[];
+  };
+}
 
 export function CalculationPage() {
   const { rentalData } = useRentalData()
   const [isFormVisible, setIsFormVisible] = useState(false)
+  const [locationData, setLocationData] = useState<LocationData>({})
   const [formData, setFormData] = useState({
     askingPrice: '',
     apartmentSize: '',
+    city: '',
+    district: '',
     neighborhood: '',
-    subneighborhood: '',
     renovationCost: ''
   })
+  const [isCustomNeighborhood, setIsCustomNeighborhood] = useState(false)
+
+  // Load location data
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await loadLocationData()
+      setLocationData(data)
+    }
+    loadData()
+  }, [])
 
   // Load initial properties from localStorage
   const [properties, setProperties] = useState<Property[]>(() => {
@@ -42,7 +56,7 @@ export function CalculationPage() {
       prevProperties.map(property => {
         // Only update properties that don't have custom rent
         if (!property.isCustomRent) {
-          const newRent = getAverageRentFromContext(property.neighborhood, property.apartmentSize)
+          const newRent = getAverageRentFromContext(property.district, property.apartmentSize, property.city)
           const newRoi = calculateROI(property.expectedPrice, newRent, property.renovationCost)
           return {
             ...property,
@@ -55,16 +69,29 @@ export function CalculationPage() {
     )
   }, [rentalData])
 
-  const getAverageRentFromContext = (neighborhood: string, size: number): number => {
-    const range = rentalData.find(range =>
+  const getAverageRentFromContext = (district: string, size: number, city?: string): number => {
+    // Find the city data
+    const cityData = rentalData.find(data =>
+      data.city.toLowerCase() === (city || '').toLowerCase()
+    );
+
+    if (!cityData) return 0;
+
+    // Find the appropriate size range
+    const range = cityData.rentData.find(range =>
       size >= range.minSize && size <= range.maxSize
-    )
+    );
 
-    if (!range) return 0
+    if (!range) return 0;
 
-    // Convert short name to full name before looking up rent
-    const fullName = GetFullName(neighborhood)
-    return range.averageRents[fullName] || 0
+    // For Zagreb, convert district name to full name
+    if (city?.toLowerCase() === 'zagreb') {
+      const fullName = GetFullName(district);
+      return range.averageRents[fullName]?.rent || 0;
+    }
+
+    // For other cities, use the district name as is
+    return range.averageRents[district]?.rent || 0;
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -81,14 +108,52 @@ export function CalculationPage() {
     return (yearlyRent / totalInvestment) * 100;
   }
 
+  const formatCityName = (name: string) =>
+    name.split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+  const findLocationByNeighborhood = (neighborhoodName: string): { city: string; district: string } | null => {
+    const normalizedSearch = neighborhoodName.toLowerCase().trim();
+
+    for (const [city, districts] of Object.entries(locationData)) {
+      for (const [district, neighborhoods] of Object.entries(districts)) {
+        if (neighborhoods.some(n => n.toLowerCase() === normalizedSearch)) {
+          return { city, district };
+        }
+      }
+    }
+    return null;
+  }
+
+  const handleNeighborhoodInput = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      neighborhood: value
+    }));
+
+    // Try to find and auto-select city and district
+    const location = findLocationByNeighborhood(value);
+    if (location) {
+      setFormData(prev => ({
+        ...prev,
+        city: location.city,
+        district: location.district,
+        neighborhood: value
+      }));
+    }
+  }
+
   const resetForm = () => {
     setFormData({
       askingPrice: '',
       apartmentSize: '',
+      city: '',
+      district: '',
       neighborhood: '',
-      subneighborhood: '',
       renovationCost: '0'
     })
+    setIsCustomNeighborhood(false)
     setIsFormVisible(false)
   }
 
@@ -99,7 +164,7 @@ export function CalculationPage() {
     const size = Number(formData.apartmentSize)
     const renovationCost = Number(formData.renovationCost)
 
-    const monthlyRent = getAverageRentFromContext(formData.neighborhood, size)
+    const monthlyRent = getAverageRentFromContext(formData.district, size, formData.city)
     const roi = calculateROI(price, monthlyRent, renovationCost)
 
     // Calculate maintenance cost with 2 decimal places
@@ -110,14 +175,15 @@ export function CalculationPage() {
       askingPrice: price,
       expectedPrice: price,
       apartmentSize: size,
-      neighborhood: GetShortName(formData.neighborhood),
+      district: formData.district,
       renovationCost: renovationCost,
       monthlyRent: monthlyRent,
-      subneighborhood: formData.subneighborhood,
+      neighborhoodz: formData.neighborhood || '',
       roi: roi,
       notes: '',
       year: '',
-      maintenanceCostPerSqm: maintenanceCost
+      maintenanceCostPerSqm: maintenanceCost,
+      city: formData.city
     }
 
     setProperties(prev => [...prev, newProperty])
@@ -182,16 +248,6 @@ export function CalculationPage() {
     ));
   };
 
-  const getAvailableneighborhoods = (): string[] => {
-    const neighborhoodSet = new Set<string>()
-    rentalData.forEach(range => {
-      Object.keys(range.averageRents).forEach(neighborhood => {
-        neighborhoodSet.add(neighborhood)
-      })
-    })
-    return Array.from(neighborhoodSet).sort()
-  }
-
   const [viewMode, setViewMode] = useState<'table' | 'tiles'>(() => {
     const savedViewMode = localStorage.getItem('viewMode')
     return (savedViewMode === 'table' || savedViewMode === 'tiles') ? savedViewMode : 'tiles'
@@ -223,12 +279,25 @@ export function CalculationPage() {
     });
   };
 
-  const handleNeighborhoodChange = (id: number, neighborhood: string, subneighborhood: string | null) => {
-    setProperties(properties.map(property =>
-      property.id === id
-        ? { ...property, neighborhood, subneighborhood: subneighborhood || '' }
-        : property
-    ));
+  const handleNeighborhoodChange = (id: number, district: string, neighborhoodz: string | null, city: string) => {
+    setProperties(properties.map(property => {
+      if (property.id === id) {
+        // Get new rent based on the new district and city
+        const newRent = getAverageRentFromContext(district, property.apartmentSize, city);
+        const newRoi = calculateROI(property.expectedPrice, newRent, property.renovationCost);
+        
+        return {
+          ...property,
+          district,
+          neighborhoodz: neighborhoodz || '',
+          city,
+          monthlyRent: newRent,
+          roi: newRoi,
+          isCustomRent: false // Reset custom rent flag when district changes
+        };
+      }
+      return property;
+    }));
   };
 
   const [isNeighborhoodPopupOpen, setIsNeighborhoodPopupOpen] = useState(false);
@@ -412,66 +481,93 @@ export function CalculationPage() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="neighborhood">Neighbourhood</label>
+                  <label htmlFor="city">City</label>
                   <select
-                    id="neighborhood"
-                    name="neighborhood"
-                    value={formData.neighborhood}
+                    id="city"
+                    name="city"
+                    value={formData.city}
                     onChange={e => {
-                      const newNeighborhood = e.target.value;
                       setFormData(prev => ({
                         ...prev,
-                        neighborhood: newNeighborhood,
-                        subneighborhood: ''
+                        city: e.target.value,
+                        district: '',
+                        neighborhood: ''
                       }));
                     }}
                     required
                     className="popup-input"
                   >
-                    <option value="">Select Neighborhood</option>
-                    {getAvailableneighborhoods().map(hood => (
-                      <option key={hood} value={hood}>{hood}</option>
+                    <option value="">Select City</option>
+                    {Object.keys(locationData).map(city => (
+                      <option key={city} value={city}>{formatCityName(city)}</option>
                     ))}
                   </select>
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="subneighborhood">Subneighborhood</label>
+                  <label htmlFor="district">District</label>
                   <select
-                    name="subneighborhood"
-                    value={formData.subneighborhood}
+                    id="district"
+                    name="district"
+                    value={formData.district}
                     onChange={e => {
-                      const newSubneighborhood = e.target.value;
-                      if (!formData.neighborhood) {
-                        const parentNeighborhood = GetNeighbourhoodFromSubneighbourhood(newSubneighborhood);
-                        if (parentNeighborhood) {
-                          setFormData(prev => ({
-                            ...prev,
-                            neighborhood: parentNeighborhood,
-                            subneighborhood: newSubneighborhood
-                          }));
-                        }
-                      } else {
-                        setFormData(prev => ({
-                          ...prev,
-                          subneighborhood: newSubneighborhood
-                        }));
-                      }
+                      const newDistrict = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        district: newDistrict,
+                        neighborhood: ''
+                      }));
                     }}
+                    required
                     className="popup-input"
+                    disabled={!formData.city}
                   >
-                    <option value="">Select Subneighborhood</option>
-                    {formData.neighborhood
-                      ? GetSubneighbourhoodsInNeighbourhood(formData.neighborhood)
-                        .map(sub => (
-                          <option key={sub} value={sub}>{sub}</option>
-                        ))
-                      : GetAllSubneighbourhoods()
-                        .map(sub => (
-                          <option key={sub} value={sub}>{sub}</option>
-                        ))
-                    }
+                    <option value="">Select District</option>
+                    {formData.city && Object.keys(locationData[formData.city] || {}).map(district => (
+                      <option key={district} value={district}>{district}</option>
+                    ))}
                   </select>
+                </div>
+
+                <div className="form-group">
+                  <button
+                    className="toggle-input-type"
+                    onClick={() => setIsCustomNeighborhood(!isCustomNeighborhood)}
+                  >
+                    {isCustomNeighborhood ? 'Select from list' : 'Type manually'}
+                  </button>
+                  <label htmlFor="neighborhood">
+                    Neighbourhood
+                  </label>
+
+                  {isCustomNeighborhood ? (
+                    <input
+                      type="text"
+                      id="neighborhood"
+                      name="neighborhood"
+                      value={formData.neighborhood}
+                      onChange={(e) => handleNeighborhoodInput(e.target.value)}
+                      className="popup-input"
+                      placeholder="Enter name"
+                      autoComplete="off"
+                    />
+                  ) : (
+                    <select
+                      id="neighborhood"
+                      name="neighborhood"
+                      value={formData.neighborhood}
+                      onChange={handleInputChange}
+                      className="popup-input"
+                      disabled={!formData.district}
+                    >
+                      <option value="">Select Neighbourhood</option>
+                      {formData.city && formData.district &&
+                        locationData[formData.city][formData.district].map(neighborhood => (
+                          <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
+                        ))
+                      }
+                    </select>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -593,9 +689,9 @@ export function CalculationPage() {
                       setIsNeighborhoodPopupOpen(true);
                     }
                   }} style={{ cursor: 'pointer' }}>
-                    {selectedProperty.subneighborhood ?
-                      `${selectedProperty.subneighborhood} (${GetFullName(selectedProperty.neighborhood)})` :
-                      GetFullName(selectedProperty.neighborhood)
+                    {selectedProperty.neighborhoodz ?
+                      `${selectedProperty.neighborhoodz} (${GetFullName(selectedProperty.district)})` :
+                      GetFullName(selectedProperty.district)
                     }
                   </span>
                 </div>
@@ -676,14 +772,15 @@ export function CalculationPage() {
       <NeighborhoodPopup
         isOpen={isNeighborhoodPopupOpen}
         onClose={() => setIsNeighborhoodPopupOpen(false)}
-        onSave={(neighborhood, subneighborhood) => {
+        onSave={(district, neighborhoodz, city) => {
           if (selectedProperty) {
-            handleNeighborhoodChange(selectedProperty.id, neighborhood, subneighborhood);
+            handleNeighborhoodChange(selectedProperty.id, district, neighborhoodz, city);
             setIsNeighborhoodPopupOpen(false);
           }
         }}
-        initialNeighborhood={selectedProperty?.neighborhood}
-        initialSubneighborhood={selectedProperty?.subneighborhood}
+        initialDistrict={selectedProperty?.district}
+        initialNeighbourhood={selectedProperty?.neighborhoodz}
+        initialCity={selectedProperty?.city}
       />
 
       {/* Add RentEditPopup */}
@@ -697,7 +794,8 @@ export function CalculationPage() {
           }
         }}
         currentRent={properties.find(p => p.id === editingRentId)?.monthlyRent || 0}
-        neighborhood={selectedProperty?.neighborhood || ''}
+        district={selectedProperty?.district || ''}
+        city={selectedProperty?.city}
       />
     </>
   )

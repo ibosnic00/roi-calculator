@@ -1,0 +1,258 @@
+{
+  "split": {
+    "Središnji i povijesni dijelovi": [
+      "Grad", "Varoš", "Radunica", "Dobri", "Lučac", "Manuš", "Bol", "Sukoišan", "Lovret"
+    ],
+    "Zapadni i elitni dijelovi": [
+      "Meje", "Zvončac", "Poljud", "Lora", "Spinut", "Marjan", "Zenta", "Bačvice", "Firule"
+    ],
+    "Istočni i rezidencijalni dijelovi": [
+      "Kman", "Lokve", "Plokite", "Blatine", "Škrape", "Trstenik", "Split 3", "Visoka",
+      "Mertojak", "Ravne njive", "Smrdečac", "Sućidar", "Križine", "Table", "Skalice",
+      "Gripe", "Kocunar"
+    ],
+    "Južni i noviji dijelovi": [
+      "Žnjan", "Pazdigrad", "Duilovo"
+    ],
+    "Sjeverni i industrijski dijelovi": [
+      "Brda", "Pujanke", "Neslanovac", "Dragovode", "Ravne Njive", "Bilice", "Smokovik",
+      "Stinice", "Brodarica"
+    ],
+    "Prigradska i ruralna područja": [
+      "Mejaši", "Kamen", "Stobreč", "Žrnovnica", "Srinjine", "Dračevac", "Dujmovača",
+      "Kila", "Šine", "Sirobuja"
+    ]
+  },
+  "rijeka": {
+    "Središnji i povijesni dijelovi": [
+      "Centar", "Stari Grad", "Potok", "Sušak", "Brajda", "Školjić", "Bulevard"
+    ],
+    "Zapadni dijelovi": [
+      "Zamet", "Kantrida", "Turnić", "Martinkovac", "Costabella", "Bivio", "Preluk",
+      "Marčeljeva Draga", "Krnjevo"
+    ],
+    "Istočni i sjeverni dijelovi": [
+      "Pehlin", "Grbci", "Rastočine", "Svilno", "Orehovica", "Pašac", "Hosti",
+      "Sveti Kuzam", "Draga"
+    ],
+    "Rezidencijalni i noviji dijelovi": [
+      "Banderovo", "Belveder", "Krimeja", "Kozala", "Donja Vežica", "Gornja Vežica",
+      "Trsat", "Mlaka", "Podmurvice", "Škurinje", "Škurinjska Draga", "Drenova",
+      "Rujevica", "Srdoči", "Pećine", "Vojak", "Brašćine"
+    ]
+  },
+  "zadar": {
+    "Središnji i povijesni dijelovi": [
+      "Poluotok", "Jazine", "Kolovare", "Branimirova obala", "Voštarnica", "Relja"
+    ],
+    "Zapadni i rezidencijalni dijelovi": [
+      "Belafuža", "Melada", "Maslina", "Mocire", "Petrići", "Puntamika", "Diklo", "Borik",
+      "Bokanjac", "Novi Bokanjac"
+    ],
+    "Istočni i noviji dijelovi": [
+      "Plovanija", "Vidikovac", "Bulevar", "Bili brig", "Crvene kuće", "Ričina", "Višnjik",
+      "Smiljevac", "Stanovi"
+    ],
+    "Južni i industrijski dijelovi": [
+      "Brodarica", "Skročini", "Ploča", "Crno", "Dračevac", "Sinjoretovo"
+    ]
+  },
+  "pula": {
+    "Središnji i povijesni dijelovi": [
+      "Centar", "Stari grad", "Monte Zaro", "Kaštanjer", "Monvidal"
+    ],
+    "Zapadni i rezidencijalni dijelovi": [
+      "Stoja", "Lungomare", "Valkane", "Valsaline", "Štinjan"
+    ],
+    "Istočni i južni dijelovi": [
+      "Veruda", "Verudela", "Vidikovac", "Sv. Polikarp", "Sisplac", "Valdebek",
+      "Monteghiro", "Veli vrh"
+    ],
+    "Sjeverni i industrijski dijelovi": [
+      "Šijana", "Gregovica", "Monte Magno", "Šikići"
+    ]
+  },
+  "solin": {
+    "Središnji i povijesni dijelovi": [
+      "Centar", "Priko vode", "Bilankuša", "Donja Strana"
+    ],
+    "Zapadni i rezidencijalni dijelovi": [
+      "Japirko", "Gašpini", "Mezanovci", "Ninčevići"
+    ],
+    "Istočni i sjeverni dijelovi": [
+      "Mravince", "Kučine", "Rupotina", "Sr. Strana"
+    ],
+    "Južni i obalni dijelovi": [
+      "Sveti Kajo", "Vranjic"
+    ]
+  },
+  "velika-gorica": {
+    "Centar i gradsko područje": [
+      "Centar", "Kurilovec", "Cibljanica", "Galženica", "Podbrežnica"
+    ],
+    "Zapadni i sjeverni dijelovi": [
+      "Pleso", "Ščitarjevo", "Lukavec", "Kromosovo naselje", "Visoki Brijeg"
+    ],
+    "Istočni i južni dijelovi": [
+      "Velika Mlaka", "Donja Lomnica", "Gradići", "Buševec", "Mala Gorica", 
+      "Pionirsko naselje", "Naselje Slavka Kolara"
+    ]
+  },
+  "slavonski-brod": {
+    "Središnji dio i povijesne četvrti": [
+      "Centar", "Tvrđava Brod"
+    ],
+    "Zapadni i rezidencijalni dijelovi": [
+      "Brodsko Vinogorje", "Podvinje", "Livada", "Lutvinka", "Mali Pariz"
+    ],
+    "Istočni i industrijski dijelovi": [
+      "Budainka", "Kolonija", "Jelas", "Mikrorajon", "Plavo Polje", "Slavonija 1"
+    ],
+    "Veća gradska naselja": [
+      "Naselje Andrije Hebranga", "Naselje Huge Badalića", "Naselje Kralja Tomislava"
+    ]
+  },
+  "osijek": {
+    "Središnji i povijesni dijelovi": [
+      "Gornji grad", "Tvrđa", "Donji grad", "Novi Grad"
+    ],
+    "Zapadni i rezidencijalni dijelovi": [
+      "Retfala", "Višnjevac", "Industrijska četvrt", "Vij. Ivana Meštrovića"
+    ],
+    "Istočni i južni dijelovi": [
+      "Jug I", "Jug II", "Sjenjak", "Bosutsko naselje", "Cvjetno naselje"
+    ],
+    "Industrijski i rubni dijelovi": [
+      "Industrijska zona", "Čepinska", "Podravlje"
+    ]
+  },
+  "varazdin": {
+    "Središnji i povijesni dijelovi": [
+      "Stari grad", "Centar", "Banfica", "Bronx"
+    ],
+    "Zapadni i rezidencijalni dijelovi": [
+      "Kućan", "Gojanec", "Jalkovec", "Jalkovečka", "Hallers", "Đurek"
+    ],
+    "Istočni i industrijski dijelovi": [
+      "Biškupec", "Grabanice", "Zbelava", "Koprivnička", "Texas", "Vilka Novaka"
+    ]
+  },
+  "karlovac": {
+    "Središnji i povijesni dijelovi": [
+      "Zvijezda", "Novi Centar", "Banija", "Rakovac"
+    ],
+    "Zapadni i rezidencijalni dijelovi": [
+      "Dubovac", "Grabrik", "Borlin", "Velika Jelsa"
+    ],
+    "Istočni i južni dijelovi": [
+      "Švarča", "Turanj", "Mekušje", "Luščić", "Drežnik"
+    ],
+    "Sjeverni i prigradski dijelovi": [
+      "Gaza"
+    ]
+  },
+  "zagreb": {
+    "Črnomerec": [
+      "Bijenik", "Črnomerec", "Fraterščica", "Gornje Selo", "Gornje Vrapče",
+      "Gornji Lukšić", "Jelenovac", "Krvarić", "Kustošija", "Lukšić",
+      "Mikulići", "Sveti Duh", "Šestinski dol", "Vrhovec", "Završje"
+    ],
+    "Donja Dubrava": [
+      "Čulinec", "Donja Dubrava", "Dubrava", "Krčevine", "Resnički gaj",
+      "Retkovec", "Trnava"
+    ],
+    "Brezovica": [
+      "Brezovica", "Brebernica", "Demerje", "Desprim", "Donji Dragonožec",
+      "Donji Trpuci", "Drežnik Brezovički", "Goli Breg", "Gornji Dragonožec",
+      "Gornji Trpuci", "Grančari", "Havidić Selo", "Horvati", "Hudi Bitek",
+      "Kupinečki Kraljevec", "Lipnica", "Odranski Obrež", "Starjak", "Strmec",
+      "Zadvorsko"
+    ],
+    "Donji Grad": [
+      "Donji Grad", "Cvjetni trg", "Zrinjevac", "Strossmayerov trg",
+      "Tomislavov trg"
+    ],
+    "Gornja Dubrava": [
+      "Branovec", "Budaki", "Cesari", "Čučerje", "Čugovec", "Čuki", "Dankovec",
+      "Degidovec", "Dubec", "Dudaki", "Fabijanići", "Furdini", "Gorni Dankovec",
+      "Gornja Dubrava", "Gornji Slanovec", "Grad mladih", "Grana", "Granešina",
+      "Jalševec", "Klaka", "Medvedski breg", "Micudaji", "Mihovci", "Miroševec",
+      "Naglići", "Novaki", "Novoselčina", "Novoselec", "Oporovec", "Orešići",
+      "Poljanice", "Studentski grad", "Svibovci", "Trnovčica", "Trstenik",
+      "Trupeljaki", "Žgulići"
+    ],
+    "Gornji Grad - Medveščak": [
+      "Britanac", "Centar", "Dolac", "Gornji grad", "Gupčeva zvijezda",
+      "Kaptol", "Kraljevec", "Ksaver", "Medveščak", "Mirogoj", "Pantovčak",
+      "Prekrižje", "Ribnjak", "Šalata", "Tuškanac", "Voćarsko naselje",
+      "Zelengaj"
+    ],
+    "Maksimir": [
+      "Donji Bukovac", "Gornji Bukovac", "Lašćina", "Maksimir", "Ravnice",
+      "Remete", "Srebrnjak", "Svetice"
+    ],
+    "Novi Zagreb - Istok": [
+      "Bundek", "Buzin", "Dugave", "Hrelić", "Jakuševec", "Kamenarka",
+      "Sloboština", "Sopot", "Središće", "Travno", "Utrina", "Veliko Polje",
+      "Zapruđe"
+    ],
+    "Novi Zagreb - Zapad": [
+      "Blato", "Botinec", "Donji Čehi", "Glogovec", "Gornji Čehi",
+      "Hrašće Turopoljsko", "Hrvatski Leskovac", "Ježdovec", "Kajzerica",
+      "Lanište", "Lučko", "Mala Mlaka", "Podbrežje", "Odra", "Otočec",
+      "Otok", "Remetinec", "Savski gaj", "Siget", "Sveta Klara", "Trnsko",
+      "Trokut"
+    ],
+    "Pešćenica - Žitnjak": [
+      "Bogdani", "Borongaj", "Borongajski lug", "Ivanja Reka", "Borovje",
+      "Donje Svetice", "Dubec", "Ferenščica", "Folnegovićevo naselje",
+      "Gate - Gmajna", "Kozari", "Kozari bok", "Kozari put", "Peščenica",
+      "Petruševec", "Resničina", "Resnik", "Savica - Šanci", "Struge",
+      "Trstik", "Volovčica", "Vukomerec", "Žitnjak"
+    ],
+    "Podsljeme": [
+      "Bačun", "Bidrovec", "Dedići", "Deščevec", "Dolje", "Gračani",
+      "Kraljičin zdenac", "Markuševec", "Mlinovi", "Popovec", "Slanovec",
+      "Sljeme"
+    ],
+    "Sesvete": [
+      "Adamovec", "Belovar", "Blaguša", "Bok", "Brestje", "Brestovčina",
+      "Budenec", "Cerje", "Divjače", "Dobrodol", "Donja zemlja", "Donje polje",
+      "Drenčec", "Dugava", "Đurđekovec", "Gajišće", "Gajec", "Glavnica Donja",
+      "Glavnica Gornja", "Glavničica", "Goranec", "Gornje grmlje",
+      "Gornje polje", "Gornje šume", "Iver", "Jesenovec", "Kašina",
+      "Kašinska Sopnica", "Kobiljak", "Kraljevečki Novaki", "Krči",
+      "Kučilovina", "Kućanec", "Laz", "Leskovec", "Lug", "Lužan", "Magdalena",
+      "Markovo polje", "Mokrica", "Moravče", "Novi Jelkovec", "Paruževina",
+      "Planina Donja", "Planina Gornja", "Plavišče", "Pod Magdalenom",
+      "Popovec", "Poredje", "Prekvršje", "Prepuštovec", "Selčina", "Sesvete",
+      "Sesvetska sela", "Sesvetska selnica", "Sesvetski Kobiljak",
+      "Sesvetski Kraljevec", "Setice", "Siget", "Soblinec", "Sodol",
+      "Sopnica", "Šašinovec", "Šimunčevec", "Trdica", "Trdice", "Vretenec",
+      "Vuger Selo", "Vugrovec Donji", "Vugrovec Gornji", "Vurnovec",
+      "Zavječe", "Žerjavinec"
+    ],
+    "Stenjevec": [
+      "Donje Vrapče", "Jankomir", "Malešnica", "Savska Opatovina",
+      "Stenjevec", "Špansko"
+    ],
+    "Trešnjevka - Jug": [
+      "Gajevo", "Gredice", "Horvati", "Jarun", "Knežija", "Prečko",
+      "Srednjaci", "Staglišće", "Vrbani"
+    ],
+    "Trešnjevka - Sjever": [
+      "Rudeš", "Trešnjevka", "Voltino"
+    ],
+    "Trnje": [
+      "Cvjetno naselje", "Kanal", "Kruge", "Martinovka", "Savica",
+      "Sigečica", "Trnje", "Vrbik"
+    ],
+    "Zagreb - Okolica": [
+      "Brezovica", "Dumovec"
+    ],
+    "Podsused - Vrapče": [
+      "Podsused", "Vrapče", "Gajnice", "Gornje Vrapče", "Perjavica",
+      "Borčec", "Gornji Stenjevec"
+    ]
+  }
+} 

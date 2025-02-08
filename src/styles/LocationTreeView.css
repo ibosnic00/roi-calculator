@@ -1,0 +1,242 @@
+.location-tree-view {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.city-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.city-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.25rem;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+}
+
+.city-tab:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.city-tab.active {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.city-tab.active svg {
+  color: white;
+}
+
+.city-content {
+  padding: 1rem;
+}
+
+.tree-node {
+  margin-bottom: 0.5rem;
+}
+
+.tree-node-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.tree-node-header:hover {
+  background-color: #f3f4f6;
+}
+
+.tree-node-header.expanded {
+  background-color: #f9fafb;
+}
+
+.chevron-icon {
+  color: #6b7280;
+}
+
+.node-icon {
+  color: #4b5563;
+}
+
+.node-label {
+  font-size: 0.875rem;
+}
+
+.spacer {
+  width: 1rem;
+}
+
+.tree-node-content {
+  margin-top: 0.25rem;
+  margin-left: 1.5rem;
+}
+
+/* District Tabs */
+.district-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #ffffff;
+}
+
+.district-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.25rem;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.district-tab:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.district-tab.active {
+  background-color: #4b5563;
+  color: white;
+  border-color: #4b5563;
+}
+
+.district-tab.active svg {
+  color: white;
+}
+
+.district-tab .sample-size {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background-color: #e5e7eb;
+  color: #4b5563;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.district-tab:hover .sample-size {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.district-tab.active .sample-size {
+  background-color: #374151;
+  color: white;
+}
+
+/* Neighborhoods */
+.neighborhood-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.neighborhood-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.neighborhood-item:hover {
+  background-color: #f3f4f6;
+  color: #2563eb;
+  cursor:default;
+}
+
+.neighborhood-item svg {
+  color: #6b7280;
+}
+
+.neighborhood-item:hover svg {
+  color: #2563eb;
+}
+
+.neighborhood-item.highlighted {
+  background-color: #eef2ff;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.neighborhood-item.highlighted:hover {
+  background-color: #e0e7ff;
+}
+
+.search-container {
+  position: relative;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+}
+
+.search-icon {
+  color: #64748b;
+  margin-right: 0.5rem;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.875rem;
+  background: transparent;
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+}
+
+.settings-section {
+  margin-bottom: 2rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+} 

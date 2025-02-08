@@ -78,6 +78,24 @@ h1 {
   margin-bottom: 0;
 }
 
+.form-group input {
+  padding: 0.4rem 0.5rem;
+}
+
+.popup-form {
+  margin: 0;
+  padding: 0.5rem 1rem;
+}
+
+.popup-input {
+  margin: 0.1rem;
+}
+
+.popup-actions {
+  display: flex;
+  margin: 0.5rem 0;
+  justify-content: space-evenly;
+}
 .button-group {
   flex: 0 0 auto;
 }
@@ -959,6 +977,8 @@ select:focus {
   .form-group {
     width: 100%;
   }
+
+  
 
   input,
   select {

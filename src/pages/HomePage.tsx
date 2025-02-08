@@ -166,7 +166,7 @@ export function HomePage() {
                         <span className="animate-text">Compare</span>
                         <span className="animate-text">Invest</span>
                     </h1>
-                    <p className="subtitle">Make informed real estate decisions in Zagreb</p>
+                    <p className="subtitle">Make informed real estate decisions in Croatia</p>
                     <button className="cta-button" onClick={() => navigate('/calculator')}>
                         Start Calculating
                     </button>

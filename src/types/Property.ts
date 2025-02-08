@@ -3,10 +3,12 @@ export interface Property {
   askingPrice: number;
   expectedPrice: number;
   apartmentSize: number;
-  neighborhood: string;
-  subneighborhood: string;
+  district: string;
+  neighborhoodz?: string;
   renovationCost: number;
   monthlyRent: number;
+  customRent?: number;
+  additionalCosts?: number;
   roi: number;
   notes: string;
   year: string;
@@ -15,4 +17,5 @@ export interface Property {
   isFavorite?: boolean;
   isSold?: boolean;
   isCustomRent?: boolean;
+  city: string;
 } 
