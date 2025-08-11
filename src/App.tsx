@@ -10,7 +10,7 @@ import './App.css'
 function App() {
   return (
     <RentalDataProvider>
-      <BrowserRouter basename="/roi-calculator">
+      <BrowserRouter>
         <div className="container">
           <header>
             <div className="header-left">
