@@ -21,10 +21,94 @@
 header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   background: #fff;
   border-bottom: 1px solid #e2e8f0;
   padding: 1rem 1.5rem;
+  position: relative;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+/* Donation Button Styles */
+.donation-button-container {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.donation-button {
+  background: linear-gradient(to right, #6b93ff, #5653ff);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.donation-button:hover {
+  background: linear-gradient(to right, #6352ff, #310adf);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.donation-button:active {
+  transform: translateY(0);
+}
+
+/* QR Code Tooltip Styles */
+.donation-qr-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(50%) translateY(100%);
+  width: 200px;
+  height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 1.3s ease;
+  z-index: 1000;
+  margin-bottom: 8px;
+}
+
+.donation-button-container:hover .donation-qr-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile responsive adjustments for donation button */
+@media (max-width: 768px) {
+  .donation-button {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .donation-button span {
+    display: none;
+  }
+  
+  .donation-button::before {
+    content: "☕";
+    font-size: 1rem;
+  }
+  
+  .donation-qr-tooltip {
+    width: 120px;
+    height: 120px;
+  }
 }
 
 h1 {

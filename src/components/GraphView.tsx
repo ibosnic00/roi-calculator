@@ -311,12 +311,12 @@ export function GraphView({ properties, onShowFavorites }: GraphViewProps) {
                   onChange={handleParameterChange}
                   className="parameter-select"
                 >
-                  <option value="roi">ROI Only</option>
-                  <option value="roi_minus_maintenance">ROI - Maintenance</option>
+                  <option value="roi">Rent (-tax) Only</option>
+                  <option value="roi_minus_maintenance">Rent - Tax - Maintenance</option>
                   <option value="appreciation">Property Appreciation</option>
-                  <option value="roi_plus_appreciation">ROI + Property Appreciation</option>
+                  <option value="roi_plus_appreciation">Rent - Tax + Property Appreciation</option>
                   <option value="appreciation_minus_maintenance">Appreciation - Maintenance</option>
-                  <option value="roi_plus_appreciation_minus_maintenance">ROI + Appreciation - Maintenance</option>
+                  <option value="roi_plus_appreciation_minus_maintenance">Rent - Tax + Appreciation - Maintenance</option>
                 </select>
               </div>
             </div>

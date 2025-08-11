@@ -288,15 +288,15 @@ function getCalculationMethodLabel(method?: string, type?: string): string {
 
   switch (method) {
     case 'roi':
-      return 'ROI Only';
+      return 'Rent (-tax) Only';
     case 'roi_minus_maintenance':
-      return 'ROI - Maintenance';
+      return 'Rent - Tax - Maintenance';
     case 'roi_plus_appreciation':
-      return 'ROI + Appreciation';
+      return 'Rent - Tax + Appreciation';
     case 'appreciation_minus_maintenance':
       return 'Appreciation - Maintenance';
     case 'roi_plus_appreciation_minus_maintenance':
-      return 'ROI + Appreciation - Maintenance';
+      return 'Rent - Tax + Appreciation - Maintenance';
     default:
       return 'Appreciation Only';
   }

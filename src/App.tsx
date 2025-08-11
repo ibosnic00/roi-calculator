@@ -13,7 +13,30 @@ function App() {
       <BrowserRouter basename="/roi-calculator">
         <div className="container">
           <header>
-          <Link to="/" title="Home"><h1>Croatia</h1></Link>
+            <div className="header-left">
+              <Link to="/" title="Home"><h1>Croatia</h1></Link>
+              
+              {/* PayPal Donation Button - Under Croatia Title */}
+              <div className="donation-button-container">
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                  <input type="hidden" name="cmd" value="_s-xclick" />
+                  <input type="hidden" name="hosted_button_id" value="2D5XX5HZM3E2L" />
+                  <input type="hidden" name="currency_code" value="EUR" />
+                  <button
+                    type="submit"
+                    className="donation-button"
+                  >
+                    <span>Support the project ☕</span>
+                  </button>
+                </form>
+                <img 
+                  src="./paypal-link.png" 
+                  alt="PayPal QR Code" 
+                  className="donation-qr-tooltip"
+                />
+              </div>
+            </div>
+            
             <nav className="main-nav">
               <Link to="/calculator" title="Calculator"><IoCalculatorOutline size={24} /></Link>
               <Link to="/investment" title="Investment Comparison"><IoTrendingUpOutline size={24} /></Link>
