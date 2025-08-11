@@ -176,7 +176,7 @@ export function HomePage() {
             <section className="features-section">
                 <div className="feature-row">
                     <img
-                        src="/roi-calculator/mockups/iphone-home1-portrait.png"
+                        src="/mockups/iphone-home1-portrait.png"
                         alt="Table View"
                         className="feature-image"
                         style={{
@@ -230,7 +230,7 @@ export function HomePage() {
 
                 <div className="feature-row reverse">
                     <img
-                        src="/roi-calculator/mockups/iphone-home2-left.png"
+                        src="/mockups/iphone-home2-left.png"
                         alt="Graph View"
                         className="feature-image"
                         style={{
@@ -284,7 +284,7 @@ export function HomePage() {
 
                 <div className="feature-row">
                     <img
-                        src="/roi-calculator/mockups/web-home-front.png"
+                        src="/mockups/web-home-front.png"
                         alt="Tile View"
                         className="feature-image1"
                         style={{
