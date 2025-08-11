@@ -233,7 +233,7 @@ export function CalculationPage() {
 
   const [viewMode, setViewMode] = useState<'table' | 'tiles'>(() => {
     const savedViewMode = localStorage.getItem('viewMode')
-    return (savedViewMode === 'table' || savedViewMode === 'tiles') ? savedViewMode : 'tiles'
+    return (savedViewMode === 'table' || savedViewMode === 'tiles') ? savedViewMode : 'table'
   })
 
   // Add effect to save viewMode changes
@@ -418,48 +418,50 @@ export function CalculationPage() {
                 className="add-property-button"
                 onClick={() => setIsFormVisible(true)}
               >
-                + ADD NEW
+                + Add new property
               </button>
             </div>
-            <div className="view-controls">
+            {properties.length > 0 && (
+              <div className="view-controls">
 
-              <div className="view-toggle">
-                <button
-                  className={`toggle-button ${viewMode === 'table' ? 'active' : ''}`}
-                  onClick={() => setViewMode('table')}
-                >
-                  Table
-                </button>
-                <button
-                  className={`toggle-button ${viewMode === 'tiles' ? 'active' : ''}`}
-                  onClick={() => setViewMode('tiles')}
-                >
-                  Tiles
-                </button>
-              </div>
-
-
-              <div className="show-controls">
-                <span className="show-label">Show</span>
-                <div className="show-buttons">
+                <div className="view-toggle">
                   <button
-                    className={`show-button ${showSold ? 'active' : ''}`}
-                    onClick={() => setShowSold(!showSold)}
-                    title="Show/Hide Sold"
+                    className={`toggle-button ${viewMode === 'table' ? 'active' : ''}`}
+                    onClick={() => setViewMode('table')}
                   >
-                    💸
+                    Table
                   </button>
                   <button
-                    className={`show-button ${showOnlyFavorites ? 'active' : ''}`}
-                    onClick={handleShowFavoritesClick}
-                    title="Show Favorites Only"
+                    className={`toggle-button ${viewMode === 'tiles' ? 'active' : ''}`}
+                    onClick={() => setViewMode('tiles')}
                   >
-                    ★
+                    Tiles
                   </button>
                 </div>
-              </div>
 
-            </div>
+
+                <div className="show-controls">
+                  <span className="show-label">Show</span>
+                  <div className="show-buttons">
+                    <button
+                      className={`show-button ${showSold ? 'active' : ''}`}
+                      onClick={() => setShowSold(!showSold)}
+                      title="Show/Hide Sold"
+                    >
+                      💸
+                    </button>
+                    <button
+                      className={`show-button ${showOnlyFavorites ? 'active' : ''}`}
+                      onClick={handleShowFavoritesClick}
+                      title="Show Favorites Only"
+                    >
+                      ★
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            )}
           </div></>
       ) : (
         <div className="form-overlay">
