@@ -69,12 +69,20 @@ select.popup-input option:first-child {
   font-size: 14px;
   background-color: white;
   box-sizing: border-box;
+  /* Force readable text regardless of OS theme */
+  color: #000;
 }
 
 .custom-select input.popup-input:focus {
   outline: none;
   border-color: #4a90e2;
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* Ensure placeholder is visible on all themes */
+.custom-select input.popup-input::placeholder {
+  color: #6b7280; /* gray-500 */
+  opacity: 1;
 }
 
 .dropdown-list {
@@ -88,6 +96,8 @@ select.popup-input option:first-child {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 9999;
   min-width: 200px;
+  /* Default text color inside dropdown */
+  color: #000;
 }
 
 .dropdown-item {
@@ -95,6 +105,7 @@ select.popup-input option:first-child {
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;
+  color: #000; /* Always readable items */
 }
 
 .dropdown-item:hover {
